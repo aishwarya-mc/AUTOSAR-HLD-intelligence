@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Local vector databases
+chroma/
+chroma_db/
+
+# Neo4j local data
+neo4j_data/
+
+# Uploaded documents
+data/documents/
+data/uploads/
+
+# Generated outputs
+outputs/
+reports/
+
+# Model files
+models/
+
+# Temporary files
+tmp/
+temp/
+
+# Python distribution
+build/
+dist/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
