@@ -1,0 +1,21 @@
+# API
+fastapi
+uvicorn[standard]
+python-multipart
+
+# UI
+streamlit
+pandas
+
+# Configuration and validation
+pydantic
+pydantic-settings
+python-dotenv
+
+# Document processing (OCR needs the tesseract binary; it is optional at runtime)
+pymupdf
+pytesseract
+pillow
+
+# HTTP client (UI -> API, optional LLM calls)
+httpx
