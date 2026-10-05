@@ -1,0 +1,43 @@
+# API
+fastapi
+uvicorn[standard]
+
+# UI
+streamlit
+
+# Configuration and validation
+pydantic
+pydantic-settings
+python-dotenv
+
+# Document processing
+pymupdf
+pytesseract
+pillow
+python-multipart
+
+# Tables and data
+pandas
+
+# AI / embeddings
+sentence-transformers
+transformers
+torch
+
+# Vector database
+chromadb
+
+# Graph database
+neo4j
+
+# Database
+sqlalchemy
+alembic
+
+# HTTP / utilities
+httpx
+tenacity
+
+# Testing
+pytest
+pytest-asyncio
