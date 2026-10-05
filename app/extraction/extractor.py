@@ -9,6 +9,7 @@ from app.extraction.dependencies import DependencyExtractor
 from app.extraction.entity_schema import ArchitectureEntityRecord
 from app.extraction.functional_flows import FunctionalFlowExtractor
 from app.extraction.interfaces import InterfaceExtractor
+from app.extraction.normalization import normalize_and_deduplicate
 from app.extraction.ports import PortExtractor
 from app.extraction.signals import SignalExtractor
 from app.ingestion.pdf_parser import ParsedDocument
@@ -71,6 +72,10 @@ class ArchitectureExtractor:
         document_version: str,
     ) -> ArchitectureExtractionResult:
 
+        # ---------------------------------------------------------
+        # 1. Run individual architecture extractors
+        # ---------------------------------------------------------
+
         components = self.component_extractor.extract(chunks)
 
         interfaces = self.interface_extractor.extract(chunks)
@@ -88,6 +93,38 @@ class ArchitectureExtractor:
         functional_flows = self.functional_flow_extractor.extract(
             chunks
         )
+
+        # ---------------------------------------------------------
+        # 2. Normalize and deduplicate extracted entities
+        # ---------------------------------------------------------
+
+        components = normalize_and_deduplicate(
+            components
+        )
+
+        interfaces = normalize_and_deduplicate(
+            interfaces
+        )
+
+        ports = normalize_and_deduplicate(
+            ports
+        )
+
+        signals = normalize_and_deduplicate(
+            signals
+        )
+
+        dependencies = normalize_and_deduplicate(
+            dependencies
+        )
+
+        functional_flows = normalize_and_deduplicate(
+            functional_flows
+        )
+
+        # ---------------------------------------------------------
+        # 3. Build final extraction result
+        # ---------------------------------------------------------
 
         result = ArchitectureExtractionResult(
             document_id=document_id,
