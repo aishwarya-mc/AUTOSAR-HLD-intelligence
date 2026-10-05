@@ -41,3 +41,6 @@ tenacity
 # Testing
 pytest
 pytest-asyncio
+
+# Demo document generation
+reportlab
