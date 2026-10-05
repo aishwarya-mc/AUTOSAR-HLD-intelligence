@@ -1,0 +1,8 @@
+[
+  {"question": "Which component provides IDoorStatus?", "must_contain": ["DoorControl"], "page": 2},
+  {"question": "Which component requires IVehicleState?", "must_contain": ["WindowControl"], "page": 2},
+  {"question": "What signal does IWindowCommand carry?", "must_contain": ["WindowPosition"], "page": 2},
+  {"question": "What ports does BodyControlManager have?", "must_contain": ["DoorStatus_In", "WindowCommand_Out"], "page": 2},
+  {"question": "What does flow F-003 describe?", "must_contain": ["VehicleSpeed"], "page": 3},
+  {"question": "What is the maximum engine torque?", "must_contain": [], "answerable": false}
+]

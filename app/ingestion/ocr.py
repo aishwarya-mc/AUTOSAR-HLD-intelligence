@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import fitz
-import pytesseract
 from PIL import Image
 
 from app.core.logging import get_logger
@@ -52,6 +51,8 @@ class OCRProcessor:
                 [pixmap.width, pixmap.height],
                 pixmap.samples,
             )
+
+            import pytesseract  # lazy: OCR is an optional runtime dependency
 
             text = pytesseract.image_to_string(image)
 

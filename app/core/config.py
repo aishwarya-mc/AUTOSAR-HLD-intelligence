@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     # LLM
     llm_provider: str = Field(default="local", alias="LLM_PROVIDER")
     llm_model: str = Field(default="", alias="LLM_MODEL")
+    anthropic_api_key: str = Field(default="", alias="ANTHROPIC_API_KEY")
 
     # Embeddings
     embedding_model: str = Field(default="", alias="EMBEDDING_MODEL")
