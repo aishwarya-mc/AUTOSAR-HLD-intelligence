@@ -62,15 +62,22 @@ div[data-testid="stFileUploaderDropzone"] {border: 2px dashed #7c3aed; border-ra
 
 
 def api(method: str, path: str, quiet: bool = False, **kwargs):
+    headers = dict(kwargs.pop("headers", {}))
+    if st.session_state.get("api_key"):
+        headers["X-API-Key"] = st.session_state["api_key"]
     try:
-        resp = httpx.request(method, f"{API_URL}{path}", timeout=120, **kwargs)
+        resp = httpx.request(method, f"{API_URL}{path}", timeout=120, headers=headers, **kwargs)
     except httpx.HTTPError as exc:
         st.error(f"Cannot reach the API at {API_URL}: {exc}")
         st.stop()
+    if resp.status_code == 401:
+        st.warning("This server requires an access key. Open **Access** below and enter your API key.")
+        return None
     if resp.status_code >= 400:
         if not quiet:
             try:
-                st.error(resp.json().get("message", resp.text))
+                body = resp.json()
+                st.error(body.get("message") or body.get("detail") or resp.text)
             except ValueError:
                 st.error(resp.text)
         return None
@@ -175,6 +182,8 @@ def page_documents():
         upload = st.file_uploader("Drag & drop an HLD PDF", type=["pdf"])
         c1, c2 = st.columns([2, 1])
         version = c1.text_input("Revision label", value="v1")
+        project = st.text_input("Project", value="default",
+                                help="Documents are isolated per project; users only see projects they may access.")
         c2.write("")
         c2.write("")
         if c2.button("Process", type="primary", disabled=upload is None, width="stretch"):
@@ -184,7 +193,7 @@ def page_documents():
                     "POST",
                     "/documents",
                     files={"file": (upload.name, upload.getvalue(), "application/pdf")},
-                    data={"version": version},
+                    data={"version": version, "project": project},
                 )
                 if resp is not None:
                     m = resp.json()
@@ -210,11 +219,12 @@ def page_documents():
     if docs:
         st.divider()
         st.markdown("#### Processed documents")
-        df = pd.DataFrame(docs)[
-            ["filename", "version", "page_count", "entity_count", "finding_count", "created_at"]
-        ]
+        df = pd.DataFrame(docs)
+        wanted = ["filename", "version", "project", "page_count", "entity_count",
+                  "finding_count", "created_at"]
+        df = df[[c for c in wanted if c in df.columns]]
         st.dataframe(df, width="stretch", hide_index=True)
-        with st.expander("Delete a document"):
+        with st.expander("Delete a document (admin)"):
             victim = st.selectbox("Document", docs, format_func=doc_label, key="del_doc")
             if st.button("Delete permanently"):
                 api("DELETE", f"/documents/{victim['document_id']}")
@@ -280,7 +290,7 @@ def page_architecture(doc):
 
     view = st.segmented_control(
         "View",
-        ["Interactive graph", "Tables", "Functional flows", "Impact analysis"],
+        ["Interactive graph", "Tables", "Component report", "Functional flows", "Impact analysis"],
         default="Interactive graph",
         key="arch_view",
     )
@@ -297,6 +307,12 @@ def page_architecture(doc):
             unsafe_allow_html=True,
         )
         components.html(graph_html(graph, set(types), None), height=580)
+    elif view == "Component report":
+        comp = st.selectbox("Component", [c["name"] for c in model["components"]])
+        rep = api("GET", f"/reports/{doc}/component/{comp}")
+        if rep is not None:
+            st.markdown(rep.text)
+            st.download_button("Download component report", rep.text, file_name=f"{comp}_report.md")
     elif view == "Tables":
         for key in ["components", "interfaces", "ports", "signals", "dependencies"]:
             with st.expander(f"{key.title()} ({len(model[key])})", expanded=key == "components"):
@@ -504,14 +520,38 @@ def page_report(doc):
     resp = api("GET", f"/reports/{doc}")
     if resp is not None:
         st.download_button("⬇ Download Markdown", resp.text, file_name="hld_report.md", type="primary")
+        st.markdown("**Structured export** (for downstream tools)")
+        cols = st.columns(4)
+        for col, (label, path, name) in zip(cols, [
+            ("JSON bundle", f"/export/{doc}.json", "hld_export.json"),
+            ("Entities CSV", f"/export/{doc}/entities.csv", "entities.csv"),
+            ("Relationships CSV", f"/export/{doc}/relationships.csv", "relationships.csv"),
+            ("Findings CSV", f"/export/{doc}/findings.csv", "findings.csv"),
+        ]):
+            data = api("GET", path)
+            if data is not None:
+                col.download_button(label, data.text, file_name=name, key=f"exp_{name}")
         st.divider()
         st.markdown(resp.text)
+
+
+def page_audit():
+    st.subheader("Audit log")
+    st.caption("Admin only: uploads, queries, reviews, exports and deletions.")
+    rows = get_json("/audit")
+    if rows is not None:
+        st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
 
 
 # ---------------------------------------------------------------- shell
 
 PAGES = ["🏠 Home", "📄 Documents", "🧩 Architecture", "💬 Ask", "✅ Validation",
-         "🔀 Compare", "📑 Report"]
+         "🔀 Compare", "📑 Report", "🕵️ Audit"]
+
+with st.expander("🔐 Access", expanded=False):
+    st.text_input("API key (leave empty when authentication is disabled)", type="password",
+                  key="api_key")
+
 page = st.segmented_control("Navigate", PAGES, default=PAGES[0], key="nav",
                             label_visibility="collapsed") or PAGES[0]
 
@@ -521,6 +561,8 @@ elif page == "📄 Documents":
     page_documents()
 elif page == "🔀 Compare":
     page_compare()
+elif page == "🕵️ Audit":
+    page_audit()
 else:
     active = current_document()
     if active:

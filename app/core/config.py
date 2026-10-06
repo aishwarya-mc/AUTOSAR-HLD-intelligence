@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     # LLM
     llm_provider: str = Field(default="local", alias="LLM_PROVIDER")
     llm_model: str = Field(default="", alias="LLM_MODEL")
+    auth_enabled: bool = Field(default=False, alias="AUTH_ENABLED")
+    api_keys: str = Field(default="", alias="API_KEYS")
     anthropic_api_key: str = Field(default="", alias="ANTHROPIC_API_KEY")
 
     # Embeddings
@@ -50,8 +52,8 @@ class Settings(BaseSettings):
 
     # Retrieval
     top_k: int = Field(default=8, alias="TOP_K", ge=1)
-    chunk_size: int = Field(default=1200, alias="CHUNK_SIZE", ge=100)
-    chunk_overlap: int = Field(default=150, alias="CHUNK_OVERLAP", ge=0)
+    chunk_size: int = Field(default=250, alias="CHUNK_SIZE", ge=100)
+    chunk_overlap: int = Field(default=40, alias="CHUNK_OVERLAP", ge=0)
 
     # Upload
     max_upload_mb: int = Field(default=100, alias="MAX_UPLOAD_MB", ge=1)

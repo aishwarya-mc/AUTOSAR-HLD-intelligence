@@ -2,11 +2,12 @@ import csv
 import io
 from dataclasses import asdict
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse, PlainTextResponse
 
-from app.api.deps import get_service
+from app.api.deps import DocAccess, audit, get_service
 from app.core.exceptions import ValidationError
+from app.core.security import User
 
 router = APIRouter(prefix="/export", tags=["Export"])
 
@@ -20,9 +21,10 @@ def _csv(rows: list[dict], columns: list[str]) -> str:
 
 
 @router.get("/{document_id}.json")
-def export_json(document_id: str):
+def export_json(document_id: str, user: User = Depends(DocAccess("viewer"))):
     """Complete structured export for downstream tools (inventory, graph, findings, reviews)."""
     service = get_service()
+    audit(user, "export", document_id, "json")
     graph = service.graph(document_id).to_dict()
     return JSONResponse(
         {
@@ -37,9 +39,10 @@ def export_json(document_id: str):
 
 
 @router.get("/{document_id}/{dataset}.csv")
-def export_csv(document_id: str, dataset: str):
+def export_csv(document_id: str, dataset: str, user: User = Depends(DocAccess("viewer"))):
     """CSV export of one dataset: entities, relationships or findings."""
     service = get_service()
+    audit(user, "export", document_id, dataset)
     if dataset == "entities":
         rows = [
             {

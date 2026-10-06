@@ -1,30 +1,40 @@
-from fastapi import APIRouter, Query
+from dataclasses import asdict
 
-from app.api.deps import get_service
+from fastapi import APIRouter, Depends, Query
+
+from app.api.deps import DocAccess, get_service
 from app.core.exceptions import ResourceNotFoundError
+from app.core.security import User
 
 router = APIRouter(prefix="/architecture", tags=["Architecture"])
 
 
 @router.get("/{document_id}/entities")
-def entities(document_id: str, entity_type: str | None = None):
+def entities(
+    document_id: str,
+    entity_type: str | None = None,
+    user: User = Depends(DocAccess("viewer")),
+):
     return get_service().entities(document_id, entity_type)
 
 
 @router.get("/{document_id}/model")
-def model(document_id: str):
-    from dataclasses import asdict
-
+def model(document_id: str, user: User = Depends(DocAccess("viewer"))):
     return asdict(get_service().model(document_id))
 
 
 @router.get("/{document_id}/graph")
-def graph(document_id: str):
+def graph(document_id: str, user: User = Depends(DocAccess("viewer"))):
     return get_service().graph(document_id).to_dict()
 
 
 @router.get("/{document_id}/impact/{element}")
-def impact(document_id: str, element: str, depth: int = Query(3, ge=1, le=6)):
+def impact(
+    document_id: str,
+    element: str,
+    depth: int = Query(3, ge=1, le=6),
+    user: User = Depends(DocAccess("viewer")),
+):
     """Traceability / change-impact: everything connected to an element."""
     g = get_service().graph(document_id)
     if element not in g.nodes:

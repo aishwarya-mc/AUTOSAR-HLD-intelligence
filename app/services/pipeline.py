@@ -33,13 +33,14 @@ class HLDService:
     # -- processing --------------------------------------------------------
 
     def process(self, pdf_path: str | Path, version: str | None = None,
-                original_filename: str | None = None) -> dict:
+                original_filename: str | None = None, project: str = "default") -> dict:
         ingested = self.ingestion.ingest(pdf_path)
         metadata = dict(ingested.metadata)
         if version:
             metadata["version"] = version
         if original_filename:
             metadata["filename"] = original_filename
+        metadata["project"] = project
         doc_id, ver = metadata["document_id"], metadata["version"]
 
         parsed = ingested.parsed_document
@@ -103,6 +104,9 @@ class HLDService:
 
     def graph(self, document_id: str) -> ArchitectureGraph:
         return build_graph(self.model(document_id))
+
+    def chunks(self, document_id: str) -> list[dict]:
+        return self._payload(document_id)["chunks"]
 
     def entities(self, document_id: str, entity_type: str | None = None) -> list[dict]:
         ents = self._payload(document_id)["entities"]
