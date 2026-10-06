@@ -14,6 +14,7 @@ RUN pip install -r requirements.txt
 COPY app ./app
 COPY frontend ./frontend
 COPY data/sample ./data/sample
+COPY scripts/start_single.sh ./scripts/start_single.sh
 
 RUN useradd -m appuser && mkdir -p data/uploads data/db && chown -R appuser /srv
 USER appuser

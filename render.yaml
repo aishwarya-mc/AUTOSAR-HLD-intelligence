@@ -1,0 +1,15 @@
+# Render Blueprint: one web service running API + UI from the Dockerfile.
+services:
+  - type: web
+    name: autosar-hld-intelligence
+    runtime: docker
+    plan: free
+    dockerCommand: sh scripts/start_single.sh
+    healthCheckPath: /_stcore/health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        value: sqlite:////srv/data/db/autosar.db
+      - key: LLM_PROVIDER
+        value: local

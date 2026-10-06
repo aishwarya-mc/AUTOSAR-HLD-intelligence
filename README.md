@@ -47,7 +47,15 @@ Data persists in the `hld-data` / `hld-uploads` volumes. Set `ANTHROPIC_API_KEY`
 `LLM_PROVIDER=anthropic` in the environment to have an LLM phrase answers (it is still
 restricted to the retrieved evidence); without them the system runs fully offline.
 
-### Managed hosts (Render, Railway, Fly.io, Azure Container Apps…)
+### One-click: Render (free tier, single container)
+
+1. Sign in at https://render.com with GitHub, then **New + → Blueprint** and pick this repository.
+2. Render reads `render.yaml` and builds the `Dockerfile`; `scripts/start_single.sh` runs the API
+   (private) and the UI (public) in one container. Open the service URL when the deploy is live.
+3. Free instances sleep when idle and have no persistent disk, so uploaded documents reset on restart.
+   Use the sample HLD for demos, or add a paid disk mounted at `/srv/data/db`.
+
+### Managed hosts (Railway, Fly.io, Azure Container Apps…)
 
 Deploy the same `Dockerfile` as two services: the API (default `CMD`, port 8000) and the UI
 (start command `streamlit run frontend/app.py --server.port $PORT --server.address 0.0.0.0`)
