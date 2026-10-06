@@ -59,6 +59,6 @@ def get_document(document_id: str):
 
 @router.delete("/{document_id}")
 def delete_document(document_id: str):
-    if not get_service().store.delete_document(document_id):
+    if not get_service().delete(document_id):
         raise ResourceNotFoundError(f"Document '{document_id}' not found.")
     return {"deleted": document_id}

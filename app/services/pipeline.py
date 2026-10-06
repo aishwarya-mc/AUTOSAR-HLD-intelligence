@@ -12,6 +12,8 @@ from app.extraction.structured_model import StructuredModel, build_structured_mo
 from app.graph.builder import ArchitectureGraph, build_graph
 from app.ingestion.service import DocumentIngestionService
 from app.rag.answerer import GroundedAnswerer
+from app.rag.hybrid import HybridRetriever
+from app.rag.vector_store import VectorStore
 from app.storage.store import DocumentStore
 from app.validation.rules import ValidationEngine
 
@@ -26,6 +28,7 @@ class HLDService:
         self.ingestion = DocumentIngestionService()
         self.chunker = SectionAwareChunker()
         self.extractor = ArchitectureExtractor()
+        self._vectors: VectorStore | None = None
 
     # -- processing --------------------------------------------------------
 
@@ -59,10 +62,27 @@ class HLDService:
         }
         metadata["entity_count"] = extraction.entity_count
         metadata["finding_count"] = len(findings)
+        try:
+            metadata["indexed_chunks"] = self.vector_store().index(doc_id, chunk_dicts)
+        except Exception as exc:
+            logger.warning("Vector indexing skipped for %s: %s", doc_id, exc)
         self.store.save_document(metadata, payload)
         logger.info("Processed %s (%s): %d entities, %d findings",
                     metadata["filename"], doc_id, extraction.entity_count, len(findings))
         return metadata
+
+    def vector_store(self) -> VectorStore:
+        if self._vectors is None:
+            self._vectors = VectorStore()
+        return self._vectors
+
+    def delete(self, document_id: str) -> bool:
+        deleted = self.store.delete_document(document_id)
+        try:
+            self.vector_store().delete(document_id)
+        except Exception as exc:
+            logger.warning("Vector delete failed for %s: %s", document_id, exc)
+        return deleted
 
     # -- accessors ---------------------------------------------------------
 
@@ -107,5 +127,11 @@ class HLDService:
     def answerer(self, document_id: str) -> GroundedAnswerer:
         meta = self.metadata(document_id)
         payload = self._payload(document_id)
-        return GroundedAnswerer(payload["chunks"], build_graph(model_from_dict(payload["model"])),
+        try:
+            store = self.vector_store()
+        except Exception as exc:
+            logger.warning("Vector store unavailable, BM25 only: %s", exc)
+            store = None
+        retriever = HybridRetriever(payload["chunks"], document_id, store)
+        return GroundedAnswerer(retriever, build_graph(model_from_dict(payload["model"])),
                                 document_id, meta["version"])

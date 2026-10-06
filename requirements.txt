@@ -19,3 +19,7 @@ pillow
 
 # HTTP client (UI -> API, optional LLM calls)
 httpx
+
+# Local RAG: embeddings (ONNX, CPU) + vector store
+fastembed
+chromadb

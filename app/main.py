@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from app.api.architecture import router as architecture_router
 from app.api.comparison import router as comparison_router
 from app.api.documents import router as documents_router
+from app.api.export import router as export_router
 from app.api.queries import router as queries_router
 from app.api.reports import router as reports_router
 from app.api.validation import router as validation_router
@@ -41,6 +42,7 @@ app.include_router(architecture_router)
 app.include_router(validation_router)
 app.include_router(comparison_router)
 app.include_router(reports_router)
+app.include_router(export_router)
 
 
 @app.exception_handler(ApplicationError)

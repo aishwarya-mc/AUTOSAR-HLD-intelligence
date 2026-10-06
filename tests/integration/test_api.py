@@ -99,3 +99,12 @@ def test_comparison(client, v1, v2):
 def test_report(client, v1, v2):
     text = client.get(f"/reports/{v2}", params={"compare_with": v1}).text
     assert "Validation Findings" in text and "Revision Comparison" in text
+
+
+def test_exports(client, v1):
+    data = client.get(f"/export/{v1}.json").json()
+    assert {"document", "inventory", "entities", "relationships", "findings"} <= set(data)
+    csv_text = client.get(f"/export/{v1}/entities.csv").text
+    assert csv_text.splitlines()[0].startswith("entity_type,name") and "DoorControl" in csv_text
+    assert client.get(f"/export/{v1}/relationships.csv").status_code == 200
+    assert client.get(f"/export/{v1}/bogus.csv").status_code == 400

@@ -11,6 +11,7 @@ services:
     volumes:
       - hld-data:/srv/data/db
       - hld-uploads:/srv/data/uploads
+      - hld-vectors:/srv/data/vectorstore
     healthcheck:
       test: ["CMD", "curl", "-fs", "http://localhost:8000/health"]
       interval: 15s
@@ -33,3 +34,4 @@ services:
 volumes:
   hld-data:
   hld-uploads:
+  hld-vectors:

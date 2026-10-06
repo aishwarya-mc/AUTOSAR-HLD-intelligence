@@ -8,7 +8,7 @@ from app.core.config import get_settings
 from app.core.logging import get_logger
 from app.core.schemas import Citation, QueryResponse
 from app.graph.builder import ArchitectureGraph
-from app.rag.retriever import BM25Retriever, RetrievedChunk, tokenize
+from app.rag.retriever import RetrievedChunk, tokenize
 
 logger = get_logger(__name__)
 
@@ -34,11 +34,15 @@ def graph_facts(entity: str, graph: ArchitectureGraph) -> list[tuple[str, int | 
     return facts
 
 
-def _best_excerpt(text: str, query_tokens: set[str], limit: int = 320) -> str:
-    sentences = re.split(r"(?<=[.!?])\s+", text)
-    best = max(sentences, key=lambda s: len(query_tokens & set(tokenize(s))), default=text)
-    best = best.strip()
-    return best if len(best) <= limit else best[: limit - 1] + "…"
+def _best_excerpt(text: str, query_tokens: set[str], limit: int = 460) -> str:
+    """Best-matching sentence plus the one after it (answers often continue in the next sentence)."""
+    sentences = [x.strip() for x in re.split(r"(?<=[.!?])\s+", text) if x.strip()]
+    if not sentences:
+        return text.strip()
+    best = max(range(len(sentences)),
+               key=lambda i: len(query_tokens & set(tokenize(sentences[i]))))
+    excerpt = " ".join(sentences[best:best + 2])
+    return excerpt if len(excerpt) <= limit else excerpt[: limit - 1] + "…"
 
 
 class GroundedAnswerer:
@@ -51,9 +55,8 @@ class GroundedAnswerer:
        configured, an extractive answer is returned so the system works fully offline.
     """
 
-    def __init__(self, chunks: list[dict], graph: ArchitectureGraph,
-                 document_id: str, version: str):
-        self.retriever = BM25Retriever(chunks)
+    def __init__(self, retriever, graph: ArchitectureGraph, document_id: str, version: str):
+        self.retriever = retriever
         self.graph = graph
         self.document_id = document_id
         self.version = version
@@ -122,7 +125,10 @@ class GroundedAnswerer:
     def _llm_answer(self, question: str, hits: list[RetrievedChunk],
                     facts: list[tuple[str, int | None]]) -> str | None:
         settings = get_settings()
-        if settings.llm_provider.lower() != "anthropic" or not settings.anthropic_api_key:
+        provider = settings.llm_provider.lower()
+        if provider not in ("anthropic", "ollama"):
+            return None
+        if provider == "anthropic" and not settings.anthropic_api_key:
             return None
         context = "\n\n".join(
             f"[C{i + 1}] (section: {h.section}, page {h.page_number})\n{h.text}"
@@ -136,6 +142,15 @@ class GroundedAnswerer:
             f"QUESTION: {question}"
         )
         try:
+            if provider == "ollama":  # locally hosted LLM: no data leaves the machine
+                resp = httpx.post(
+                    f"{settings.ollama_url.rstrip('/')}/api/generate",
+                    json={"model": settings.llm_model or "llama3.2", "prompt": prompt,
+                          "stream": False, "options": {"temperature": 0}},
+                    timeout=180,
+                )
+                resp.raise_for_status()
+                return resp.json()["response"].strip()
             resp = httpx.post(
                 "https://api.anthropic.com/v1/messages",
                 headers={

@@ -28,7 +28,10 @@ class Settings(BaseSettings):
     anthropic_api_key: str = Field(default="", alias="ANTHROPIC_API_KEY")
 
     # Embeddings
-    embedding_model: str = Field(default="", alias="EMBEDDING_MODEL")
+    embedding_model: str = Field(default="BAAI/bge-small-en-v1.5", alias="EMBEDDING_MODEL")
+    embeddings_enabled: bool = Field(default=True, alias="EMBEDDINGS_ENABLED")
+    vector_dir_override: str = Field(default="", alias="VECTOR_DIR")
+    ollama_url: str = Field(default="http://localhost:11434", alias="OLLAMA_URL")
 
     # ChromaDB
     chroma_host: str = Field(default="localhost", alias="CHROMA_HOST")
@@ -68,6 +71,12 @@ class Settings(BaseSettings):
     @property
     def upload_dir(self) -> Path:
         return self.data_dir / "uploads"
+
+    @property
+    def vector_dir(self) -> Path:
+        if self.vector_dir_override:
+            return Path(self.vector_dir_override)
+        return self.data_dir / "vectorstore"
 
     @property
     def document_dir(self) -> Path:

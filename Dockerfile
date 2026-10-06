@@ -11,12 +11,16 @@ WORKDIR /srv
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
+# Bake the embedding model into the image so the container runs fully offline
+ENV FASTEMBED_CACHE_PATH=/opt/models
+RUN python -c "from fastembed import TextEmbedding; TextEmbedding('BAAI/bge-small-en-v1.5')" \n    && chmod -R a+rX /opt/models
+
 COPY app ./app
 COPY frontend ./frontend
 COPY data/sample ./data/sample
 COPY scripts/start_single.sh ./scripts/start_single.sh
 
-RUN useradd -m appuser && mkdir -p data/uploads data/db && chown -R appuser /srv
+RUN useradd -m appuser && mkdir -p data/uploads data/db data/vectorstore && chown -R appuser /srv
 USER appuser
 
 EXPOSE 8000 8501
