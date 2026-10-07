@@ -1,0 +1,391 @@
+{
+  "key": "thermal",
+  "title": "Climate and Thermal Management",
+  "split": "dev",
+  "component": [
+    "ClimateManager",
+    "CompressorControl",
+    "BlowerControl",
+    "CabinSensorManager",
+    "CoolantControl",
+    "DefrostManager"
+  ],
+  "interface": [
+    "ICabinTemperature",
+    "IOutsideTemperature",
+    "ICompressorRequest",
+    "IBlowerRequest",
+    "ICoolantState",
+    "IDefrostRequest"
+  ],
+  "port": [
+    "CabinTemperature_Out",
+    "CabinTemperature_In",
+    "OutsideTemperature_Out",
+    "OutsideTemperature_In",
+    "CompressorRequest_Out",
+    "CompressorRequest_In",
+    "BlowerRequest_Out",
+    "BlowerRequest_In",
+    "CoolantState_Out",
+    "CoolantState_In",
+    "DefrostRequest_Out",
+    "DefrostRequest_In"
+  ],
+  "signal": [
+    "CabinTemperature",
+    "OutsideTemperature",
+    "CompressorSpeed",
+    "BlowerSpeed",
+    "CoolantStatus",
+    "DefrostCommand"
+  ],
+  "dependency": [
+    "CabinSensorManager PROVIDES_INTERFACE ICabinTemperature",
+    "ClimateManager REQUIRES_INTERFACE ICabinTemperature",
+    "CabinSensorManager PROVIDES_INTERFACE IOutsideTemperature",
+    "ClimateManager REQUIRES_INTERFACE IOutsideTemperature",
+    "ClimateManager PROVIDES_INTERFACE ICompressorRequest",
+    "CompressorControl REQUIRES_INTERFACE ICompressorRequest",
+    "ClimateManager PROVIDES_INTERFACE IBlowerRequest",
+    "BlowerControl REQUIRES_INTERFACE IBlowerRequest",
+    "CoolantControl PROVIDES_INTERFACE ICoolantState",
+    "ClimateManager REQUIRES_INTERFACE ICoolantState",
+    "ClimateManager PROVIDES_INTERFACE IDefrostRequest",
+    "DefrostManager REQUIRES_INTERFACE IDefrostRequest"
+  ],
+  "functional_flow": [
+    "F-001: Cabin Temperature Distribution",
+    "F-002: Outside Temperature Distribution",
+    "F-003: Compressor Speed Distribution",
+    "F-004: Blower Speed Distribution",
+    "F-005: Coolant Status Distribution",
+    "F-006: Defrost Command Distribution"
+  ],
+  "tables": {
+    "components": [
+      [
+        "ClimateManager",
+        "Coordinator",
+        "Computes cabin temperature targets."
+      ],
+      [
+        "CompressorControl",
+        "Consumer",
+        "Controls the A/C compressor."
+      ],
+      [
+        "BlowerControl",
+        "Consumer",
+        "Controls blower fan speed."
+      ],
+      [
+        "CabinSensorManager",
+        "Provider",
+        "Measures cabin and outside temperature."
+      ],
+      [
+        "CoolantControl",
+        "Provider",
+        "Reports coolant circuit state."
+      ],
+      [
+        "DefrostManager",
+        "Consumer",
+        "Activates window defrost."
+      ]
+    ],
+    "interfaces": [
+      [
+        "ICabinTemperature",
+        "CabinSensorManager",
+        "ClimateManager",
+        "CabinTemperature",
+        "int16"
+      ],
+      [
+        "IOutsideTemperature",
+        "CabinSensorManager",
+        "ClimateManager",
+        "OutsideTemperature",
+        "int16"
+      ],
+      [
+        "ICompressorRequest",
+        "ClimateManager",
+        "CompressorControl",
+        "CompressorSpeed",
+        "uint16"
+      ],
+      [
+        "IBlowerRequest",
+        "ClimateManager",
+        "BlowerControl",
+        "BlowerSpeed",
+        "uint8"
+      ],
+      [
+        "ICoolantState",
+        "CoolantControl",
+        "ClimateManager",
+        "CoolantStatus",
+        "uint8"
+      ],
+      [
+        "IDefrostRequest",
+        "ClimateManager",
+        "DefrostManager",
+        "DefrostCommand",
+        "uint8"
+      ]
+    ],
+    "ports": [
+      [
+        "CabinSensorManager",
+        "CabinTemperature_Out",
+        "P-PORT",
+        "ICabinTemperature"
+      ],
+      [
+        "ClimateManager",
+        "CabinTemperature_In",
+        "R-PORT",
+        "ICabinTemperature"
+      ],
+      [
+        "CabinSensorManager",
+        "OutsideTemperature_Out",
+        "P-PORT",
+        "IOutsideTemperature"
+      ],
+      [
+        "ClimateManager",
+        "OutsideTemperature_In",
+        "R-PORT",
+        "IOutsideTemperature"
+      ],
+      [
+        "ClimateManager",
+        "CompressorRequest_Out",
+        "P-PORT",
+        "ICompressorRequest"
+      ],
+      [
+        "CompressorControl",
+        "CompressorRequest_In",
+        "R-PORT",
+        "ICompressorRequest"
+      ],
+      [
+        "ClimateManager",
+        "BlowerRequest_Out",
+        "P-PORT",
+        "IBlowerRequest"
+      ],
+      [
+        "BlowerControl",
+        "BlowerRequest_In",
+        "R-PORT",
+        "IBlowerRequest"
+      ],
+      [
+        "CoolantControl",
+        "CoolantState_Out",
+        "P-PORT",
+        "ICoolantState"
+      ],
+      [
+        "ClimateManager",
+        "CoolantState_In",
+        "R-PORT",
+        "ICoolantState"
+      ],
+      [
+        "ClimateManager",
+        "DefrostRequest_Out",
+        "P-PORT",
+        "IDefrostRequest"
+      ],
+      [
+        "DefrostManager",
+        "DefrostRequest_In",
+        "R-PORT",
+        "IDefrostRequest"
+      ]
+    ],
+    "signals": [
+      [
+        "CabinTemperature",
+        "int16",
+        "CabinSensorManager",
+        "ClimateManager"
+      ],
+      [
+        "OutsideTemperature",
+        "int16",
+        "CabinSensorManager",
+        "ClimateManager"
+      ],
+      [
+        "CompressorSpeed",
+        "uint16",
+        "ClimateManager",
+        "CompressorControl"
+      ],
+      [
+        "BlowerSpeed",
+        "uint8",
+        "ClimateManager",
+        "BlowerControl"
+      ],
+      [
+        "CoolantStatus",
+        "uint8",
+        "CoolantControl",
+        "ClimateManager"
+      ],
+      [
+        "DefrostCommand",
+        "uint8",
+        "ClimateManager",
+        "DefrostManager"
+      ]
+    ],
+    "dependencies": [
+      [
+        "CabinSensorManager",
+        "PROVIDES_INTERFACE",
+        "ICabinTemperature",
+        "Publishes cabin temperature."
+      ],
+      [
+        "ClimateManager",
+        "REQUIRES_INTERFACE",
+        "ICabinTemperature",
+        "Consumes cabin temperature."
+      ],
+      [
+        "CabinSensorManager",
+        "PROVIDES_INTERFACE",
+        "IOutsideTemperature",
+        "Publishes outside temperature."
+      ],
+      [
+        "ClimateManager",
+        "REQUIRES_INTERFACE",
+        "IOutsideTemperature",
+        "Consumes outside temperature."
+      ],
+      [
+        "ClimateManager",
+        "PROVIDES_INTERFACE",
+        "ICompressorRequest",
+        "Publishes compressor speed."
+      ],
+      [
+        "CompressorControl",
+        "REQUIRES_INTERFACE",
+        "ICompressorRequest",
+        "Consumes compressor speed."
+      ],
+      [
+        "ClimateManager",
+        "PROVIDES_INTERFACE",
+        "IBlowerRequest",
+        "Publishes blower speed."
+      ],
+      [
+        "BlowerControl",
+        "REQUIRES_INTERFACE",
+        "IBlowerRequest",
+        "Consumes blower speed."
+      ],
+      [
+        "CoolantControl",
+        "PROVIDES_INTERFACE",
+        "ICoolantState",
+        "Publishes coolant status."
+      ],
+      [
+        "ClimateManager",
+        "REQUIRES_INTERFACE",
+        "ICoolantState",
+        "Consumes coolant status."
+      ],
+      [
+        "ClimateManager",
+        "PROVIDES_INTERFACE",
+        "IDefrostRequest",
+        "Publishes defrost command."
+      ],
+      [
+        "DefrostManager",
+        "REQUIRES_INTERFACE",
+        "IDefrostRequest",
+        "Consumes defrost command."
+      ]
+    ],
+    "flows": [
+      [
+        "F-001",
+        "Cabin Temperature Distribution",
+        "CabinSensorManager publishes CabinTemperature through ICabinTemperature. ClimateManager receives the signal through CabinTemperature_In and updates its internal state model."
+      ],
+      [
+        "F-002",
+        "Outside Temperature Distribution",
+        "CabinSensorManager publishes OutsideTemperature through IOutsideTemperature. ClimateManager receives the signal through OutsideTemperature_In and updates its internal state model."
+      ],
+      [
+        "F-003",
+        "Compressor Speed Distribution",
+        "ClimateManager publishes CompressorSpeed through ICompressorRequest. CompressorControl receives the signal through CompressorRequest_In and updates its internal state model."
+      ],
+      [
+        "F-004",
+        "Blower Speed Distribution",
+        "ClimateManager publishes BlowerSpeed through IBlowerRequest. BlowerControl receives the signal through BlowerRequest_In and updates its internal state model."
+      ],
+      [
+        "F-005",
+        "Coolant Status Distribution",
+        "CoolantControl publishes CoolantStatus through ICoolantState. ClimateManager receives the signal through CoolantState_In and updates its internal state model."
+      ],
+      [
+        "F-006",
+        "Defrost Command Distribution",
+        "ClimateManager publishes DefrostCommand through IDefrostRequest. DefrostManager receives the signal through DefrostRequest_In and updates its internal state model."
+      ]
+    ]
+  },
+  "seeded_defects": [
+    {
+      "kind": "wrong_direction",
+      "subject": "ICabinTemperature",
+      "expected_rules": [
+        "V003"
+      ]
+    },
+    {
+      "kind": "missing_dependency",
+      "subject": "IOutsideTemperature",
+      "expected_rules": [
+        "V005"
+      ]
+    },
+    {
+      "kind": "undefined_interface_on_port",
+      "subject": "ICompressorRequest",
+      "expected_rules": [
+        "V002"
+      ]
+    },
+    {
+      "kind": "signal_endpoint_mismatch",
+      "subject": "BlowerSpeed",
+      "expected_rules": [
+        "V007"
+      ]
+    }
+  ]
+}

@@ -8,6 +8,7 @@ from app.core.config import get_settings
 from app.core.logging import get_logger
 from app.core.schemas import Citation, QueryResponse
 from app.graph.builder import ArchitectureGraph
+from app.rag.answerability import load_answerability_model
 from app.rag.retriever import RetrievedChunk, tokenize
 
 logger = get_logger(__name__)
@@ -62,11 +63,30 @@ class GroundedAnswerer:
         self.version = version
 
     def answer(self, question: str, top_k: int = 8) -> QueryResponse:
-        hits = self.retriever.search(question, top_k=top_k)
+        model = load_answerability_model()
+        features = None
+        if model is not None and hasattr(self.retriever, "retrieve_with_features"):
+            hits, features = self.retriever.retrieve_with_features(question, top_k=top_k)
+        else:
+            hits = self.retriever.search(question, top_k=top_k)
         entities = find_entities(question, self.graph)
         facts: list[tuple[str, int | None]] = []
         for ent in entities:
             facts.extend(graph_facts(ent, self.graph))
+
+        probability = None
+        if model is not None and features is not None:
+            # A trained classifier decides whether the document can answer this question.
+            features["entity_match"] = float(len(entities))
+            answerable, probability = model.is_answerable(features)
+            if not answerable:
+                return QueryResponse(
+                    answer=NOT_FOUND, confidence=round(probability, 2), grounded=False,
+                    limitations=[
+                        f"Answerability model v{model.version}: estimated probability that the document "
+                        f"answers this question is {probability:.2f} (threshold {model.threshold:.2f})."
+                    ],
+                )
 
         if not hits and not facts:
             return QueryResponse(
@@ -88,8 +108,11 @@ class GroundedAnswerer:
             hits, facts, q_tokens
         )
 
-        top = hits[0].score if hits else 0.0
-        confidence = min(0.95, 0.35 + min(top, 12.0) / 24.0 + (0.15 if entities else 0.0))
+        if probability is not None:
+            confidence = min(0.99, probability)  # calibrated probability from the trained model
+        else:
+            top = hits[0].score if hits else 0.0
+            confidence = min(0.95, 0.35 + min(top, 12.0) / 24.0 + (0.15 if entities else 0.0))
         limitations = ["AI-assisted answer; verify against the cited pages before engineering use."]
         if not entities:
             limitations.append("No specific architecture entity was recognised in the question.")

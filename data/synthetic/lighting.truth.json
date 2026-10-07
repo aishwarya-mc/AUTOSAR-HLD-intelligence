@@ -1,0 +1,287 @@
+{
+  "key": "lighting",
+  "title": "Exterior Lighting System",
+  "split": "dev",
+  "component": [
+    "LightingManager",
+    "HeadlampControl",
+    "IndicatorControl",
+    "LightSensorManager",
+    "SwitchControl"
+  ],
+  "interface": [
+    "IAmbientLight",
+    "ISwitchPosition",
+    "IHeadlampCommand",
+    "IIndicatorCommand"
+  ],
+  "port": [
+    "AmbientLight_Out",
+    "AmbientLight_In",
+    "SwitchPosition_Out",
+    "SwitchPosition_In",
+    "HeadlampCommand_Out",
+    "HeadlampCommand_In",
+    "IndicatorCommand_Out",
+    "IndicatorCommand_In"
+  ],
+  "signal": [
+    "AmbientLightLevel",
+    "SwitchPosition",
+    "HeadlampCommand",
+    "IndicatorCommand"
+  ],
+  "dependency": [
+    "LightSensorManager PROVIDES_INTERFACE IAmbientLight",
+    "LightingManager REQUIRES_INTERFACE IAmbientLight",
+    "SwitchControl PROVIDES_INTERFACE ISwitchPosition",
+    "LightingManager REQUIRES_INTERFACE ISwitchPosition",
+    "LightingManager PROVIDES_INTERFACE IHeadlampCommand",
+    "HeadlampControl REQUIRES_INTERFACE IHeadlampCommand",
+    "LightingManager PROVIDES_INTERFACE IIndicatorCommand",
+    "IndicatorControl REQUIRES_INTERFACE IIndicatorCommand"
+  ],
+  "functional_flow": [
+    "F-001: Ambient Light Level Distribution",
+    "F-002: Switch Position Distribution",
+    "F-003: Headlamp Command Distribution",
+    "F-004: Indicator Command Distribution"
+  ],
+  "tables": {
+    "components": [
+      [
+        "LightingManager",
+        "Coordinator",
+        "Combines switch and sensor inputs into lamp commands."
+      ],
+      [
+        "HeadlampControl",
+        "Consumer",
+        "Drives low and high beam outputs."
+      ],
+      [
+        "IndicatorControl",
+        "Consumer",
+        "Drives turn indicators and hazard lights."
+      ],
+      [
+        "LightSensorManager",
+        "Provider",
+        "Provides ambient light level."
+      ],
+      [
+        "SwitchControl",
+        "Provider",
+        "Reads the column switches."
+      ]
+    ],
+    "interfaces": [
+      [
+        "IAmbientLight",
+        "LightSensorManager",
+        "LightingManager",
+        "AmbientLightLevel",
+        "uint16"
+      ],
+      [
+        "ISwitchPosition",
+        "SwitchControl",
+        "LightingManager",
+        "SwitchPosition",
+        "uint8"
+      ],
+      [
+        "IHeadlampCommand",
+        "LightingManager",
+        "HeadlampControl",
+        "HeadlampCommand",
+        "uint8"
+      ],
+      [
+        "IIndicatorCommand",
+        "LightingManager",
+        "IndicatorControl",
+        "IndicatorCommand",
+        "uint8"
+      ]
+    ],
+    "ports": [
+      [
+        "LightSensorManager",
+        "AmbientLight_Out",
+        "P-PORT",
+        "IAmbientLight"
+      ],
+      [
+        "LightingManager",
+        "AmbientLight_In",
+        "R-PORT",
+        "IAmbientLight"
+      ],
+      [
+        "SwitchControl",
+        "SwitchPosition_Out",
+        "P-PORT",
+        "ISwitchPosition"
+      ],
+      [
+        "LightingManager",
+        "SwitchPosition_In",
+        "R-PORT",
+        "ISwitchPosition"
+      ],
+      [
+        "LightingManager",
+        "HeadlampCommand_Out",
+        "P-PORT",
+        "IHeadlampCommand"
+      ],
+      [
+        "HeadlampControl",
+        "HeadlampCommand_In",
+        "R-PORT",
+        "IHeadlampCommand"
+      ],
+      [
+        "LightingManager",
+        "IndicatorCommand_Out",
+        "P-PORT",
+        "IIndicatorCommand"
+      ],
+      [
+        "IndicatorControl",
+        "IndicatorCommand_In",
+        "R-PORT",
+        "IIndicatorCommand"
+      ]
+    ],
+    "signals": [
+      [
+        "AmbientLightLevel",
+        "uint16",
+        "LightSensorManager",
+        "LightingManager"
+      ],
+      [
+        "SwitchPosition",
+        "uint8",
+        "SwitchControl",
+        "LightingManager"
+      ],
+      [
+        "HeadlampCommand",
+        "uint8",
+        "LightingManager",
+        "HeadlampControl"
+      ],
+      [
+        "IndicatorCommand",
+        "uint8",
+        "LightingManager",
+        "IndicatorControl"
+      ]
+    ],
+    "dependencies": [
+      [
+        "LightSensorManager",
+        "PROVIDES_INTERFACE",
+        "IAmbientLight",
+        "Publishes ambient light level."
+      ],
+      [
+        "LightingManager",
+        "REQUIRES_INTERFACE",
+        "IAmbientLight",
+        "Consumes ambient light level."
+      ],
+      [
+        "SwitchControl",
+        "PROVIDES_INTERFACE",
+        "ISwitchPosition",
+        "Publishes switch position."
+      ],
+      [
+        "LightingManager",
+        "REQUIRES_INTERFACE",
+        "ISwitchPosition",
+        "Consumes switch position."
+      ],
+      [
+        "LightingManager",
+        "PROVIDES_INTERFACE",
+        "IHeadlampCommand",
+        "Publishes headlamp command."
+      ],
+      [
+        "HeadlampControl",
+        "REQUIRES_INTERFACE",
+        "IHeadlampCommand",
+        "Consumes headlamp command."
+      ],
+      [
+        "LightingManager",
+        "PROVIDES_INTERFACE",
+        "IIndicatorCommand",
+        "Publishes indicator command."
+      ],
+      [
+        "IndicatorControl",
+        "REQUIRES_INTERFACE",
+        "IIndicatorCommand",
+        "Consumes indicator command."
+      ]
+    ],
+    "flows": [
+      [
+        "F-001",
+        "Ambient Light Level Distribution",
+        "LightSensorManager publishes AmbientLightLevel through IAmbientLight. LightingManager receives the signal through AmbientLight_In and updates its internal state model."
+      ],
+      [
+        "F-002",
+        "Switch Position Distribution",
+        "SwitchControl publishes SwitchPosition through ISwitchPosition. LightingManager receives the signal through SwitchPosition_In and updates its internal state model."
+      ],
+      [
+        "F-003",
+        "Headlamp Command Distribution",
+        "LightingManager publishes HeadlampCommand through IHeadlampCommand. HeadlampControl receives the signal through HeadlampCommand_In and updates its internal state model."
+      ],
+      [
+        "F-004",
+        "Indicator Command Distribution",
+        "LightingManager publishes IndicatorCommand through IIndicatorCommand. IndicatorControl receives the signal through IndicatorCommand_In and updates its internal state model."
+      ]
+    ]
+  },
+  "seeded_defects": [
+    {
+      "kind": "wrong_direction",
+      "subject": "IAmbientLight",
+      "expected_rules": [
+        "V003"
+      ]
+    },
+    {
+      "kind": "missing_dependency",
+      "subject": "ISwitchPosition",
+      "expected_rules": [
+        "V005"
+      ]
+    },
+    {
+      "kind": "undefined_interface_on_port",
+      "subject": "IHeadlampCommand",
+      "expected_rules": [
+        "V002"
+      ]
+    },
+    {
+      "kind": "signal_endpoint_mismatch",
+      "subject": "IndicatorCommand",
+      "expected_rules": [
+        "V007"
+      ]
+    }
+  ]
+}

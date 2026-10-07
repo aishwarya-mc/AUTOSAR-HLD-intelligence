@@ -1,0 +1,715 @@
+{
+  "summary": {
+    "component": {
+      "tp": 32,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "interface": {
+      "tp": 30,
+      "fp": 2,
+      "fn": 0,
+      "precision": 0.938,
+      "recall": 1.0
+    },
+    "port": {
+      "tp": 60,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "signal": {
+      "tp": 14,
+      "fp": 0,
+      "fn": 16,
+      "precision": 1.0,
+      "recall": 0.467
+    },
+    "dependency": {
+      "tp": 60,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "functional_flow": {
+      "tp": 0,
+      "fp": 30,
+      "fn": 30,
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "overall": {
+      "precision": 0.86,
+      "recall": 0.81,
+      "f1": 0.834
+    }
+  },
+  "per_document": {
+    "powertrain": {
+      "component": {
+        "tp": 5,
+        "fp": 0,
+        "fn": 0
+      },
+      "interface": {
+        "tp": 5,
+        "fp": 0,
+        "fn": 0
+      },
+      "port": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 0
+      },
+      "signal": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 3
+      },
+      "dependency": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 0
+      },
+      "functional_flow": {
+        "tp": 0,
+        "fp": 5,
+        "fn": 5
+      }
+    },
+    "adas": {
+      "component": {
+        "tp": 6,
+        "fp": 0,
+        "fn": 0
+      },
+      "interface": {
+        "tp": 6,
+        "fp": 0,
+        "fn": 0
+      },
+      "port": {
+        "tp": 12,
+        "fp": 0,
+        "fn": 0
+      },
+      "signal": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 4
+      },
+      "dependency": {
+        "tp": 12,
+        "fp": 0,
+        "fn": 0
+      },
+      "functional_flow": {
+        "tp": 0,
+        "fp": 6,
+        "fn": 6
+      }
+    },
+    "infotainment": {
+      "component": {
+        "tp": 5,
+        "fp": 0,
+        "fn": 0
+      },
+      "interface": {
+        "tp": 4,
+        "fp": 2,
+        "fn": 0
+      },
+      "port": {
+        "tp": 8,
+        "fp": 0,
+        "fn": 0
+      },
+      "signal": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 3
+      },
+      "dependency": {
+        "tp": 8,
+        "fp": 0,
+        "fn": 0
+      },
+      "functional_flow": {
+        "tp": 0,
+        "fp": 4,
+        "fn": 4
+      }
+    },
+    "battery": {
+      "component": {
+        "tp": 5,
+        "fp": 0,
+        "fn": 0
+      },
+      "interface": {
+        "tp": 5,
+        "fp": 0,
+        "fn": 0
+      },
+      "port": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 0
+      },
+      "signal": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 3
+      },
+      "dependency": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 0
+      },
+      "functional_flow": {
+        "tp": 0,
+        "fp": 5,
+        "fn": 5
+      }
+    },
+    "lighting": {
+      "component": {
+        "tp": 5,
+        "fp": 0,
+        "fn": 0
+      },
+      "interface": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0
+      },
+      "port": {
+        "tp": 8,
+        "fp": 0,
+        "fn": 0
+      },
+      "signal": {
+        "tp": 3,
+        "fp": 0,
+        "fn": 1
+      },
+      "dependency": {
+        "tp": 8,
+        "fp": 0,
+        "fn": 0
+      },
+      "functional_flow": {
+        "tp": 0,
+        "fp": 4,
+        "fn": 4
+      }
+    },
+    "thermal": {
+      "component": {
+        "tp": 6,
+        "fp": 0,
+        "fn": 0
+      },
+      "interface": {
+        "tp": 6,
+        "fp": 0,
+        "fn": 0
+      },
+      "port": {
+        "tp": 12,
+        "fp": 0,
+        "fn": 0
+      },
+      "signal": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 2
+      },
+      "dependency": {
+        "tp": 12,
+        "fp": 0,
+        "fn": 0
+      },
+      "functional_flow": {
+        "tp": 0,
+        "fp": 6,
+        "fn": 6
+      }
+    }
+  },
+  "errors": [
+    {
+      "doc": "powertrain",
+      "type": "signal",
+      "error": "missed",
+      "name": "FuelDemand"
+    },
+    {
+      "doc": "powertrain",
+      "type": "signal",
+      "error": "missed",
+      "name": "GearRequest"
+    },
+    {
+      "doc": "powertrain",
+      "type": "signal",
+      "error": "missed",
+      "name": "TorqueLimit"
+    },
+    {
+      "doc": "powertrain",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-001: Throttle Position Distribution"
+    },
+    {
+      "doc": "powertrain",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-002: Engine Speed Distribution"
+    },
+    {
+      "doc": "powertrain",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-003: Fuel Demand Distribution"
+    },
+    {
+      "doc": "powertrain",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-004: Gear Request Distribution"
+    },
+    {
+      "doc": "powertrain",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-005: Torque Limit Distribution"
+    },
+    {
+      "doc": "powertrain",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-001: Throttle Position Distribution ThrottleControl publishes ThrottlePosition through IThrottlePosition"
+    },
+    {
+      "doc": "powertrain",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-002: Engine Speed Distribution CrankSensorManager publishes EngineSpeed through IEngineSpeed"
+    },
+    {
+      "doc": "powertrain",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-003: Fuel Demand Distribution EngineControlManager publishes FuelDemand through IFuelDemand"
+    },
+    {
+      "doc": "powertrain",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-004: Gear Request Distribution EngineControlManager publishes GearRequest through IGearRequest"
+    },
+    {
+      "doc": "powertrain",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-005: Torque Limit Distribution TransmissionControl publishes TorqueLimit through ITorqueLimit"
+    },
+    {
+      "doc": "adas",
+      "type": "signal",
+      "error": "missed",
+      "name": "CollisionRisk"
+    },
+    {
+      "doc": "adas",
+      "type": "signal",
+      "error": "missed",
+      "name": "LaneOffset"
+    },
+    {
+      "doc": "adas",
+      "type": "signal",
+      "error": "missed",
+      "name": "ObjectDistance"
+    },
+    {
+      "doc": "adas",
+      "type": "signal",
+      "error": "missed",
+      "name": "WarningLevel"
+    },
+    {
+      "doc": "adas",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-001: Object Distance Distribution"
+    },
+    {
+      "doc": "adas",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-002: Lane Offset Distribution"
+    },
+    {
+      "doc": "adas",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-003: Collision Risk Distribution"
+    },
+    {
+      "doc": "adas",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-004: Steering Angle Command Distribution"
+    },
+    {
+      "doc": "adas",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-005: Warning Level Distribution"
+    },
+    {
+      "doc": "adas",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-006: Camera Status Distribution"
+    },
+    {
+      "doc": "adas",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-001: Object Distance Distribution RadarControl publishes ObjectDistance through IRadarObjects"
+    },
+    {
+      "doc": "adas",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-002: Lane Offset Distribution CameraControl publishes LaneOffset through ILaneDetection"
+    },
+    {
+      "doc": "adas",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-003: Collision Risk Distribution PerceptionManager publishes CollisionRisk through ICollisionRisk"
+    },
+    {
+      "doc": "adas",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-004: Steering Angle Command Distribution LaneKeepControl publishes SteeringAngleCommand through ISteeringCorrection"
+    },
+    {
+      "doc": "adas",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-005: Warning Level Distribution PerceptionManager publishes WarningLevel through IDriverWarning"
+    },
+    {
+      "doc": "adas",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-006: Camera Status Distribution CameraControl publishes CameraStatus through ICameraStatus"
+    },
+    {
+      "doc": "infotainment",
+      "type": "interface",
+      "error": "spurious",
+      "name": "INFOTAINMENT"
+    },
+    {
+      "doc": "infotainment",
+      "type": "interface",
+      "error": "spurious",
+      "name": "IVI"
+    },
+    {
+      "doc": "infotainment",
+      "type": "signal",
+      "error": "missed",
+      "name": "StreamState"
+    },
+    {
+      "doc": "infotainment",
+      "type": "signal",
+      "error": "missed",
+      "name": "TrackTitle"
+    },
+    {
+      "doc": "infotainment",
+      "type": "signal",
+      "error": "missed",
+      "name": "VolumeLevel"
+    },
+    {
+      "doc": "infotainment",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-001: Volume Level Distribution"
+    },
+    {
+      "doc": "infotainment",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-002: Stream State Distribution"
+    },
+    {
+      "doc": "infotainment",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-003: Phone Status Distribution"
+    },
+    {
+      "doc": "infotainment",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-004: Track Title Distribution"
+    },
+    {
+      "doc": "infotainment",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-001: Volume Level Distribution VolumeControl publishes VolumeLevel through IVolumeLevel"
+    },
+    {
+      "doc": "infotainment",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-002: Stream State Distribution MediaManager publishes StreamState through IAudioStream"
+    },
+    {
+      "doc": "infotainment",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-003: Phone Status Distribution BluetoothManager publishes PhoneStatus through IPhoneConnection"
+    },
+    {
+      "doc": "infotainment",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-004: Track Title Distribution MediaManager publishes TrackTitle through IDisplayContent"
+    },
+    {
+      "doc": "battery",
+      "type": "signal",
+      "error": "missed",
+      "name": "CellTemperature"
+    },
+    {
+      "doc": "battery",
+      "type": "signal",
+      "error": "missed",
+      "name": "CellVoltage"
+    },
+    {
+      "doc": "battery",
+      "type": "signal",
+      "error": "missed",
+      "name": "ChargeCurrentLimit"
+    },
+    {
+      "doc": "battery",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-001: Cell Voltage Distribution"
+    },
+    {
+      "doc": "battery",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-002: Cell Temperature Distribution"
+    },
+    {
+      "doc": "battery",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-003: Charge Current Limit Distribution"
+    },
+    {
+      "doc": "battery",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-004: Contactor Command Distribution"
+    },
+    {
+      "doc": "battery",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-005: Pack Status Distribution"
+    },
+    {
+      "doc": "battery",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-001: Cell Voltage Distribution CellMonitorControl publishes CellVoltage through ICellVoltage"
+    },
+    {
+      "doc": "battery",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-002: Cell Temperature Distribution CellMonitorControl publishes CellTemperature through ICellTemperature"
+    },
+    {
+      "doc": "battery",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-003: Charge Current Limit Distribution BatteryManager publishes ChargeCurrentLimit through IChargeLimit"
+    },
+    {
+      "doc": "battery",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-004: Contactor Command Distribution BatteryManager publishes ContactorCommand through IContactorCommand"
+    },
+    {
+      "doc": "battery",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-005: Pack Status Distribution BatteryManager publishes PackStatus through IPackStatus"
+    },
+    {
+      "doc": "lighting",
+      "type": "signal",
+      "error": "missed",
+      "name": "AmbientLightLevel"
+    },
+    {
+      "doc": "lighting",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-001: Ambient Light Level Distribution"
+    },
+    {
+      "doc": "lighting",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-002: Switch Position Distribution"
+    },
+    {
+      "doc": "lighting",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-003: Headlamp Command Distribution"
+    },
+    {
+      "doc": "lighting",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-004: Indicator Command Distribution"
+    },
+    {
+      "doc": "lighting",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-001: Ambient Light Level Distribution LightSensorManager publishes AmbientLightLevel through IAmbientLight"
+    },
+    {
+      "doc": "lighting",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-002: Switch Position Distribution SwitchControl publishes SwitchPosition through ISwitchPosition"
+    },
+    {
+      "doc": "lighting",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-003: Headlamp Command Distribution LightingManager publishes HeadlampCommand through IHeadlampCommand"
+    },
+    {
+      "doc": "lighting",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-004: Indicator Command Distribution LightingManager publishes IndicatorCommand through IIndicatorCommand"
+    },
+    {
+      "doc": "thermal",
+      "type": "signal",
+      "error": "missed",
+      "name": "CabinTemperature"
+    },
+    {
+      "doc": "thermal",
+      "type": "signal",
+      "error": "missed",
+      "name": "OutsideTemperature"
+    },
+    {
+      "doc": "thermal",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-001: Cabin Temperature Distribution"
+    },
+    {
+      "doc": "thermal",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-002: Outside Temperature Distribution"
+    },
+    {
+      "doc": "thermal",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-003: Compressor Speed Distribution"
+    },
+    {
+      "doc": "thermal",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-004: Blower Speed Distribution"
+    },
+    {
+      "doc": "thermal",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-005: Coolant Status Distribution"
+    },
+    {
+      "doc": "thermal",
+      "type": "functional_flow",
+      "error": "missed",
+      "name": "F-006: Defrost Command Distribution"
+    },
+    {
+      "doc": "thermal",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-001: Cabin Temperature Distribution CabinSensorManager publishes CabinTemperature through ICabinTemperature"
+    },
+    {
+      "doc": "thermal",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-002: Outside Temperature Distribution CabinSensorManager publishes OutsideTemperature through IOutsideTemperature"
+    },
+    {
+      "doc": "thermal",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-003: Compressor Speed Distribution ClimateManager publishes CompressorSpeed through ICompressorRequest"
+    },
+    {
+      "doc": "thermal",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-004: Blower Speed Distribution ClimateManager publishes BlowerSpeed through IBlowerRequest"
+    },
+    {
+      "doc": "thermal",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-005: Coolant Status Distribution CoolantControl publishes CoolantStatus through ICoolantState"
+    },
+    {
+      "doc": "thermal",
+      "type": "functional_flow",
+      "error": "spurious",
+      "name": "F-006: Defrost Command Distribution ClimateManager publishes DefrostCommand through IDefrostRequest"
+    }
+  ]
+}

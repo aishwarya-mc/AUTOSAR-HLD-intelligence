@@ -146,7 +146,7 @@ class ValidationEngine:
             for rel, comp in (("PROVIDES_INTERFACE", i.provider), ("REQUIRES_INTERFACE", i.consumer)):
                 if (comp, rel, i.name) not in declared:
                     self._add("V005", f"Missing dependency: {comp} {rel} {i.name}",
-                              f"The Interfaces table implies this dependency but section 7 does "
+                              "The Interfaces table implies this dependency but section 7 does "
                               "not trace it (violates 'dependencies must be traceable').",
                               FindingSeverity.warning, f"{comp}|{rel}|{i.name}", i.page,
                               "7. Dependencies", f"{i.name} | {i.provider} | {i.consumer}")

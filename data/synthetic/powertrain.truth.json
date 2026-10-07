@@ -1,0 +1,336 @@
+{
+  "key": "powertrain",
+  "title": "Powertrain Control System",
+  "split": "dev",
+  "component": [
+    "EngineControlManager",
+    "ThrottleControl",
+    "FuelInjectionControl",
+    "TransmissionControl",
+    "CrankSensorManager"
+  ],
+  "interface": [
+    "IThrottlePosition",
+    "IEngineSpeed",
+    "IFuelDemand",
+    "IGearRequest",
+    "ITorqueLimit"
+  ],
+  "port": [
+    "ThrottlePosition_Out",
+    "ThrottlePosition_In",
+    "EngineSpeed_Out",
+    "EngineSpeed_In",
+    "FuelDemand_Out",
+    "FuelDemand_In",
+    "GearRequest_Out",
+    "GearRequest_In",
+    "TorqueLimit_Out",
+    "TorqueLimit_In"
+  ],
+  "signal": [
+    "ThrottlePosition",
+    "EngineSpeed",
+    "FuelDemand",
+    "GearRequest",
+    "TorqueLimit"
+  ],
+  "dependency": [
+    "ThrottleControl PROVIDES_INTERFACE IThrottlePosition",
+    "EngineControlManager REQUIRES_INTERFACE IThrottlePosition",
+    "CrankSensorManager PROVIDES_INTERFACE IEngineSpeed",
+    "EngineControlManager REQUIRES_INTERFACE IEngineSpeed",
+    "EngineControlManager PROVIDES_INTERFACE IFuelDemand",
+    "FuelInjectionControl REQUIRES_INTERFACE IFuelDemand",
+    "EngineControlManager PROVIDES_INTERFACE IGearRequest",
+    "TransmissionControl REQUIRES_INTERFACE IGearRequest",
+    "TransmissionControl PROVIDES_INTERFACE ITorqueLimit",
+    "EngineControlManager REQUIRES_INTERFACE ITorqueLimit"
+  ],
+  "functional_flow": [
+    "F-001: Throttle Position Distribution",
+    "F-002: Engine Speed Distribution",
+    "F-003: Fuel Demand Distribution",
+    "F-004: Gear Request Distribution",
+    "F-005: Torque Limit Distribution"
+  ],
+  "tables": {
+    "components": [
+      [
+        "EngineControlManager",
+        "Coordinator",
+        "Coordinates torque requests and engine state."
+      ],
+      [
+        "ThrottleControl",
+        "Provider",
+        "Measures throttle position and reports it."
+      ],
+      [
+        "FuelInjectionControl",
+        "Consumer",
+        "Meters fuel based on load and speed."
+      ],
+      [
+        "TransmissionControl",
+        "Consumer",
+        "Selects gears using engine speed and torque."
+      ],
+      [
+        "CrankSensorManager",
+        "Provider",
+        "Derives engine speed from the crank sensor."
+      ]
+    ],
+    "interfaces": [
+      [
+        "IThrottlePosition",
+        "ThrottleControl",
+        "EngineControlManager",
+        "ThrottlePosition",
+        "uint8"
+      ],
+      [
+        "IEngineSpeed",
+        "CrankSensorManager",
+        "EngineControlManager",
+        "EngineSpeed",
+        "uint16"
+      ],
+      [
+        "IFuelDemand",
+        "EngineControlManager",
+        "FuelInjectionControl",
+        "FuelDemand",
+        "uint16"
+      ],
+      [
+        "IGearRequest",
+        "EngineControlManager",
+        "TransmissionControl",
+        "GearRequest",
+        "uint8"
+      ],
+      [
+        "ITorqueLimit",
+        "TransmissionControl",
+        "EngineControlManager",
+        "TorqueLimit",
+        "uint16"
+      ]
+    ],
+    "ports": [
+      [
+        "ThrottleControl",
+        "ThrottlePosition_Out",
+        "P-PORT",
+        "IThrottlePosition"
+      ],
+      [
+        "EngineControlManager",
+        "ThrottlePosition_In",
+        "R-PORT",
+        "IThrottlePosition"
+      ],
+      [
+        "CrankSensorManager",
+        "EngineSpeed_Out",
+        "P-PORT",
+        "IEngineSpeed"
+      ],
+      [
+        "EngineControlManager",
+        "EngineSpeed_In",
+        "R-PORT",
+        "IEngineSpeed"
+      ],
+      [
+        "EngineControlManager",
+        "FuelDemand_Out",
+        "P-PORT",
+        "IFuelDemand"
+      ],
+      [
+        "FuelInjectionControl",
+        "FuelDemand_In",
+        "R-PORT",
+        "IFuelDemand"
+      ],
+      [
+        "EngineControlManager",
+        "GearRequest_Out",
+        "P-PORT",
+        "IGearRequest"
+      ],
+      [
+        "TransmissionControl",
+        "GearRequest_In",
+        "R-PORT",
+        "IGearRequest"
+      ],
+      [
+        "TransmissionControl",
+        "TorqueLimit_Out",
+        "P-PORT",
+        "ITorqueLimit"
+      ],
+      [
+        "EngineControlManager",
+        "TorqueLimit_In",
+        "R-PORT",
+        "ITorqueLimit"
+      ]
+    ],
+    "signals": [
+      [
+        "ThrottlePosition",
+        "uint8",
+        "ThrottleControl",
+        "EngineControlManager"
+      ],
+      [
+        "EngineSpeed",
+        "uint16",
+        "CrankSensorManager",
+        "EngineControlManager"
+      ],
+      [
+        "FuelDemand",
+        "uint16",
+        "EngineControlManager",
+        "FuelInjectionControl"
+      ],
+      [
+        "GearRequest",
+        "uint8",
+        "EngineControlManager",
+        "TransmissionControl"
+      ],
+      [
+        "TorqueLimit",
+        "uint16",
+        "TransmissionControl",
+        "EngineControlManager"
+      ]
+    ],
+    "dependencies": [
+      [
+        "ThrottleControl",
+        "PROVIDES_INTERFACE",
+        "IThrottlePosition",
+        "Publishes throttle position."
+      ],
+      [
+        "EngineControlManager",
+        "REQUIRES_INTERFACE",
+        "IThrottlePosition",
+        "Consumes throttle position."
+      ],
+      [
+        "CrankSensorManager",
+        "PROVIDES_INTERFACE",
+        "IEngineSpeed",
+        "Publishes engine speed."
+      ],
+      [
+        "EngineControlManager",
+        "REQUIRES_INTERFACE",
+        "IEngineSpeed",
+        "Consumes engine speed."
+      ],
+      [
+        "EngineControlManager",
+        "PROVIDES_INTERFACE",
+        "IFuelDemand",
+        "Publishes fuel demand."
+      ],
+      [
+        "FuelInjectionControl",
+        "REQUIRES_INTERFACE",
+        "IFuelDemand",
+        "Consumes fuel demand."
+      ],
+      [
+        "EngineControlManager",
+        "PROVIDES_INTERFACE",
+        "IGearRequest",
+        "Publishes gear request."
+      ],
+      [
+        "TransmissionControl",
+        "REQUIRES_INTERFACE",
+        "IGearRequest",
+        "Consumes gear request."
+      ],
+      [
+        "TransmissionControl",
+        "PROVIDES_INTERFACE",
+        "ITorqueLimit",
+        "Publishes torque limit."
+      ],
+      [
+        "EngineControlManager",
+        "REQUIRES_INTERFACE",
+        "ITorqueLimit",
+        "Consumes torque limit."
+      ]
+    ],
+    "flows": [
+      [
+        "F-001",
+        "Throttle Position Distribution",
+        "ThrottleControl publishes ThrottlePosition through IThrottlePosition. EngineControlManager receives the signal through ThrottlePosition_In and updates its internal state model."
+      ],
+      [
+        "F-002",
+        "Engine Speed Distribution",
+        "CrankSensorManager publishes EngineSpeed through IEngineSpeed. EngineControlManager receives the signal through EngineSpeed_In and updates its internal state model."
+      ],
+      [
+        "F-003",
+        "Fuel Demand Distribution",
+        "EngineControlManager publishes FuelDemand through IFuelDemand. FuelInjectionControl receives the signal through FuelDemand_In and updates its internal state model."
+      ],
+      [
+        "F-004",
+        "Gear Request Distribution",
+        "EngineControlManager publishes GearRequest through IGearRequest. TransmissionControl receives the signal through GearRequest_In and updates its internal state model."
+      ],
+      [
+        "F-005",
+        "Torque Limit Distribution",
+        "TransmissionControl publishes TorqueLimit through ITorqueLimit. EngineControlManager receives the signal through TorqueLimit_In and updates its internal state model."
+      ]
+    ]
+  },
+  "seeded_defects": [
+    {
+      "kind": "wrong_direction",
+      "subject": "IThrottlePosition",
+      "expected_rules": [
+        "V003"
+      ]
+    },
+    {
+      "kind": "missing_dependency",
+      "subject": "IEngineSpeed",
+      "expected_rules": [
+        "V005"
+      ]
+    },
+    {
+      "kind": "undefined_interface_on_port",
+      "subject": "IFuelDemand",
+      "expected_rules": [
+        "V002"
+      ]
+    },
+    {
+      "kind": "signal_endpoint_mismatch",
+      "subject": "GearRequest",
+      "expected_rules": [
+        "V007"
+      ]
+    }
+  ]
+}

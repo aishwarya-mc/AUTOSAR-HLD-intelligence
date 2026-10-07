@@ -4,7 +4,6 @@ from pathlib import Path
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -25,6 +24,7 @@ class Settings(BaseSettings):
     # LLM
     llm_provider: str = Field(default="local", alias="LLM_PROVIDER")
     llm_model: str = Field(default="", alias="LLM_MODEL")
+    answerability_model_dir: str = Field(default="", alias="ANSWERABILITY_MODEL_DIR")
     auth_enabled: bool = Field(default=False, alias="AUTH_ENABLED")
     api_keys: str = Field(default="", alias="API_KEYS")
     anthropic_api_key: str = Field(default="", alias="ANTHROPIC_API_KEY")
@@ -57,6 +57,10 @@ class Settings(BaseSettings):
 
     # Upload
     max_upload_mb: int = Field(default=100, alias="MAX_UPLOAD_MB", ge=1)
+
+    @property
+    def project_root_data(self) -> Path:
+        return PROJECT_ROOT / "data"
 
     @property
     def data_dir(self) -> Path:

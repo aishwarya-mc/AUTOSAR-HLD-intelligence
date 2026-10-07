@@ -1,5 +1,10 @@
 from app.extraction.structured_model import (
-    ComponentDef, InterfaceDef, PortDef, SignalDef, StructuredModel, _ident,
+    ComponentDef,
+    InterfaceDef,
+    PortDef,
+    SignalDef,
+    StructuredModel,
+    _ident,
 )
 from app.graph.builder import build_graph
 from app.rag.retriever import BM25Retriever, tokenize

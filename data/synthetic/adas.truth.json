@@ -1,0 +1,391 @@
+{
+  "key": "adas",
+  "title": "Driver Assistance Perception System",
+  "split": "dev",
+  "component": [
+    "PerceptionManager",
+    "RadarControl",
+    "CameraControl",
+    "BrakeAssistControl",
+    "LaneKeepControl",
+    "WarningManager"
+  ],
+  "interface": [
+    "IRadarObjects",
+    "ILaneDetection",
+    "ICollisionRisk",
+    "ISteeringCorrection",
+    "IDriverWarning",
+    "ICameraStatus"
+  ],
+  "port": [
+    "RadarObjects_Out",
+    "RadarObjects_In",
+    "LaneDetection_Out",
+    "LaneDetection_In",
+    "CollisionRisk_Out",
+    "CollisionRisk_In",
+    "SteeringCorrection_Out",
+    "SteeringCorrection_In",
+    "DriverWarning_Out",
+    "DriverWarning_In",
+    "CameraStatus_Out",
+    "CameraStatus_In"
+  ],
+  "signal": [
+    "ObjectDistance",
+    "LaneOffset",
+    "CollisionRisk",
+    "SteeringAngleCommand",
+    "WarningLevel",
+    "CameraStatus"
+  ],
+  "dependency": [
+    "RadarControl PROVIDES_INTERFACE IRadarObjects",
+    "PerceptionManager REQUIRES_INTERFACE IRadarObjects",
+    "CameraControl PROVIDES_INTERFACE ILaneDetection",
+    "PerceptionManager REQUIRES_INTERFACE ILaneDetection",
+    "PerceptionManager PROVIDES_INTERFACE ICollisionRisk",
+    "BrakeAssistControl REQUIRES_INTERFACE ICollisionRisk",
+    "LaneKeepControl PROVIDES_INTERFACE ISteeringCorrection",
+    "PerceptionManager REQUIRES_INTERFACE ISteeringCorrection",
+    "PerceptionManager PROVIDES_INTERFACE IDriverWarning",
+    "WarningManager REQUIRES_INTERFACE IDriverWarning",
+    "CameraControl PROVIDES_INTERFACE ICameraStatus",
+    "WarningManager REQUIRES_INTERFACE ICameraStatus"
+  ],
+  "functional_flow": [
+    "F-001: Object Distance Distribution",
+    "F-002: Lane Offset Distribution",
+    "F-003: Collision Risk Distribution",
+    "F-004: Steering Angle Command Distribution",
+    "F-005: Warning Level Distribution",
+    "F-006: Camera Status Distribution"
+  ],
+  "tables": {
+    "components": [
+      [
+        "PerceptionManager",
+        "Coordinator",
+        "Fuses object lists and publishes the environment model."
+      ],
+      [
+        "RadarControl",
+        "Provider",
+        "Delivers radar object distance and velocity."
+      ],
+      [
+        "CameraControl",
+        "Provider",
+        "Delivers lane and object detections."
+      ],
+      [
+        "BrakeAssistControl",
+        "Consumer",
+        "Requests braking when a collision is predicted."
+      ],
+      [
+        "LaneKeepControl",
+        "Consumer",
+        "Computes steering corrections."
+      ],
+      [
+        "WarningManager",
+        "Consumer",
+        "Raises driver warnings."
+      ]
+    ],
+    "interfaces": [
+      [
+        "IRadarObjects",
+        "RadarControl",
+        "PerceptionManager",
+        "ObjectDistance",
+        "uint16"
+      ],
+      [
+        "ILaneDetection",
+        "CameraControl",
+        "PerceptionManager",
+        "LaneOffset",
+        "int16"
+      ],
+      [
+        "ICollisionRisk",
+        "PerceptionManager",
+        "BrakeAssistControl",
+        "CollisionRisk",
+        "uint8"
+      ],
+      [
+        "ISteeringCorrection",
+        "LaneKeepControl",
+        "PerceptionManager",
+        "SteeringAngleCommand",
+        "int16"
+      ],
+      [
+        "IDriverWarning",
+        "PerceptionManager",
+        "WarningManager",
+        "WarningLevel",
+        "uint8"
+      ],
+      [
+        "ICameraStatus",
+        "CameraControl",
+        "WarningManager",
+        "CameraStatus",
+        "boolean"
+      ]
+    ],
+    "ports": [
+      [
+        "RadarControl",
+        "RadarObjects_Out",
+        "P-PORT",
+        "IRadarObjects"
+      ],
+      [
+        "PerceptionManager",
+        "RadarObjects_In",
+        "R-PORT",
+        "IRadarObjects"
+      ],
+      [
+        "CameraControl",
+        "LaneDetection_Out",
+        "P-PORT",
+        "ILaneDetection"
+      ],
+      [
+        "PerceptionManager",
+        "LaneDetection_In",
+        "R-PORT",
+        "ILaneDetection"
+      ],
+      [
+        "PerceptionManager",
+        "CollisionRisk_Out",
+        "P-PORT",
+        "ICollisionRisk"
+      ],
+      [
+        "BrakeAssistControl",
+        "CollisionRisk_In",
+        "R-PORT",
+        "ICollisionRisk"
+      ],
+      [
+        "LaneKeepControl",
+        "SteeringCorrection_Out",
+        "P-PORT",
+        "ISteeringCorrection"
+      ],
+      [
+        "PerceptionManager",
+        "SteeringCorrection_In",
+        "R-PORT",
+        "ISteeringCorrection"
+      ],
+      [
+        "PerceptionManager",
+        "DriverWarning_Out",
+        "P-PORT",
+        "IDriverWarning"
+      ],
+      [
+        "WarningManager",
+        "DriverWarning_In",
+        "R-PORT",
+        "IDriverWarning"
+      ],
+      [
+        "CameraControl",
+        "CameraStatus_Out",
+        "P-PORT",
+        "ICameraStatus"
+      ],
+      [
+        "WarningManager",
+        "CameraStatus_In",
+        "R-PORT",
+        "ICameraStatus"
+      ]
+    ],
+    "signals": [
+      [
+        "ObjectDistance",
+        "uint16",
+        "RadarControl",
+        "PerceptionManager"
+      ],
+      [
+        "LaneOffset",
+        "int16",
+        "CameraControl",
+        "PerceptionManager"
+      ],
+      [
+        "CollisionRisk",
+        "uint8",
+        "PerceptionManager",
+        "BrakeAssistControl"
+      ],
+      [
+        "SteeringAngleCommand",
+        "int16",
+        "LaneKeepControl",
+        "PerceptionManager"
+      ],
+      [
+        "WarningLevel",
+        "uint8",
+        "PerceptionManager",
+        "WarningManager"
+      ],
+      [
+        "CameraStatus",
+        "boolean",
+        "CameraControl",
+        "WarningManager"
+      ]
+    ],
+    "dependencies": [
+      [
+        "RadarControl",
+        "PROVIDES_INTERFACE",
+        "IRadarObjects",
+        "Publishes object distance."
+      ],
+      [
+        "PerceptionManager",
+        "REQUIRES_INTERFACE",
+        "IRadarObjects",
+        "Consumes object distance."
+      ],
+      [
+        "CameraControl",
+        "PROVIDES_INTERFACE",
+        "ILaneDetection",
+        "Publishes lane offset."
+      ],
+      [
+        "PerceptionManager",
+        "REQUIRES_INTERFACE",
+        "ILaneDetection",
+        "Consumes lane offset."
+      ],
+      [
+        "PerceptionManager",
+        "PROVIDES_INTERFACE",
+        "ICollisionRisk",
+        "Publishes collision risk."
+      ],
+      [
+        "BrakeAssistControl",
+        "REQUIRES_INTERFACE",
+        "ICollisionRisk",
+        "Consumes collision risk."
+      ],
+      [
+        "LaneKeepControl",
+        "PROVIDES_INTERFACE",
+        "ISteeringCorrection",
+        "Publishes steering angle command."
+      ],
+      [
+        "PerceptionManager",
+        "REQUIRES_INTERFACE",
+        "ISteeringCorrection",
+        "Consumes steering angle command."
+      ],
+      [
+        "PerceptionManager",
+        "PROVIDES_INTERFACE",
+        "IDriverWarning",
+        "Publishes warning level."
+      ],
+      [
+        "WarningManager",
+        "REQUIRES_INTERFACE",
+        "IDriverWarning",
+        "Consumes warning level."
+      ],
+      [
+        "CameraControl",
+        "PROVIDES_INTERFACE",
+        "ICameraStatus",
+        "Publishes camera status."
+      ],
+      [
+        "WarningManager",
+        "REQUIRES_INTERFACE",
+        "ICameraStatus",
+        "Consumes camera status."
+      ]
+    ],
+    "flows": [
+      [
+        "F-001",
+        "Object Distance Distribution",
+        "RadarControl publishes ObjectDistance through IRadarObjects. PerceptionManager receives the signal through RadarObjects_In and updates its internal state model."
+      ],
+      [
+        "F-002",
+        "Lane Offset Distribution",
+        "CameraControl publishes LaneOffset through ILaneDetection. PerceptionManager receives the signal through LaneDetection_In and updates its internal state model."
+      ],
+      [
+        "F-003",
+        "Collision Risk Distribution",
+        "PerceptionManager publishes CollisionRisk through ICollisionRisk. BrakeAssistControl receives the signal through CollisionRisk_In and updates its internal state model."
+      ],
+      [
+        "F-004",
+        "Steering Angle Command Distribution",
+        "LaneKeepControl publishes SteeringAngleCommand through ISteeringCorrection. PerceptionManager receives the signal through SteeringCorrection_In and updates its internal state model."
+      ],
+      [
+        "F-005",
+        "Warning Level Distribution",
+        "PerceptionManager publishes WarningLevel through IDriverWarning. WarningManager receives the signal through DriverWarning_In and updates its internal state model."
+      ],
+      [
+        "F-006",
+        "Camera Status Distribution",
+        "CameraControl publishes CameraStatus through ICameraStatus. WarningManager receives the signal through CameraStatus_In and updates its internal state model."
+      ]
+    ]
+  },
+  "seeded_defects": [
+    {
+      "kind": "wrong_direction",
+      "subject": "IRadarObjects",
+      "expected_rules": [
+        "V003"
+      ]
+    },
+    {
+      "kind": "missing_dependency",
+      "subject": "ILaneDetection",
+      "expected_rules": [
+        "V005"
+      ]
+    },
+    {
+      "kind": "undefined_interface_on_port",
+      "subject": "ICollisionRisk",
+      "expected_rules": [
+        "V002"
+      ]
+    },
+    {
+      "kind": "signal_endpoint_mismatch",
+      "subject": "SteeringAngleCommand",
+      "expected_rules": [
+        "V007"
+      ]
+    }
+  ]
+}

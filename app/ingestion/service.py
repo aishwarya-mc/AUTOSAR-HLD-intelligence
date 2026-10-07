@@ -8,7 +8,7 @@ from app.core.logging import get_logger
 from app.ingestion.document_validator import validate_document
 from app.ingestion.metadata import build_document_metadata
 from app.ingestion.ocr import OCRProcessor
-from app.ingestion.pdf_parser import PDFParser, ParsedDocument
+from app.ingestion.pdf_parser import ParsedDocument, PDFParser
 
 logger = get_logger(__name__)
 
@@ -52,15 +52,15 @@ class DocumentIngestionService:
 
             ocr_pages = {}
 
-            if parsed.low_text_pages:
+            if parsed.scanned_pages:
                 logger.info(
-                    "Detected %d low-text pages. Running OCR fallback.",
-                    len(parsed.low_text_pages),
+                    "Detected %d scanned pages. Running OCR fallback.",
+                    len(parsed.scanned_pages),
                 )
 
                 ocr_pages = self.ocr_processor.process_low_text_pages(
                     path,
-                    parsed.low_text_pages,
+                    parsed.scanned_pages,
                 )
 
                 for page in parsed.pages:

@@ -108,3 +108,9 @@ def test_exports(client, v1):
     assert csv_text.splitlines()[0].startswith("entity_type,name") and "DoorControl" in csv_text
     assert client.get(f"/export/{v1}/relationships.csv").status_code == 200
     assert client.get(f"/export/{v1}/bogus.csv").status_code == 400
+
+
+def test_version_endpoint(client):
+    data = client.get("/version").json()
+    assert data["answerability_model"]["version"] and data["embedding_model"]
+    assert "git_sha" in data and data["auth_enabled"] is False

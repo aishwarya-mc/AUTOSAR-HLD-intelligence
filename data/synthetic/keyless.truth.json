@@ -1,0 +1,287 @@
+{
+  "key": "keyless",
+  "title": "Passive Keyless Entry",
+  "split": "test",
+  "component": [
+    "AccessManager",
+    "KeyFobControl",
+    "DoorLockControl",
+    "ImmobilizerControl",
+    "ProximitySensorManager"
+  ],
+  "interface": [
+    "IKeyMessage",
+    "IKeyDistance",
+    "ILockRequest",
+    "IStartRelease"
+  ],
+  "port": [
+    "KeyMessage_Out",
+    "KeyMessage_In",
+    "KeyDistance_Out",
+    "KeyDistance_In",
+    "LockRequest_Out",
+    "LockRequest_In",
+    "StartRelease_Out",
+    "StartRelease_In"
+  ],
+  "signal": [
+    "KeyChallenge",
+    "KeyDistance",
+    "LockState",
+    "StartAuthorisation"
+  ],
+  "dependency": [
+    "KeyFobControl PROVIDES_INTERFACE IKeyMessage",
+    "AccessManager REQUIRES_INTERFACE IKeyMessage",
+    "ProximitySensorManager PROVIDES_INTERFACE IKeyDistance",
+    "AccessManager REQUIRES_INTERFACE IKeyDistance",
+    "AccessManager PROVIDES_INTERFACE ILockRequest",
+    "DoorLockControl REQUIRES_INTERFACE ILockRequest",
+    "AccessManager PROVIDES_INTERFACE IStartRelease",
+    "ImmobilizerControl REQUIRES_INTERFACE IStartRelease"
+  ],
+  "functional_flow": [
+    "F-001: Key Challenge Distribution",
+    "F-002: Key Distance Distribution",
+    "F-003: Lock State Distribution",
+    "F-004: Start Authorisation Distribution"
+  ],
+  "tables": {
+    "components": [
+      [
+        "AccessManager",
+        "Coordinator",
+        "Authorises entry and engine start."
+      ],
+      [
+        "KeyFobControl",
+        "Provider",
+        "Receives and decodes key fob messages."
+      ],
+      [
+        "DoorLockControl",
+        "Consumer",
+        "Locks and unlocks the doors."
+      ],
+      [
+        "ImmobilizerControl",
+        "Consumer",
+        "Releases engine start authorisation."
+      ],
+      [
+        "ProximitySensorManager",
+        "Provider",
+        "Estimates the key distance."
+      ]
+    ],
+    "interfaces": [
+      [
+        "IKeyMessage",
+        "KeyFobControl",
+        "AccessManager",
+        "KeyChallenge",
+        "uint32"
+      ],
+      [
+        "IKeyDistance",
+        "ProximitySensorManager",
+        "AccessManager",
+        "KeyDistance",
+        "uint8"
+      ],
+      [
+        "ILockRequest",
+        "AccessManager",
+        "DoorLockControl",
+        "LockState",
+        "boolean"
+      ],
+      [
+        "IStartRelease",
+        "AccessManager",
+        "ImmobilizerControl",
+        "StartAuthorisation",
+        "boolean"
+      ]
+    ],
+    "ports": [
+      [
+        "KeyFobControl",
+        "KeyMessage_Out",
+        "P-PORT",
+        "IKeyMessage"
+      ],
+      [
+        "AccessManager",
+        "KeyMessage_In",
+        "R-PORT",
+        "IKeyMessage"
+      ],
+      [
+        "ProximitySensorManager",
+        "KeyDistance_Out",
+        "P-PORT",
+        "IKeyDistance"
+      ],
+      [
+        "AccessManager",
+        "KeyDistance_In",
+        "R-PORT",
+        "IKeyDistance"
+      ],
+      [
+        "AccessManager",
+        "LockRequest_Out",
+        "P-PORT",
+        "ILockRequest"
+      ],
+      [
+        "DoorLockControl",
+        "LockRequest_In",
+        "R-PORT",
+        "ILockRequest"
+      ],
+      [
+        "AccessManager",
+        "StartRelease_Out",
+        "P-PORT",
+        "IStartRelease"
+      ],
+      [
+        "ImmobilizerControl",
+        "StartRelease_In",
+        "R-PORT",
+        "IStartRelease"
+      ]
+    ],
+    "signals": [
+      [
+        "KeyChallenge",
+        "uint32",
+        "KeyFobControl",
+        "AccessManager"
+      ],
+      [
+        "KeyDistance",
+        "uint8",
+        "ProximitySensorManager",
+        "AccessManager"
+      ],
+      [
+        "LockState",
+        "boolean",
+        "AccessManager",
+        "DoorLockControl"
+      ],
+      [
+        "StartAuthorisation",
+        "boolean",
+        "AccessManager",
+        "ImmobilizerControl"
+      ]
+    ],
+    "dependencies": [
+      [
+        "KeyFobControl",
+        "PROVIDES_INTERFACE",
+        "IKeyMessage",
+        "Publishes key challenge."
+      ],
+      [
+        "AccessManager",
+        "REQUIRES_INTERFACE",
+        "IKeyMessage",
+        "Consumes key challenge."
+      ],
+      [
+        "ProximitySensorManager",
+        "PROVIDES_INTERFACE",
+        "IKeyDistance",
+        "Publishes key distance."
+      ],
+      [
+        "AccessManager",
+        "REQUIRES_INTERFACE",
+        "IKeyDistance",
+        "Consumes key distance."
+      ],
+      [
+        "AccessManager",
+        "PROVIDES_INTERFACE",
+        "ILockRequest",
+        "Publishes lock state."
+      ],
+      [
+        "DoorLockControl",
+        "REQUIRES_INTERFACE",
+        "ILockRequest",
+        "Consumes lock state."
+      ],
+      [
+        "AccessManager",
+        "PROVIDES_INTERFACE",
+        "IStartRelease",
+        "Publishes start authorisation."
+      ],
+      [
+        "ImmobilizerControl",
+        "REQUIRES_INTERFACE",
+        "IStartRelease",
+        "Consumes start authorisation."
+      ]
+    ],
+    "flows": [
+      [
+        "F-001",
+        "Key Challenge Distribution",
+        "KeyFobControl publishes KeyChallenge through IKeyMessage. AccessManager receives the signal through KeyMessage_In and updates its internal state model."
+      ],
+      [
+        "F-002",
+        "Key Distance Distribution",
+        "ProximitySensorManager publishes KeyDistance through IKeyDistance. AccessManager receives the signal through KeyDistance_In and updates its internal state model."
+      ],
+      [
+        "F-003",
+        "Lock State Distribution",
+        "AccessManager publishes LockState through ILockRequest. DoorLockControl receives the signal through LockRequest_In and updates its internal state model."
+      ],
+      [
+        "F-004",
+        "Start Authorisation Distribution",
+        "AccessManager publishes StartAuthorisation through IStartRelease. ImmobilizerControl receives the signal through StartRelease_In and updates its internal state model."
+      ]
+    ]
+  },
+  "seeded_defects": [
+    {
+      "kind": "wrong_direction",
+      "subject": "IKeyMessage",
+      "expected_rules": [
+        "V003"
+      ]
+    },
+    {
+      "kind": "missing_dependency",
+      "subject": "IKeyDistance",
+      "expected_rules": [
+        "V005"
+      ]
+    },
+    {
+      "kind": "undefined_interface_on_port",
+      "subject": "ILockRequest",
+      "expected_rules": [
+        "V002"
+      ]
+    },
+    {
+      "kind": "signal_endpoint_mismatch",
+      "subject": "StartAuthorisation",
+      "expected_rules": [
+        "V007"
+      ]
+    }
+  ]
+}

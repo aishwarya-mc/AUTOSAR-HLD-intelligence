@@ -68,14 +68,14 @@
   },
   "qa": {
     "total_questions": 32,
-    "accuracy_overall": 1.0,
-    "answer_accuracy_answerable": 1.0,
-    "citation_page_hit_rate": 1.0,
+    "accuracy_overall": 0.906,
+    "answer_accuracy_answerable": 0.885,
+    "citation_page_hit_rate": 0.885,
     "groundedness_valid_citations": 1.0,
     "refusal_accuracy_unanswerable": 1.0,
     "by_category": {
       "lookup": "15/15",
-      "paraphrase": "5/5",
+      "paraphrase": "2/5",
       "flow": "3/3",
       "datatype": "2/2",
       "integration": "1/1",
@@ -89,7 +89,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.69,
+        "confidence": 0.96,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -102,17 +102,17 @@
           {
             "id": "C2",
             "page": 2,
-            "section": "5. Ports"
-          },
-          {
-            "id": "C3",
-            "page": 2,
             "section": "4. Interfaces"
           },
           {
-            "id": "C4",
+            "id": "C3",
             "page": 1,
             "section": "2. Software Architecture"
+          },
+          {
+            "id": "C4",
+            "page": 2,
+            "section": "5. Ports"
           },
           {
             "id": "C5",
@@ -120,7 +120,7 @@
             "section": "3. Software Components"
           }
         ],
-        "answer": "Architecture facts:\n- DoorControl provides interface IDoorStatus (page 2)\n- BodyControlManager requires interface IDoorStatus (page 2)\n- IDoorStatus carries signal DoorOpenStatus (page 2)\n- DoorStatus_Out typed by IDoorStatus (page 2)\n- DoorStatus_In typed by IDoorStatus (page 2)\n\nRelevant document text:\n- [7. Dependencies, page 3] Dependencies Source Relationship Target Reason DoorControl PROVIDES_INTERFACE IDoorStatus Publishes door state. BodyControlManager REQUIRES_INTERFACE IDoorStatus Consumes door state.\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed"
+        "answer": "Architecture facts:\n- DoorControl provides interface IDoorStatus (page 2)\n- BodyControlManager requires interface IDoorStatus (page 2)\n- IDoorStatus carries signal DoorOpenStatus (page 2)\n- DoorStatus_Out typed by IDoorStatus (page 2)\n- DoorStatus_In typed by IDoorStatus (page 2)\n\nRelevant document text:\n- [7. Dependencies, page 3] Dependencies Source Relationship Target Reason DoorControl PROVIDES_INTERFACE IDoorStatus Publishes door state. BodyControlManager REQUIRES_INTERFACE IDoorStatus Consumes door state.\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed\n- [2. Software Architecture, page 1] Software Architecture The primary software components are BodyControlManager, DoorControl, WindowControl, and VehicleStateManager. BodyControlManager acts as the central coordination component."
       },
       {
         "id": "Q02",
@@ -129,7 +129,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.73,
+        "confidence": 0.94,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -141,13 +141,13 @@
           },
           {
             "id": "C2",
-            "page": 2,
-            "section": "5. Ports"
+            "page": 1,
+            "section": "2. Software Architecture"
           },
           {
             "id": "C3",
-            "page": 1,
-            "section": "2. Software Architecture"
+            "page": 2,
+            "section": "5. Ports"
           },
           {
             "id": "C4",
@@ -156,11 +156,11 @@
           },
           {
             "id": "C5",
-            "page": 1,
-            "section": "1. System Overview"
+            "page": 3,
+            "section": "8. Functional Flows"
           }
         ],
-        "answer": "Architecture facts:\n- VehicleStateManager provides interface IVehicleState (page 2)\n- WindowControl requires interface IVehicleState (page 2)\n- IVehicleState carries signal VehicleSpeed (page 2)\n- VehicleState_Out typed by IVehicleState (page 2)\n- VehicleState_In typed by IVehicleState (page 2)\n\nRelevant document text:\n- [7. Dependencies, page 3] WindowControl REQUIRES_INTERFACE IVehicleState Uses vehicle speed.\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState\n- [2. Software Architecture, page 1] Software Architecture The primary software components are BodyControlManager, DoorControl, WindowControl, and VehicleStateManager. BodyControlManager acts as the central coordination component."
+        "answer": "Architecture facts:\n- VehicleStateManager provides interface IVehicleState (page 2)\n- WindowControl requires interface IVehicleState (page 2)\n- IVehicleState carries signal VehicleSpeed (page 2)\n- VehicleState_Out typed by IVehicleState (page 2)\n- VehicleState_In typed by IVehicleState (page 2)\n\nRelevant document text:\n- [7. Dependencies, page 3] WindowControl REQUIRES_INTERFACE IVehicleState Uses vehicle speed.\n- [2. Software Architecture, page 1] Software Architecture The primary software components are BodyControlManager, DoorControl, WindowControl, and VehicleStateManager. BodyControlManager acts as the central coordination component.\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState"
       },
       {
         "id": "Q03",
@@ -169,25 +169,25 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.65,
+        "confidence": 0.95,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
         "citations": [
           {
             "id": "C1",
-            "page": 3,
-            "section": "8. Functional Flows"
-          },
-          {
-            "id": "C2",
             "page": 2,
             "section": "6. Signals"
           },
           {
+            "id": "C2",
+            "page": 3,
+            "section": "8. Functional Flows"
+          },
+          {
             "id": "C3",
             "page": 2,
-            "section": "5. Ports"
+            "section": "4. Interfaces"
           },
           {
             "id": "C4",
@@ -197,10 +197,10 @@
           {
             "id": "C5",
             "page": 2,
-            "section": "4. Interfaces"
+            "section": "5. Ports"
           }
         ],
-        "answer": "Architecture facts:\n- BodyControlManager provides interface IWindowCommand (page 2)\n- WindowControl requires interface IWindowCommand (page 2)\n- IWindowCommand carries signal WindowPosition (page 2)\n- WindowCommand_Out typed by IWindowCommand (page 2)\n- WindowCommand_In typed by IWindowCommand (page 2)\n\nRelevant document text:\n- [8. Functional Flows, page 3] Flow F-002: Window Command BodyControlManager evaluates the requested window operation and publishes WindowPosition through IWindowCommand. WindowControl receives the command through WindowCommand_In.\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState"
+        "answer": "Architecture facts:\n- BodyControlManager provides interface IWindowCommand (page 2)\n- WindowControl requires interface IWindowCommand (page 2)\n- IWindowCommand carries signal WindowPosition (page 2)\n- WindowCommand_Out typed by IWindowCommand (page 2)\n- WindowCommand_In typed by IWindowCommand (page 2)\n\nRelevant document text:\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [8. Functional Flows, page 3] Flow F-002: Window Command BodyControlManager evaluates the requested window operation and publishes WindowPosition through IWindowCommand. WindowControl receives the command through WindowCommand_In.\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed"
       },
       {
         "id": "Q04",
@@ -209,38 +209,38 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.65,
+        "confidence": 0.95,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
         "citations": [
           {
             "id": "C1",
-            "page": 2,
-            "section": "5. Ports"
-          },
-          {
-            "id": "C2",
-            "page": 1,
-            "section": "2. Software Architecture"
-          },
-          {
-            "id": "C3",
             "page": 1,
             "section": "3. Software Components"
           },
           {
-            "id": "C4",
+            "id": "C2",
             "page": 2,
-            "section": "6. Signals"
+            "section": "5. Ports"
+          },
+          {
+            "id": "C3",
+            "page": 3,
+            "section": "8. Functional Flows"
+          },
+          {
+            "id": "C4",
+            "page": 1,
+            "section": "2. Software Architecture"
           },
           {
             "id": "C5",
             "page": 3,
-            "section": "8. Functional Flows"
+            "section": "7. Dependencies"
           }
         ],
-        "answer": "Architecture facts:\n- BodyControlManager requires interface IDoorStatus (page 2)\n- BodyControlManager provides interface IWindowCommand (page 2)\n- BodyControlManager has port DoorStatus_In (page 2)\n- BodyControlManager has port WindowCommand_Out (page 2)\n- DoorOpenStatus received by BodyControlManager (page 2)\n- BodyControlManager sends signal WindowPosition (page 2)\n\nRelevant document text:\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState\n- [2. Software Architecture, page 1] Software Architecture The primary software components are BodyControlManager, DoorControl, WindowControl, and VehicleStateManager. BodyControlManager acts as the central coordination component.\n- [3. Software Components, page 1] Software Components Component Role Primary Responsibility BodyControlManager Coordinator Coordinates body-control functions and consumes door and vehicle state information. DoorControl Provider Monitors door status and publishes door-state information."
+        "answer": "Architecture facts:\n- BodyControlManager requires interface IDoorStatus (page 2)\n- BodyControlManager provides interface IWindowCommand (page 2)\n- BodyControlManager has port DoorStatus_In (page 2)\n- BodyControlManager has port WindowCommand_Out (page 2)\n- DoorOpenStatus received by BodyControlManager (page 2)\n- BodyControlManager sends signal WindowPosition (page 2)\n\nRelevant document text:\n- [3. Software Components, page 1] Software Components Component Role Primary Responsibility BodyControlManager Coordinator Coordinates body-control functions and consumes door and vehicle state information. DoorControl Provider Monitors door status and publishes door-state information.\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState\n- [8. Functional Flows, page 3] BodyControlManager receives the signal through DoorStatus_In and updates the body-state model. Flow F-002: Window Command BodyControlManager evaluates the requested window operation and publishes WindowPosition through IWindowCommand."
       },
       {
         "id": "Q05",
@@ -249,7 +249,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.53,
+        "confidence": 0.86,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -289,7 +289,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.65,
+        "confidence": 0.95,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -302,25 +302,25 @@
           {
             "id": "C2",
             "page": 2,
-            "section": "5. Ports"
+            "section": "4. Interfaces"
           },
           {
             "id": "C3",
             "page": 2,
-            "section": "4. Interfaces"
+            "section": "5. Ports"
           },
           {
             "id": "C4",
             "page": 1,
-            "section": "3. Software Components"
+            "section": "2. Software Architecture"
           },
           {
             "id": "C5",
             "page": 1,
-            "section": "2. Software Architecture"
+            "section": "3. Software Components"
           }
         ],
-        "answer": "Architecture facts:\n- DoorControl provides interface IDoorStatus (page 2)\n- BodyControlManager requires interface IDoorStatus (page 2)\n- IDoorStatus carries signal DoorOpenStatus (page 2)\n- DoorStatus_Out typed by IDoorStatus (page 2)\n- DoorStatus_In typed by IDoorStatus (page 2)\n\nRelevant document text:\n- [7. Dependencies, page 3] BodyControlManager REQUIRES_INTERFACE IDoorStatus Consumes door state. BodyControlManager PROVIDES_INTERFACE IWindowCommand Generates window commands.\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed"
+        "answer": "Architecture facts:\n- DoorControl provides interface IDoorStatus (page 2)\n- BodyControlManager requires interface IDoorStatus (page 2)\n- IDoorStatus carries signal DoorOpenStatus (page 2)\n- DoorStatus_Out typed by IDoorStatus (page 2)\n- DoorStatus_In typed by IDoorStatus (page 2)\n\nRelevant document text:\n- [7. Dependencies, page 3] BodyControlManager REQUIRES_INTERFACE IDoorStatus Consumes door state. BodyControlManager PROVIDES_INTERFACE IWindowCommand Generates window commands.\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState"
       },
       {
         "id": "Q07",
@@ -329,7 +329,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.76,
+        "confidence": 0.96,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -346,21 +346,21 @@
           },
           {
             "id": "C3",
-            "page": 2,
-            "section": "5. Ports"
-          },
-          {
-            "id": "C4",
             "page": 1,
             "section": "3. Software Components"
           },
           {
-            "id": "C5",
+            "id": "C4",
             "page": 3,
             "section": "8. Functional Flows"
+          },
+          {
+            "id": "C5",
+            "page": 2,
+            "section": "5. Ports"
           }
         ],
-        "answer": "Architecture facts:\n- VehicleStateManager provides interface IVehicleState (page 2)\n- WindowControl requires interface IVehicleState (page 2)\n- IVehicleState carries signal VehicleSpeed (page 2)\n- VehicleState_Out typed by IVehicleState (page 2)\n- VehicleState_In typed by IVehicleState (page 2)\n- WindowControl has port VehicleState_In (page 2)\n\nRelevant document text:\n- [7. Dependencies, page 3] VehicleStateManager PROVIDES_INTERFACE IVehicleState Provides vehicle state. WindowControl REQUIRES_INTERFACE IVehicleState Uses vehicle speed.\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState"
+        "answer": "Architecture facts:\n- VehicleStateManager provides interface IVehicleState (page 2)\n- WindowControl requires interface IVehicleState (page 2)\n- IVehicleState carries signal VehicleSpeed (page 2)\n- VehicleState_Out typed by IVehicleState (page 2)\n- VehicleState_In typed by IVehicleState (page 2)\n- WindowControl has port VehicleState_In (page 2)\n\nRelevant document text:\n- [7. Dependencies, page 3] VehicleStateManager PROVIDES_INTERFACE IVehicleState Provides vehicle state. WindowControl REQUIRES_INTERFACE IVehicleState Uses vehicle speed.\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed\n- [3. Software Components, page 1] VehicleStateManager Provider Provides vehicle-level state information including vehicle speed."
       },
       {
         "id": "Q08",
@@ -369,7 +369,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.66,
+        "confidence": 0.8,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -377,12 +377,12 @@
           {
             "id": "C1",
             "page": 2,
-            "section": "6. Signals"
+            "section": "4. Interfaces"
           },
           {
             "id": "C2",
             "page": 2,
-            "section": "4. Interfaces"
+            "section": "6. Signals"
           },
           {
             "id": "C3",
@@ -391,16 +391,16 @@
           },
           {
             "id": "C4",
-            "page": 3,
-            "section": "7. Dependencies"
+            "page": 1,
+            "section": "2. Software Architecture"
           },
           {
             "id": "C5",
-            "page": 1,
-            "section": "2. Software Architecture"
+            "page": 3,
+            "section": "7. Dependencies"
           }
         ],
-        "answer": "Architecture facts:\n- IVehicleState carries signal VehicleSpeed (page 2)\n- VehicleStateManager sends signal VehicleSpeed (page 2)\n- VehicleSpeed received by WindowControl (page 2)\n\nRelevant document text:\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed\n- [8. Functional Flows, page 3] Flow F-003: Vehicle State Dependency VehicleStateManager publishes VehicleSpeed through IVehicleState. WindowControl consumes VehicleSpeed to apply safety-related window-operation constraints."
+        "answer": "Architecture facts:\n- IVehicleState carries signal VehicleSpeed (page 2)\n- VehicleStateManager sends signal VehicleSpeed (page 2)\n- VehicleSpeed received by WindowControl (page 2)\n\nRelevant document text:\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [8. Functional Flows, page 3] Flow F-003: Vehicle State Dependency VehicleStateManager publishes VehicleSpeed through IVehicleState. WindowControl consumes VehicleSpeed to apply safety-related window-operation constraints."
       },
       {
         "id": "Q09",
@@ -409,7 +409,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.74,
+        "confidence": 0.96,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -426,13 +426,13 @@
           },
           {
             "id": "C3",
-            "page": 2,
-            "section": "4. Interfaces"
+            "page": 3,
+            "section": "7. Dependencies"
           },
           {
             "id": "C4",
-            "page": 3,
-            "section": "7. Dependencies"
+            "page": 2,
+            "section": "4. Interfaces"
           },
           {
             "id": "C5",
@@ -440,7 +440,7 @@
             "section": "5. Ports"
           }
         ],
-        "answer": "Architecture facts:\n- IWindowCommand carries signal WindowPosition (page 2)\n- BodyControlManager sends signal WindowPosition (page 2)\n- WindowPosition received by WindowControl (page 2)\n\nRelevant document text:\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [8. Functional Flows, page 3] Flow F-002: Window Command BodyControlManager evaluates the requested window operation and publishes WindowPosition through IWindowCommand. WindowControl receives the command through WindowCommand_In.\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed"
+        "answer": "Architecture facts:\n- IWindowCommand carries signal WindowPosition (page 2)\n- BodyControlManager sends signal WindowPosition (page 2)\n- WindowPosition received by WindowControl (page 2)\n\nRelevant document text:\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [8. Functional Flows, page 3] Flow F-002: Window Command BodyControlManager evaluates the requested window operation and publishes WindowPosition through IWindowCommand. WindowControl receives the command through WindowCommand_In.\n- [7. Dependencies, page 3] Dependencies Source Relationship Target Reason DoorControl PROVIDES_INTERFACE IDoorStatus Publishes door state. BodyControlManager REQUIRES_INTERFACE IDoorStatus Consumes door state."
       },
       {
         "id": "Q10",
@@ -449,38 +449,38 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.72,
+        "confidence": 0.93,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
         "citations": [
           {
             "id": "C1",
-            "page": 3,
-            "section": "8. Functional Flows"
-          },
-          {
-            "id": "C2",
             "page": 2,
             "section": "6. Signals"
           },
           {
-            "id": "C3",
-            "page": 2,
-            "section": "4. Interfaces"
+            "id": "C2",
+            "page": 3,
+            "section": "8. Functional Flows"
           },
           {
-            "id": "C4",
+            "id": "C3",
             "page": 2,
             "section": "5. Ports"
           },
           {
+            "id": "C4",
+            "page": 2,
+            "section": "4. Interfaces"
+          },
+          {
             "id": "C5",
-            "page": 1,
-            "section": "3. Software Components"
+            "page": 3,
+            "section": "7. Dependencies"
           }
         ],
-        "answer": "Architecture facts:\n- IDoorStatus carries signal DoorOpenStatus (page 2)\n- DoorControl sends signal DoorOpenStatus (page 2)\n- DoorOpenStatus received by BodyControlManager (page 2)\n\nRelevant document text:\n- [8. Functional Flows, page 3] Functional Flows Flow F-001: Door State Monitoring DoorControl reads the physical door state and publishes DoorOpenStatus through IDoorStatus. BodyControlManager receives the signal through DoorStatus_In and updates the body-state model.\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed"
+        "answer": "Architecture facts:\n- IDoorStatus carries signal DoorOpenStatus (page 2)\n- DoorControl sends signal DoorOpenStatus (page 2)\n- DoorOpenStatus received by BodyControlManager (page 2)\n\nRelevant document text:\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [8. Functional Flows, page 3] Functional Flows Flow F-001: Door State Monitoring DoorControl reads the physical door state and publishes DoorOpenStatus through IDoorStatus. BodyControlManager receives the signal through DoorStatus_In and updates the body-state model.\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState"
       },
       {
         "id": "Q11",
@@ -489,7 +489,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.63,
+        "confidence": 0.96,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -506,21 +506,21 @@
           },
           {
             "id": "C3",
-            "page": 2,
-            "section": "4. Interfaces"
-          },
-          {
-            "id": "C4",
             "page": 1,
             "section": "2. Software Architecture"
           },
           {
-            "id": "C5",
+            "id": "C4",
             "page": 2,
             "section": "6. Signals"
+          },
+          {
+            "id": "C5",
+            "page": 2,
+            "section": "4. Interfaces"
           }
         ],
-        "answer": "Architecture facts:\n- WindowControl requires interface IWindowCommand (page 2)\n- WindowControl requires interface IVehicleState (page 2)\n- WindowControl has port WindowCommand_In (page 2)\n- WindowControl has port VehicleState_In (page 2)\n- WindowPosition received by WindowControl (page 2)\n- VehicleSpeed received by WindowControl (page 2)\n\nRelevant document text:\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState\n- [7. Dependencies, page 3] WindowControl REQUIRES_INTERFACE IWindowCommand Consumes window commands. VehicleStateManager PROVIDES_INTERFACE IVehicleState Provides vehicle state.\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed"
+        "answer": "Architecture facts:\n- WindowControl requires interface IWindowCommand (page 2)\n- WindowControl requires interface IVehicleState (page 2)\n- WindowControl has port WindowCommand_In (page 2)\n- WindowControl has port VehicleState_In (page 2)\n- WindowPosition received by WindowControl (page 2)\n- VehicleSpeed received by WindowControl (page 2)\n\nRelevant document text:\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState\n- [7. Dependencies, page 3] WindowControl REQUIRES_INTERFACE IWindowCommand Consumes window commands. VehicleStateManager PROVIDES_INTERFACE IVehicleState Provides vehicle state.\n- [2. Software Architecture, page 1] Software Architecture The primary software components are BodyControlManager, DoorControl, WindowControl, and VehicleStateManager. BodyControlManager acts as the central coordination component."
       },
       {
         "id": "Q12",
@@ -529,7 +529,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.73,
+        "confidence": 0.94,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -546,21 +546,21 @@
           },
           {
             "id": "C3",
-            "page": 1,
-            "section": "2. Software Architecture"
+            "page": 3,
+            "section": "7. Dependencies"
           },
           {
             "id": "C4",
-            "page": 2,
-            "section": "4. Interfaces"
+            "page": 3,
+            "section": "8. Functional Flows"
           },
           {
             "id": "C5",
-            "page": 3,
-            "section": "7. Dependencies"
+            "page": 1,
+            "section": "2. Software Architecture"
           }
         ],
-        "answer": "Architecture facts:\n- DoorControl provides interface IDoorStatus (page 2)\n- DoorControl has port DoorStatus_Out (page 2)\n- DoorControl sends signal DoorOpenStatus (page 2)\n\nRelevant document text:\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [2. Software Architecture, page 1] Software Architecture The primary software components are BodyControlManager, DoorControl, WindowControl, and VehicleStateManager. BodyControlManager acts as the central coordination component."
+        "answer": "Architecture facts:\n- DoorControl provides interface IDoorStatus (page 2)\n- DoorControl has port DoorStatus_Out (page 2)\n- DoorControl sends signal DoorOpenStatus (page 2)\n\nRelevant document text:\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [7. Dependencies, page 3] Dependencies Source Relationship Target Reason DoorControl PROVIDES_INTERFACE IDoorStatus Publishes door state. BodyControlManager REQUIRES_INTERFACE IDoorStatus Consumes door state."
       },
       {
         "id": "Q13",
@@ -581,26 +581,26 @@
           },
           {
             "id": "C2",
-            "page": 3,
-            "section": "7. Dependencies"
-          },
-          {
-            "id": "C3",
             "page": 2,
             "section": "4. Interfaces"
           },
           {
+            "id": "C3",
+            "page": 3,
+            "section": "7. Dependencies"
+          },
+          {
             "id": "C4",
-            "page": 1,
-            "section": "3. Software Components"
+            "page": 2,
+            "section": "6. Signals"
           },
           {
             "id": "C5",
-            "page": 1,
-            "section": "2. Software Architecture"
+            "page": 3,
+            "section": "8. Functional Flows"
           }
         ],
-        "answer": "Architecture facts:\n- VehicleStateManager has port VehicleState_Out (page 2)\n- VehicleState_Out typed by IVehicleState (page 2)\n\nRelevant document text:\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState\n- [7. Dependencies, page 3] VehicleStateManager PROVIDES_INTERFACE IVehicleState Provides vehicle state. WindowControl REQUIRES_INTERFACE IVehicleState Uses vehicle speed.\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed"
+        "answer": "Architecture facts:\n- VehicleStateManager has port VehicleState_Out (page 2)\n- VehicleState_Out typed by IVehicleState (page 2)\n\nRelevant document text:\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed\n- [7. Dependencies, page 3] VehicleStateManager PROVIDES_INTERFACE IVehicleState Provides vehicle state. WindowControl REQUIRES_INTERFACE IVehicleState Uses vehicle speed."
       },
       {
         "id": "Q14",
@@ -609,20 +609,20 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.65,
+        "confidence": 0.94,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
         "citations": [
           {
             "id": "C1",
-            "page": 2,
-            "section": "4. Interfaces"
+            "page": 3,
+            "section": "7. Dependencies"
           },
           {
             "id": "C2",
-            "page": 3,
-            "section": "7. Dependencies"
+            "page": 2,
+            "section": "4. Interfaces"
           },
           {
             "id": "C3",
@@ -631,8 +631,8 @@
           },
           {
             "id": "C4",
-            "page": 2,
-            "section": "6. Signals"
+            "page": 1,
+            "section": "3. Software Components"
           },
           {
             "id": "C5",
@@ -640,7 +640,7 @@
             "section": "5. Ports"
           }
         ],
-        "answer": "Architecture facts:\n- WindowControl requires interface IWindowCommand (page 2)\n- WindowControl requires interface IVehicleState (page 2)\n- WindowControl has port WindowCommand_In (page 2)\n- WindowControl has port VehicleState_In (page 2)\n- WindowPosition received by WindowControl (page 2)\n- VehicleSpeed received by WindowControl (page 2)\n\nRelevant document text:\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed\n- [7. Dependencies, page 3] WindowControl REQUIRES_INTERFACE IWindowCommand Consumes window commands. VehicleStateManager PROVIDES_INTERFACE IVehicleState Provides vehicle state.\n- [2. Software Architecture, page 1] Software Architecture The primary software components are BodyControlManager, DoorControl, WindowControl, and VehicleStateManager. BodyControlManager acts as the central coordination component."
+        "answer": "Architecture facts:\n- WindowControl requires interface IWindowCommand (page 2)\n- WindowControl requires interface IVehicleState (page 2)\n- WindowControl has port WindowCommand_In (page 2)\n- WindowControl has port VehicleState_In (page 2)\n- WindowPosition received by WindowControl (page 2)\n- VehicleSpeed received by WindowControl (page 2)\n\nRelevant document text:\n- [7. Dependencies, page 3] WindowControl REQUIRES_INTERFACE IWindowCommand Consumes window commands. VehicleStateManager PROVIDES_INTERFACE IVehicleState Provides vehicle state.\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed\n- [2. Software Architecture, page 1] Software Architecture The primary software components are BodyControlManager, DoorControl, WindowControl, and VehicleStateManager. BodyControlManager acts as the central coordination component."
       },
       {
         "id": "Q15",
@@ -649,15 +649,15 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.66,
+        "confidence": 0.82,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
         "citations": [
           {
             "id": "C1",
-            "page": 3,
-            "section": "7. Dependencies"
+            "page": 1,
+            "section": "3. Software Components"
           },
           {
             "id": "C2",
@@ -666,61 +666,35 @@
           },
           {
             "id": "C3",
-            "page": 1,
-            "section": "3. Software Components"
+            "page": 3,
+            "section": "7. Dependencies"
           },
           {
             "id": "C4",
             "page": 1,
-            "section": "2. Software Architecture"
+            "section": "1. System Overview"
           },
           {
             "id": "C5",
-            "page": 2,
-            "section": "5. Ports"
+            "page": 1,
+            "section": "2. Software Architecture"
           }
         ],
-        "answer": "Architecture facts:\n- BodyControlManager requires interface IDoorStatus (page 2)\n- BodyControlManager provides interface IWindowCommand (page 2)\n- BodyControlManager has port DoorStatus_In (page 2)\n- BodyControlManager has port WindowCommand_Out (page 2)\n- DoorOpenStatus received by BodyControlManager (page 2)\n- BodyControlManager sends signal WindowPosition (page 2)\n\nRelevant document text:\n- [7. Dependencies, page 3] BodyControlManager REQUIRES_INTERFACE IDoorStatus Consumes door state. BodyControlManager PROVIDES_INTERFACE IWindowCommand Generates window commands.\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed\n- [3. Software Components, page 1] Software Components Component Role Primary Responsibility BodyControlManager Coordinator Coordinates body-control functions and consumes door and vehicle state information. DoorControl Provider Monitors door status and publishes door-state information."
+        "answer": "Architecture facts:\n- BodyControlManager requires interface IDoorStatus (page 2)\n- BodyControlManager provides interface IWindowCommand (page 2)\n- BodyControlManager has port DoorStatus_In (page 2)\n- BodyControlManager has port WindowCommand_Out (page 2)\n- DoorOpenStatus received by BodyControlManager (page 2)\n- BodyControlManager sends signal WindowPosition (page 2)\n\nRelevant document text:\n- [3. Software Components, page 1] Software Components Component Role Primary Responsibility BodyControlManager Coordinator Coordinates body-control functions and consumes door and vehicle state information. DoorControl Provider Monitors door status and publishes door-state information.\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed\n- [7. Dependencies, page 3] BodyControlManager REQUIRES_INTERFACE IDoorStatus Consumes door state. BodyControlManager PROVIDES_INTERFACE IWindowCommand Generates window commands."
       },
       {
         "id": "Q16",
         "category": "paraphrase",
         "question": "Who is responsible for publishing door state information?",
-        "passed": true,
+        "passed": false,
         "answerable": true,
-        "grounded": true,
-        "confidence": 0.49,
-        "answer_contains_expected": true,
-        "citation_on_expected_page": true,
-        "retrieval_hit": true,
-        "citations": [
-          {
-            "id": "C1",
-            "page": 1,
-            "section": "3. Software Components"
-          },
-          {
-            "id": "C2",
-            "page": 3,
-            "section": "7. Dependencies"
-          },
-          {
-            "id": "C3",
-            "page": 1,
-            "section": "2. Software Architecture"
-          },
-          {
-            "id": "C4",
-            "page": 3,
-            "section": "8. Functional Flows"
-          },
-          {
-            "id": "C5",
-            "page": 1,
-            "section": "1. System Overview"
-          }
-        ],
-        "answer": "Relevant document text:\n- [3. Software Components, page 1] Software Components Component Role Primary Responsibility BodyControlManager Coordinator Coordinates body-control functions and consumes door and vehicle state information. DoorControl Provider Monitors door status and publishes door-state information.\n- [7. Dependencies, page 3] Dependencies Source Relationship Target Reason DoorControl PROVIDES_INTERFACE IDoorStatus Publishes door state. BodyControlManager REQUIRES_INTERFACE IDoorStatus Consumes door state.\n- [2. Software Architecture, page 1] DoorControl publishes door state information. WindowControl consumes window commands."
+        "grounded": false,
+        "confidence": 0.06,
+        "answer_contains_expected": false,
+        "citation_on_expected_page": false,
+        "retrieval_hit": false,
+        "citations": [],
+        "answer": "The requested information was not found in the document."
       },
       {
         "id": "Q17",
@@ -729,7 +703,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.58,
+        "confidence": 0.37,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -746,21 +720,21 @@
           },
           {
             "id": "C3",
+            "page": 3,
+            "section": "7. Dependencies"
+          },
+          {
+            "id": "C4",
             "page": 1,
             "section": "2. Software Architecture"
           },
           {
-            "id": "C4",
-            "page": 2,
-            "section": "4. Interfaces"
-          },
-          {
             "id": "C5",
-            "page": 3,
-            "section": "7. Dependencies"
+            "page": 2,
+            "section": "5. Ports"
           }
         ],
-        "answer": "Architecture facts:\n- IVehicleState carries signal VehicleSpeed (page 2)\n- VehicleStateManager sends signal VehicleSpeed (page 2)\n- VehicleSpeed received by WindowControl (page 2)\n\nRelevant document text:\n- [8. Functional Flows, page 3] WindowControl consumes VehicleSpeed to apply safety-related window-operation constraints.\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [2. Software Architecture, page 1] Software Architecture The primary software components are BodyControlManager, DoorControl, WindowControl, and VehicleStateManager. BodyControlManager acts as the central coordination component."
+        "answer": "Architecture facts:\n- IVehicleState carries signal VehicleSpeed (page 2)\n- VehicleStateManager sends signal VehicleSpeed (page 2)\n- VehicleSpeed received by WindowControl (page 2)\n\nRelevant document text:\n- [8. Functional Flows, page 3] WindowControl consumes VehicleSpeed to apply safety-related window-operation constraints.\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [7. Dependencies, page 3] WindowControl REQUIRES_INTERFACE IVehicleState Uses vehicle speed."
       },
       {
         "id": "Q18",
@@ -769,7 +743,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.47,
+        "confidence": 0.36,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -786,13 +760,13 @@
           },
           {
             "id": "C3",
-            "page": 1,
-            "section": "1. System Overview"
+            "page": 2,
+            "section": "5. Ports"
           },
           {
             "id": "C4",
-            "page": 2,
-            "section": "5. Ports"
+            "page": 1,
+            "section": "1. System Overview"
           },
           {
             "id": "C5",
@@ -800,87 +774,35 @@
             "section": "Unclassified"
           }
         ],
-        "answer": "Relevant document text:\n- [2. Software Architecture, page 1] BodyControlManager acts as the central coordination component. DoorControl publishes door state information.\n- [3. Software Components, page 1] Software Components Component Role Primary Responsibility BodyControlManager Coordinator Coordinates body-control functions and consumes door and vehicle state information. DoorControl Provider Monitors door status and publishes door-state information.\n- [1. System Overview, page 1] The architecture follows an AUTOSAR software-component model in which software components communicate through typed interfaces and ports."
+        "answer": "Relevant document text:\n- [2. Software Architecture, page 1] BodyControlManager acts as the central coordination component. DoorControl publishes door state information.\n- [3. Software Components, page 1] Software Components Component Role Primary Responsibility BodyControlManager Coordinator Coordinates body-control functions and consumes door and vehicle state information. DoorControl Provider Monitors door status and publishes door-state information.\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState"
       },
       {
         "id": "Q19",
         "category": "paraphrase",
         "question": "How does the window controller learn the requested window position?",
-        "passed": true,
+        "passed": false,
         "answerable": true,
-        "grounded": true,
-        "confidence": 0.62,
-        "answer_contains_expected": true,
-        "citation_on_expected_page": true,
-        "retrieval_hit": true,
-        "citations": [
-          {
-            "id": "C1",
-            "page": 3,
-            "section": "8. Functional Flows"
-          },
-          {
-            "id": "C2",
-            "page": 2,
-            "section": "4. Interfaces"
-          },
-          {
-            "id": "C3",
-            "page": 3,
-            "section": "7. Dependencies"
-          },
-          {
-            "id": "C4",
-            "page": 1,
-            "section": "3. Software Components"
-          },
-          {
-            "id": "C5",
-            "page": 2,
-            "section": "6. Signals"
-          }
-        ],
-        "answer": "Architecture facts:\n- WindowControl requires interface IWindowCommand (page 2)\n- WindowControl requires interface IVehicleState (page 2)\n- WindowControl has port WindowCommand_In (page 2)\n- WindowControl has port VehicleState_In (page 2)\n- WindowPosition received by WindowControl (page 2)\n- VehicleSpeed received by WindowControl (page 2)\n- IWindowCommand carries signal WindowPosition (page 2)\n- BodyControlManager sends signal WindowPosition (page 2)\n\nRelevant document text:\n- [8. Functional Flows, page 3] Flow F-002: Window Command BodyControlManager evaluates the requested window operation and publishes WindowPosition through IWindowCommand. WindowControl receives the command through WindowCommand_In.\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed\n- [7. Dependencies, page 3] BodyControlManager PROVIDES_INTERFACE IWindowCommand Generates window commands. WindowControl REQUIRES_INTERFACE IWindowCommand Consumes window commands."
+        "grounded": false,
+        "confidence": 0.17,
+        "answer_contains_expected": false,
+        "citation_on_expected_page": false,
+        "retrieval_hit": false,
+        "citations": [],
+        "answer": "The requested information was not found in the document."
       },
       {
         "id": "Q20",
         "category": "paraphrase",
         "question": "What safety-related constraint depends on speed?",
-        "passed": true,
+        "passed": false,
         "answerable": true,
-        "grounded": true,
-        "confidence": 0.48,
-        "answer_contains_expected": true,
-        "citation_on_expected_page": true,
-        "retrieval_hit": true,
-        "citations": [
-          {
-            "id": "C1",
-            "page": 3,
-            "section": "8. Functional Flows"
-          },
-          {
-            "id": "C2",
-            "page": 2,
-            "section": "6. Signals"
-          },
-          {
-            "id": "C3",
-            "page": 1,
-            "section": "1. System Overview"
-          },
-          {
-            "id": "C4",
-            "page": 2,
-            "section": "4. Interfaces"
-          },
-          {
-            "id": "C5",
-            "page": 3,
-            "section": "7. Dependencies"
-          }
-        ],
-        "answer": "Relevant document text:\n- [8. Functional Flows, page 3] WindowControl consumes VehicleSpeed to apply safety-related window-operation constraints.\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [1. System Overview, page 1] System Overview The Body Control System (BCS) coordinates body-related vehicle functions including door state monitoring, window commands, and vehicle state information. The architecture follows an AUTOSAR software-component model in which software components communicate through typed interfaces and ports."
+        "grounded": false,
+        "confidence": 0.04,
+        "answer_contains_expected": false,
+        "citation_on_expected_page": false,
+        "retrieval_hit": false,
+        "citations": [],
+        "answer": "The requested information was not found in the document."
       },
       {
         "id": "Q21",
@@ -889,7 +811,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.51,
+        "confidence": 0.85,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -929,7 +851,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.53,
+        "confidence": 0.86,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -969,38 +891,38 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.61,
+        "confidence": 0.77,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
         "citations": [
           {
             "id": "C1",
-            "page": 3,
-            "section": "8. Functional Flows"
-          },
-          {
-            "id": "C2",
             "page": 2,
             "section": "6. Signals"
           },
           {
-            "id": "C3",
+            "id": "C2",
             "page": 3,
-            "section": "9. Integration Constraints"
+            "section": "8. Functional Flows"
           },
           {
-            "id": "C4",
+            "id": "C3",
             "page": 3,
             "section": "7. Dependencies"
           },
           {
+            "id": "C4",
+            "page": 2,
+            "section": "4. Interfaces"
+          },
+          {
             "id": "C5",
-            "page": 1,
-            "section": "3. Software Components"
+            "page": 3,
+            "section": "9. Integration Constraints"
           }
         ],
-        "answer": "Relevant document text:\n- [8. Functional Flows, page 3] Flow F-003: Vehicle State Dependency VehicleStateManager publishes VehicleSpeed through IVehicleState. WindowControl consumes VehicleSpeed to apply safety-related window-operation constraints.\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [9. Integration Constraints, page 3] Signal names shall remain consistent between interface definitions and functional flows. Architecture dependencies must be traceable to an approved source section."
+        "answer": "Relevant document text:\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [8. Functional Flows, page 3] Flow F-003: Vehicle State Dependency VehicleStateManager publishes VehicleSpeed through IVehicleState. WindowControl consumes VehicleSpeed to apply safety-related window-operation constraints.\n- [7. Dependencies, page 3] VehicleStateManager PROVIDES_INTERFACE IVehicleState Provides vehicle state. WindowControl REQUIRES_INTERFACE IVehicleState Uses vehicle speed."
       },
       {
         "id": "Q24",
@@ -1009,7 +931,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.76,
+        "confidence": 0.96,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -1021,26 +943,26 @@
           },
           {
             "id": "C2",
-            "page": 3,
-            "section": "8. Functional Flows"
-          },
-          {
-            "id": "C3",
             "page": 1,
             "section": "Unclassified"
           },
           {
+            "id": "C3",
+            "page": 3,
+            "section": "8. Functional Flows"
+          },
+          {
             "id": "C4",
-            "page": 2,
-            "section": "4. Interfaces"
+            "page": 1,
+            "section": "2. Software Architecture"
           },
           {
             "id": "C5",
-            "page": 1,
-            "section": "2. Software Architecture"
+            "page": 2,
+            "section": "4. Interfaces"
           }
         ],
-        "answer": "Architecture facts:\n- IVehicleState carries signal VehicleSpeed (page 2)\n- VehicleStateManager sends signal VehicleSpeed (page 2)\n- VehicleSpeed received by WindowControl (page 2)\n\nRelevant document text:\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [8. Functional Flows, page 3] Flow F-003: Vehicle State Dependency VehicleStateManager publishes VehicleSpeed through IVehicleState. WindowControl consumes VehicleSpeed to apply safety-related window-operation constraints.\n- [Unclassified, page 1] AUTOSAR BODY CONTROL SYSTEM High-Level Design Document Document ID: HLD-BCS-001 Revision: 1.0 Status: Approved for Engineering Analysis Classification: Synthetic Demonstration Data"
+        "answer": "Architecture facts:\n- IVehicleState carries signal VehicleSpeed (page 2)\n- VehicleStateManager sends signal VehicleSpeed (page 2)\n- VehicleSpeed received by WindowControl (page 2)\n\nRelevant document text:\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [Unclassified, page 1] AUTOSAR BODY CONTROL SYSTEM High-Level Design Document Document ID: HLD-BCS-001 Revision: 1.0 Status: Approved for Engineering Analysis Classification: Synthetic Demonstration Data\n- [8. Functional Flows, page 3] Flow F-003: Vehicle State Dependency VehicleStateManager publishes VehicleSpeed through IVehicleState. WindowControl consumes VehicleSpeed to apply safety-related window-operation constraints."
       },
       {
         "id": "Q25",
@@ -1049,7 +971,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.81,
+        "confidence": 0.96,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -1061,13 +983,13 @@
           },
           {
             "id": "C2",
-            "page": 2,
-            "section": "4. Interfaces"
+            "page": 3,
+            "section": "8. Functional Flows"
           },
           {
             "id": "C3",
-            "page": 3,
-            "section": "8. Functional Flows"
+            "page": 2,
+            "section": "4. Interfaces"
           },
           {
             "id": "C4",
@@ -1080,7 +1002,7 @@
             "section": "5. Ports"
           }
         ],
-        "answer": "Architecture facts:\n- IDoorStatus carries signal DoorOpenStatus (page 2)\n- DoorControl sends signal DoorOpenStatus (page 2)\n- DoorOpenStatus received by BodyControlManager (page 2)\n\nRelevant document text:\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed\n- [8. Functional Flows, page 3] Functional Flows Flow F-001: Door State Monitoring DoorControl reads the physical door state and publishes DoorOpenStatus through IDoorStatus. BodyControlManager receives the signal through DoorStatus_In and updates the body-state model."
+        "answer": "Architecture facts:\n- IDoorStatus carries signal DoorOpenStatus (page 2)\n- DoorControl sends signal DoorOpenStatus (page 2)\n- DoorOpenStatus received by BodyControlManager (page 2)\n\nRelevant document text:\n- [6. Signals, page 2] Signals Signal Data Type Source Destination DoorOpenStatus boolean DoorControl BodyControlManager WindowPosition uint8 BodyControlManager WindowControl VehicleSpeed uint16 VehicleStateManager WindowControl\n- [8. Functional Flows, page 3] Functional Flows Flow F-001: Door State Monitoring DoorControl reads the physical door state and publishes DoorOpenStatus through IDoorStatus. BodyControlManager receives the signal through DoorStatus_In and updates the body-state model.\n- [4. Interfaces, page 2] Interfaces Interface Provider Consumer Signals IDoorStatus DoorControl BodyControlManager DoorOpenStatus IWindowCommand BodyControlManager WindowControl WindowPosition IVehicleState VehicleStateManager WindowControl VehicleSpeed"
       },
       {
         "id": "Q26",
@@ -1089,7 +1011,7 @@
         "passed": true,
         "answerable": true,
         "grounded": true,
-        "confidence": 0.67,
+        "confidence": 0.87,
         "answer_contains_expected": true,
         "citation_on_expected_page": true,
         "retrieval_hit": true,
@@ -1111,13 +1033,13 @@
           },
           {
             "id": "C4",
-            "page": 1,
-            "section": "1. System Overview"
+            "page": 3,
+            "section": "7. Dependencies"
           },
           {
             "id": "C5",
-            "page": 3,
-            "section": "7. Dependencies"
+            "page": 1,
+            "section": "1. System Overview"
           }
         ],
         "answer": "Relevant document text:\n- [9. Integration Constraints, page 3] Integration Constraints All provider and consumer ports shall reference compatible interfaces. Signal names shall remain consistent between interface definitions and functional flows.\n- [5. Ports, page 2] Ports Component Port Direction Interface DoorControl DoorStatus_Out P-PORT IDoorStatus BodyControlManager DoorStatus_In R-PORT IDoorStatus BodyControlManager WindowCommand_Out P-PORT IWindowCommand WindowControl WindowCommand_In R-PORT IWindowCommand VehicleStateManager VehicleState_Out P-PORT IVehicleState WindowControl VehicleState_In R-PORT IVehicleState\n- [8. Functional Flows, page 3] WindowControl consumes VehicleSpeed to apply safety-related window-operation constraints."
@@ -1129,7 +1051,7 @@
         "passed": true,
         "answerable": false,
         "grounded": false,
-        "confidence": 0.0,
+        "confidence": 0.03,
         "answer_contains_expected": null,
         "citation_on_expected_page": null,
         "retrieval_hit": null,
@@ -1143,7 +1065,7 @@
         "passed": true,
         "answerable": false,
         "grounded": false,
-        "confidence": 0.0,
+        "confidence": 0.03,
         "answer_contains_expected": null,
         "citation_on_expected_page": null,
         "retrieval_hit": null,
@@ -1157,7 +1079,7 @@
         "passed": true,
         "answerable": false,
         "grounded": false,
-        "confidence": 0.0,
+        "confidence": 0.04,
         "answer_contains_expected": null,
         "citation_on_expected_page": null,
         "retrieval_hit": null,
@@ -1171,7 +1093,7 @@
         "passed": true,
         "answerable": false,
         "grounded": false,
-        "confidence": 0.0,
+        "confidence": 0.03,
         "answer_contains_expected": null,
         "citation_on_expected_page": null,
         "retrieval_hit": null,
@@ -1185,7 +1107,7 @@
         "passed": true,
         "answerable": false,
         "grounded": false,
-        "confidence": 0.0,
+        "confidence": 0.03,
         "answer_contains_expected": null,
         "citation_on_expected_page": null,
         "retrieval_hit": null,
@@ -1199,7 +1121,7 @@
         "passed": true,
         "answerable": false,
         "grounded": false,
-        "confidence": 0.0,
+        "confidence": 0.03,
         "answer_contains_expected": null,
         "citation_on_expected_page": null,
         "retrieval_hit": null,
@@ -1207,5 +1129,165 @@
         "answer": "The requested information was not found in the document."
       }
     ]
+  },
+  "independent": {
+    "trained": {
+      "label": "trained answerability model",
+      "accuracy": 0.889,
+      "answerable_accuracy": 0.875,
+      "refusal_accuracy": 0.917,
+      "n": 36,
+      "failures": [
+        {
+          "id": "S02",
+          "doc": "steering",
+          "answerable": true,
+          "passed": false,
+          "grounded": false,
+          "confidence": 0.2,
+          "question": "What does the AngleSensorManager provide to the rest of the system?",
+          "answer": "The requested information was not found in the document."
+        },
+        {
+          "id": "S03",
+          "doc": "steering",
+          "answerable": true,
+          "passed": false,
+          "grounded": false,
+          "confidence": 0.06,
+          "question": "Which signal tells the motor drive how much current to apply?",
+          "answer": "The requested information was not found in the document."
+        },
+        {
+          "id": "S11",
+          "doc": "steering",
+          "answerable": false,
+          "passed": false,
+          "grounded": true,
+          "confidence": 0.95,
+          "question": "What is the CAN identifier of IFaultReport?",
+          "answer": "Architecture facts:\n- SteeringManager provides interface IFaultReport (page 2)\n- DiagnosticManager requires interface IFaultReport (page 2)\n- IFaultReport carries signal FaultCode (page 2)\n- FaultRepo"
+        },
+        {
+          "id": "K07",
+          "doc": "keyless",
+          "answerable": true,
+          "passed": false,
+          "grounded": false,
+          "confidence": 0.1,
+          "question": "Which component estimates how far away the key is?",
+          "answer": "The requested information was not found in the document."
+        }
+      ]
+    },
+    "legacy_gate": {
+      "label": "previous hand-set relevance gate",
+      "accuracy": 0.722,
+      "answerable_accuracy": 1.0,
+      "refusal_accuracy": 0.167,
+      "n": 36,
+      "failures": [
+        {
+          "id": "S10",
+          "doc": "steering",
+          "answerable": false,
+          "passed": false,
+          "grounded": true,
+          "confidence": 0.41,
+          "question": "Which supplier manufactures the torque sensor?",
+          "answer": "Relevant document text:\n- [3. Software Components, page 1] TorqueSensorControl Provider Measures driver steering torque. MotorDriveControl Consumer Drives the assist motor.\n- [7. Dependencies, page 3]"
+        },
+        {
+          "id": "S11",
+          "doc": "steering",
+          "answerable": false,
+          "passed": false,
+          "grounded": true,
+          "confidence": 0.5,
+          "question": "What is the CAN identifier of IFaultReport?",
+          "answer": "Architecture facts:\n- SteeringManager provides interface IFaultReport (page 2)\n- DiagnosticManager requires interface IFaultReport (page 2)\n- IFaultReport carries signal FaultCode (page 2)\n- FaultRepo"
+        },
+        {
+          "id": "S12",
+          "doc": "steering",
+          "answerable": false,
+          "passed": false,
+          "grounded": true,
+          "confidence": 0.42,
+          "question": "How many pole pairs does the assist motor have?",
+          "answer": "Relevant document text:\n- [3. Software Components, page 1] MotorDriveControl Consumer Drives the assist motor. AngleSensorManager Provider Reports steering wheel angle.\n- [5. Ports, page 2] Ports Comp"
+        },
+        {
+          "id": "K09",
+          "doc": "keyless",
+          "answerable": false,
+          "passed": false,
+          "grounded": true,
+          "confidence": 0.4,
+          "question": "What encryption algorithm protects the key fob messages?",
+          "answer": "Relevant document text:\n- [8. Functional Flows, page 3] Functional Flows Flow F-001: Key Challenge Distribution KeyFobControl publishes KeyChallenge through IKeyMessage. AccessManager receives the sig"
+        },
+        {
+          "id": "K10",
+          "doc": "keyless",
+          "answerable": false,
+          "passed": false,
+          "grounded": true,
+          "confidence": 0.4,
+          "question": "What is the radio frequency of the key fob?",
+          "answer": "Relevant document text:\n- [6. Signals, page 2] Signals Signal Data Type Source Destination KeyChallenge uint32 KeyFobControl AccessManager KeyDistance uint8 ProximitySensorManager AccessManager LockSt"
+        },
+        {
+          "id": "K12",
+          "doc": "keyless",
+          "answerable": false,
+          "passed": false,
+          "grounded": true,
+          "confidence": 0.5,
+          "question": "Who signed off the access manager design?",
+          "answer": "Architecture facts:\n- AccessManager requires interface IKeyMessage (page 2)\n- AccessManager requires interface IKeyDistance (page 2)\n- AccessManager provides interface ILockRequest (page 2)\n- AccessMa"
+        },
+        {
+          "id": "W09",
+          "doc": "wiper",
+          "answerable": false,
+          "passed": false,
+          "grounded": true,
+          "confidence": 0.36,
+          "question": "What is the wiper blade length?",
+          "answer": "Relevant document text:\n- [Unclassified, page 1] WIPER AND RAIN SENSING High-Level Design Document Document ID: HLD-WRS-001 Revision: 1.0 Status: Approved for Engineering Analysis Classification: Synt"
+        },
+        {
+          "id": "W10",
+          "doc": "wiper",
+          "answerable": false,
+          "passed": false,
+          "grounded": true,
+          "confidence": 0.41,
+          "question": "How many wipe cycles per minute are performed at high speed?",
+          "answer": "Relevant document text:\n- [8. Functional Flows, page 3] Flow F-003: Wipe Interval Distribution WiperManager publishes WipeInterval through IWiperDrive. WiperMotorControl receives the signal through Wi"
+        },
+        {
+          "id": "W11",
+          "doc": "wiper",
+          "answerable": false,
+          "passed": false,
+          "grounded": true,
+          "confidence": 0.36,
+          "question": "What optical wavelength does the rain sensor use?",
+          "answer": "Relevant document text:\n- [Unclassified, page 1] WIPER AND RAIN SENSING High-Level Design Document Document ID: HLD-WRS-001 Revision: 1.0 Status: Approved for Engineering Analysis Classification: Synt"
+        },
+        {
+          "id": "W12",
+          "doc": "wiper",
+          "answerable": false,
+          "passed": false,
+          "grounded": true,
+          "confidence": 0.38,
+          "question": "Which window does the washer spray?",
+          "answer": "Relevant document text:\n- [3. Software Components, page 1] WasherControl Consumer Controls the washer pump. StalkSwitchManager Provider Reads wiper stalk switch.\n- [8. Functional Flows, page 3] Flow F"
+        }
+      ]
+    }
   }
 }

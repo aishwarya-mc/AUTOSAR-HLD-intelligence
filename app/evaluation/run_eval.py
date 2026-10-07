@@ -7,10 +7,9 @@ import argparse
 import json
 import os
 import sys
+import tempfile
 from collections import defaultdict
 from pathlib import Path
-
-import tempfile
 
 os.environ.setdefault("DATABASE_URL", "sqlite:///:memory:")
 os.environ.setdefault("VECTOR_DIR", tempfile.mkdtemp(prefix="hld_eval_vectors_"))
@@ -86,6 +85,41 @@ def qa_metrics(service: HLDService, document_id: str, cases: list[dict]) -> dict
     }
 
 
+def independent_eval(service: HLDService) -> dict:
+    """Hand-written questions on held-out documents, trained model vs the previous hand-set gate."""
+    from app.rag.answerability import load_answerability_model
+
+    settings = get_settings()
+    cases = json.loads((settings.evaluation_data_dir / "qa_set_independent.json").read_text(encoding="utf-8"))
+    doc_ids = {}
+    for key in {c["doc"] for c in cases}:
+        doc_ids[key] = service.process(settings.project_root_data / "synthetic" / f"{key}.pdf")["document_id"]
+
+    def run(label: str, model_dir: str) -> dict:
+        settings.answerability_model_dir = model_dir
+        load_answerability_model.cache_clear()
+        rows = []
+        for c in cases:
+            r = service.answerer(doc_ids[c["doc"]]).answer(c["question"])
+            answerable = c.get("answerable", True)
+            ok = (r.grounded and all(t.lower() in r.answer.lower() for t in c["must_contain"])) if answerable                 else not r.grounded
+            rows.append({"id": c["id"], "doc": c["doc"], "answerable": answerable, "passed": bool(ok),
+                         "grounded": r.grounded, "confidence": r.confidence, "question": c["question"],
+                         "answer": r.answer[:200]})
+        ans = [x for x in rows if x["answerable"]]
+        un = [x for x in rows if not x["answerable"]]
+        return {"label": label, "accuracy": round(sum(x["passed"] for x in rows) / len(rows), 3),
+                "answerable_accuracy": round(sum(x["passed"] for x in ans) / len(ans), 3),
+                "refusal_accuracy": round(sum(x["passed"] for x in un) / len(un), 3),
+                "n": len(rows), "failures": [x for x in rows if not x["passed"]]}
+
+    trained = run("trained answerability model", "")
+    legacy = run("previous hand-set relevance gate", "/nonexistent")
+    settings.answerability_model_dir = ""
+    load_answerability_model.cache_clear()
+    return {"trained": trained, "legacy_gate": legacy}
+
+
 def to_markdown(config: dict, ext: dict, qa: dict) -> str:
     lines = ["# Evaluation results", "", "## Configuration", ""]
     lines += [f"- {k}: `{v}`" for k, v in config.items()]
@@ -132,12 +166,14 @@ def main() -> int:
         "indexed_chunks": doc.get("indexed_chunks", 0),
     }
 
+    indep = independent_eval(service)
     print(to_markdown(config, ext, qa))
+    print("INDEPENDENT", json.dumps({k: {m: v[m] for m in ("accuracy", "answerable_accuracy", "refusal_accuracy")} for k, v in indep.items()}))
     if args.out:
         out = Path(args.out)
         out.mkdir(parents=True, exist_ok=True)
         (out / "results.json").write_text(
-            json.dumps({"config": config, "extraction": ext, "qa": qa}, indent=2), encoding="utf-8")
+            json.dumps({"config": config, "extraction": ext, "qa": qa, "independent": indep}, indent=2), encoding="utf-8")
         (out / "results.md").write_text(to_markdown(config, ext, qa), encoding="utf-8")
     failed = ext["overall"]["recall"] < 1.0 or any(not x["passed"] for x in qa["results"])
     return 1 if failed else 0

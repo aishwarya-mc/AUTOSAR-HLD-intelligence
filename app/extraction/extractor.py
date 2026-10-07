@@ -6,12 +6,14 @@ from app.chunking.section_chunker import DocumentChunk
 from app.core.logging import get_logger
 from app.extraction.components import ComponentExtractor
 from app.extraction.dependencies import DependencyExtractor
-from app.extraction.entity_schema import ArchitectureEntityRecord
+from app.extraction.entity_schema import ArchitectureEntityRecord, EntityType
 from app.extraction.functional_flows import FunctionalFlowExtractor
 from app.extraction.interfaces import InterfaceExtractor
 from app.extraction.normalization import normalize_and_deduplicate
 from app.extraction.ports import PortExtractor
 from app.extraction.signals import SignalExtractor
+from app.extraction.structured_model import build_structured_model
+from app.extraction.table_entities import TableEntityExtractor
 from app.ingestion.pdf_parser import ParsedDocument
 
 logger = get_logger(__name__)
@@ -63,6 +65,7 @@ class ArchitectureExtractor:
         self.signal_extractor = SignalExtractor()
         self.dependency_extractor = DependencyExtractor()
         self.functional_flow_extractor = FunctionalFlowExtractor()
+        self.table_extractor = TableEntityExtractor()
 
     def extract(
         self,
@@ -93,6 +96,15 @@ class ArchitectureExtractor:
         functional_flows = self.functional_flow_extractor.extract(
             chunks
         )
+
+        # Table-driven entities make extraction independent of naming conventions.
+        table_entities = self.table_extractor.extract(
+            build_structured_model(document), document_id, document_version
+        )
+        components = components + table_entities[EntityType.COMPONENT]
+        interfaces = interfaces + table_entities[EntityType.INTERFACE]
+        ports = ports + table_entities[EntityType.PORT]
+        signals = signals + table_entities[EntityType.SIGNAL]
 
         # ---------------------------------------------------------
         # 2. Normalize and deduplicate extracted entities

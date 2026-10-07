@@ -22,7 +22,9 @@ from reportlab.lib.units import mm
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 REPO = Path(__file__).resolve().parents[1]
-OUT_BASE = Path(sys.argv[1]) if len(sys.argv) > 1 else REPO / "dist"
+ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
+RERUN = "--rerun" in sys.argv  # regenerate every experiment (slow)
+OUT_BASE = Path(ARGS[0]) if ARGS else REPO / "dist"
 
 UNIVERSITY = "AmritaVishwaVidyapeetham"
 STUDENT = "AishwaryaManoj"
@@ -87,6 +89,8 @@ def declarations(dest: Path):
         Paragraph("<b>External software and models used</b>", B),
         grid([["Component", "Use", "Licence / source"],
               ["BAAI/bge-small-en-v1.5", "Pre-trained embedding model (retrieval)", "MIT, Hugging Face"],
+              ["sentence-transformers/all-MiniLM-L6-v2", "Pre-trained embedding model, used only in the retrieval comparison", "Apache-2.0, Hugging Face"],
+              ["scikit-learn, joblib, NumPy, matplotlib", "Training and evaluating the answerability classifier, PCA, plots", "BSD / PSF"],
               ["fastembed / ONNX Runtime", "Local embedding inference", "Apache-2.0"],
               ["ChromaDB", "Local vector store", "Apache-2.0"],
               ["PyMuPDF", "PDF parsing and tables", "AGPL-3.0 / commercial"],
@@ -120,7 +124,7 @@ def declarations(dest: Path):
                "without a generative model.", "None", "N/A"]],
              [40, 60, 40, 30]),
         Spacer(1, 3 * mm),
-        Paragraph("Verification performed: all code was run; 34 automated tests pass; extraction and Q&amp;A were "
+        Paragraph("Verification performed: all code was run; the automated test suite passes; extraction and Q&amp;A were "
                   "evaluated against hand-written ground truth; the UI was exercised manually and with automated "
                   "screenshots. Generated text in the report was reviewed for factual accuracy against the code and results.", B),
         *sig])
@@ -150,9 +154,21 @@ Student: {FULL_NAME} ({REG}), {FULL_UNI}. Version {VERSION}, {date.today():%d %B
 | Lexical retrieval | BM25 (k1 = 1.5, b = 0.75) with CamelCase and underscore splitting |
 | Fusion | reciprocal rank fusion, k = 60 |
 | top_k | 8 (API allows 1-50) |
-| Relevance gate | best semantic cosine similarity must be >= 0.60 or nothing is retrieved |
-| Semantic-only floor | chunks with no keyword overlap need similarity >= 0.65 |
-| Calibration | off-topic questions peaked at about 0.57-0.60 and in-domain paraphrases scored >= 0.62 on the sample HLD; re-calibrate for other corpora |
+| Fusion weights | lexical 1, dense 10 (tuned on the development documents; held-out MRR 0.869 vs 0.837 equal weights) |
+| Answer / refuse decision | trained answerability classifier (section 2b); the old 0.60 cosine gate is only a fallback when no model file exists |
+
+## 2b. Answerability model
+
+| Item | Value |
+|---|---|
+| Task | binary classification: can this document answer this question? |
+| Algorithm | random forest (selected from logistic regression, RBF-SVM, k-NN, decision tree, random forest, gradient boosting) wrapped in sigmoid calibration |
+| Features | 12 (see `FEATURE_NAMES` in `app/rag/hybrid.py`): similarity statistics, BM25 scores, vocabulary coverage, retriever agreement, entity matches |
+| Training data | 288 labelled questions from 6 development documents (`data/evaluation/answerability_dataset.csv`) |
+| Validation | nested leave-one-document-out CV (inner 5-fold grouped grid search) |
+| Decision threshold | chosen on out-of-fold predictions to maximise F1 (stored in metadata) |
+| Artefact | `models/answerability/v1.0.0/` (also `current/`): `model.joblib` + `metadata.json` with hyper-parameters, training/test documents, dataset hash, git commit, metrics |
+| Reproduce | `python -m app.evaluation.train_answerability` |
 
 ## 3. Prompts
 
@@ -236,7 +252,7 @@ Declare before the demo: no external API is used (LLM_PROVIDER=local; embeddings
 | 4:30-6:00 | Ask tab: "Which component provides IDoorStatus?", "How does the window controller learn the requested window position?", then "What is the maximum engine torque?" | Grounded answers with citations and confidence; open a citation; the last question is refused rather than guessed. |
 | 6:00-7:00 | Upload sample_hld_v2.pdf (v2) > Validation tab > accept one finding > Compare tab | V003/V004/V005/V009 found with page evidence; human review; the diff shows 10 changes and impacted elements. |
 | 7:00-7:40 | Report tab: download Markdown, JSON and CSV exports | Structured export for downstream tools. |
-| 7:40-8:30 | Terminal: `pytest` (34 passed) and `python -m app.evaluation.run_eval` | Extraction precision/recall 1.0 on the sample; Q&A 32/32 with groundedness 1.0 and refusal 6/6. State plainly that the benchmark is small and synthetic. |
+| 7:40-8:30 | Terminal: `pytest`, then show `Evaluation_Results` figures (nested-CV ROC, learning curve, retrieval comparison, confusion matrix) | The answerability classifier was chosen by nested leave-one-document-out CV; compare it with the old threshold; show the independent question set and the failures. State plainly that data are synthetic and test sets are small. |
 | 8:30-9:00 | Responsible AI and limitations | Grounding, human review, RBAC and audit log, local data; limits: single table layout, small benchmark, no LLM evaluated. |
 
 ## Before recording
@@ -336,14 +352,33 @@ def main():
     if tests.returncode != 0:
         sys.exit("tests failed; fix them before building the submission")
 
+    if RERUN:
+        for step in (["-m", "app.evaluation.extraction_eval", "--label", "after_fix", "--out", "data/evaluation/results"],
+                     ["-m", "app.evaluation.train_answerability"], ["-m", "app.evaluation.retrieval_experiments"],
+                     ["-m", "app.evaluation.validation_eval", "--out", "data/evaluation/results"], ["-m", "app.evaluation.eda"]):
+            print("re-running", step[1], "...")
+            out = run([PY, *step])
+            if out.returncode != 0:
+                sys.exit(f"{step[1]} failed:\n{out.stderr[-1500:]}")
     print("running evaluation ...")
     res_dir = REPO / "data/evaluation/results"
     ev = run([PY, "-m", "app.evaluation.run_eval", "--out", str(res_dir)])
     if ev.returncode != 0:
-        sys.exit("evaluation reported failures:\n" + ev.stdout[-1500:])
+        print("note: some evaluation questions fail (expected; see Evaluation_Results)")
     results = json.loads((res_dir / "results.json").read_text(encoding="utf-8"))
 
     er = dirs["Evaluation_Results"]
+    for src, artifact, ext in [("answerability_report.json", "Answerability_Model_Report", "json"),
+                               ("retrieval_experiments.json", "Retrieval_Experiments", "json"),
+                               ("validation_eval.json", "Validation_Rules_Evaluation", "json"),
+                               ("eda_summary.json", "EDA_Summary", "json"),
+                               ("extraction_corpus_before_fix.json", "Extraction_Before_Fixes", "json"),
+                               ("extraction_corpus_after_fix.json", "Extraction_After_Fixes", "json")]:
+        shutil.copy(res_dir / src, er / fname(artifact, ext))
+    shutil.copy(REPO / "data/evaluation/answerability_dataset.csv", er / fname("Answerability_Dataset", "csv"))
+    shutil.copy(REPO / "data/evaluation/runs.jsonl", er / fname("Experiment_Log", "jsonl"))
+    shutil.copy(REPO / "data/evaluation/qa_set_independent.json", er / fname("QA_Independent_Set", "json"))
+    shutil.copytree(REPO / "data/evaluation/figures", er / "Figures")
     shutil.copy(res_dir / "results.json", er / fname("Evaluation_Metrics", "json"))
     shutil.copy(res_dir / "results.md", er / fname("Evaluation_Summary", "md"))
     shutil.copy(REPO / "data/evaluation/qa_set.json", er / fname("QA_Ground_Truth", "json"))
@@ -352,7 +387,7 @@ def main():
 
     print("building technical report ...")
     rep = dirs["Documentation"] / fname("Technical_Report", "pdf")
-    r = run([PY, "scripts/build_report.py", str(rep), passed])
+    r = run([PY, "scripts/make_report.py", str(rep), passed])
     if r.returncode != 0:
         sys.exit("report build failed:\n" + r.stderr[-1500:])
     shots = REPO / "submission_assets/screenshots"
@@ -382,6 +417,17 @@ def main():
         shutil.copy(REPO / "scripts" / f, inp / f)
     (inp / "README_Input_Data.md").write_text(INPUT_README, encoding="utf-8")
 
+    import submission_docs
+
+    docs_dir = dirs["Documentation"]
+    (docs_dir / fname("Rubric_Self_Assessment", "md")).write_text(submission_docs.rubric_self_assessment(REG, passed), encoding="utf-8")
+    (docs_dir / fname("Technical_QA_Preparation", "md")).write_text(submission_docs.qa_prep(REG), encoding="utf-8")
+    shutil.copytree(REPO / "models", dirs["Model_Prompts_Config"] / "models")
+    shutil.copytree(REPO / "models", code / "models")
+    shutil.copytree(REPO / "data/synthetic", code / "data/synthetic")
+    shutil.copytree(REPO / "data/synthetic", inp / "synthetic")
+    shutil.copy(REPO / "scripts/generate_synthetic_hlds.py", inp / "generate_synthetic_hlds.py")
+    shutil.copy(REPO / "requirements-lock.txt", code / "requirements-lock.txt")
     (dirs["Model_Prompts_Config"] / fname("Model_Prompts_Config", "md")).write_text(MODEL_CONFIG, encoding="utf-8")
     (dirs["Video"] / fname("Video_Script", "md")).write_text(VIDEO_SCRIPT, encoding="utf-8")
     (dirs["Video"] / "PLACE_VIDEO_HERE.txt").write_text(

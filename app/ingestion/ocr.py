@@ -81,11 +81,10 @@ class OCRProcessor:
                     page_number,
                 )
             except Exception as exc:
-                logger.exception(
-                    "OCR failed for page %d: %s",
-                    page_number,
-                    exc,
-                )
+                if exc.__class__.__name__ == "TesseractNotFoundError":
+                    logger.warning("Tesseract is not installed; skipping OCR for page %d", page_number)
+                else:
+                    logger.exception("OCR failed for page %d: %s", page_number, exc)
                 results[page_number] = ""
 
         return results

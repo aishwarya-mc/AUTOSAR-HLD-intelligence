@@ -1,0 +1,336 @@
+{
+  "key": "battery",
+  "title": "Battery Management System",
+  "split": "dev",
+  "component": [
+    "BatteryManager",
+    "CellMonitorControl",
+    "ChargeControl",
+    "ContactorControl",
+    "ThermalManager"
+  ],
+  "interface": [
+    "ICellVoltage",
+    "ICellTemperature",
+    "IChargeLimit",
+    "IContactorCommand",
+    "IPackStatus"
+  ],
+  "port": [
+    "CellVoltage_Out",
+    "CellVoltage_In",
+    "CellTemperature_Out",
+    "CellTemperature_In",
+    "ChargeLimit_Out",
+    "ChargeLimit_In",
+    "ContactorCommand_Out",
+    "ContactorCommand_In",
+    "PackStatus_Out",
+    "PackStatus_In"
+  ],
+  "signal": [
+    "CellVoltage",
+    "CellTemperature",
+    "ChargeCurrentLimit",
+    "ContactorCommand",
+    "PackStatus"
+  ],
+  "dependency": [
+    "CellMonitorControl PROVIDES_INTERFACE ICellVoltage",
+    "BatteryManager REQUIRES_INTERFACE ICellVoltage",
+    "CellMonitorControl PROVIDES_INTERFACE ICellTemperature",
+    "ThermalManager REQUIRES_INTERFACE ICellTemperature",
+    "BatteryManager PROVIDES_INTERFACE IChargeLimit",
+    "ChargeControl REQUIRES_INTERFACE IChargeLimit",
+    "BatteryManager PROVIDES_INTERFACE IContactorCommand",
+    "ContactorControl REQUIRES_INTERFACE IContactorCommand",
+    "BatteryManager PROVIDES_INTERFACE IPackStatus",
+    "ThermalManager REQUIRES_INTERFACE IPackStatus"
+  ],
+  "functional_flow": [
+    "F-001: Cell Voltage Distribution",
+    "F-002: Cell Temperature Distribution",
+    "F-003: Charge Current Limit Distribution",
+    "F-004: Contactor Command Distribution",
+    "F-005: Pack Status Distribution"
+  ],
+  "tables": {
+    "components": [
+      [
+        "BatteryManager",
+        "Coordinator",
+        "Supervises pack state and limits."
+      ],
+      [
+        "CellMonitorControl",
+        "Provider",
+        "Measures cell voltages and temperatures."
+      ],
+      [
+        "ChargeControl",
+        "Consumer",
+        "Regulates charge current."
+      ],
+      [
+        "ContactorControl",
+        "Consumer",
+        "Opens and closes the high-voltage contactors."
+      ],
+      [
+        "ThermalManager",
+        "Consumer",
+        "Controls pack cooling."
+      ]
+    ],
+    "interfaces": [
+      [
+        "ICellVoltage",
+        "CellMonitorControl",
+        "BatteryManager",
+        "CellVoltage",
+        "uint16"
+      ],
+      [
+        "ICellTemperature",
+        "CellMonitorControl",
+        "ThermalManager",
+        "CellTemperature",
+        "int16"
+      ],
+      [
+        "IChargeLimit",
+        "BatteryManager",
+        "ChargeControl",
+        "ChargeCurrentLimit",
+        "uint16"
+      ],
+      [
+        "IContactorCommand",
+        "BatteryManager",
+        "ContactorControl",
+        "ContactorCommand",
+        "uint8"
+      ],
+      [
+        "IPackStatus",
+        "BatteryManager",
+        "ThermalManager",
+        "PackStatus",
+        "uint8"
+      ]
+    ],
+    "ports": [
+      [
+        "CellMonitorControl",
+        "CellVoltage_Out",
+        "P-PORT",
+        "ICellVoltage"
+      ],
+      [
+        "BatteryManager",
+        "CellVoltage_In",
+        "R-PORT",
+        "ICellVoltage"
+      ],
+      [
+        "CellMonitorControl",
+        "CellTemperature_Out",
+        "P-PORT",
+        "ICellTemperature"
+      ],
+      [
+        "ThermalManager",
+        "CellTemperature_In",
+        "R-PORT",
+        "ICellTemperature"
+      ],
+      [
+        "BatteryManager",
+        "ChargeLimit_Out",
+        "P-PORT",
+        "IChargeLimit"
+      ],
+      [
+        "ChargeControl",
+        "ChargeLimit_In",
+        "R-PORT",
+        "IChargeLimit"
+      ],
+      [
+        "BatteryManager",
+        "ContactorCommand_Out",
+        "P-PORT",
+        "IContactorCommand"
+      ],
+      [
+        "ContactorControl",
+        "ContactorCommand_In",
+        "R-PORT",
+        "IContactorCommand"
+      ],
+      [
+        "BatteryManager",
+        "PackStatus_Out",
+        "P-PORT",
+        "IPackStatus"
+      ],
+      [
+        "ThermalManager",
+        "PackStatus_In",
+        "R-PORT",
+        "IPackStatus"
+      ]
+    ],
+    "signals": [
+      [
+        "CellVoltage",
+        "uint16",
+        "CellMonitorControl",
+        "BatteryManager"
+      ],
+      [
+        "CellTemperature",
+        "int16",
+        "CellMonitorControl",
+        "ThermalManager"
+      ],
+      [
+        "ChargeCurrentLimit",
+        "uint16",
+        "BatteryManager",
+        "ChargeControl"
+      ],
+      [
+        "ContactorCommand",
+        "uint8",
+        "BatteryManager",
+        "ContactorControl"
+      ],
+      [
+        "PackStatus",
+        "uint8",
+        "BatteryManager",
+        "ThermalManager"
+      ]
+    ],
+    "dependencies": [
+      [
+        "CellMonitorControl",
+        "PROVIDES_INTERFACE",
+        "ICellVoltage",
+        "Publishes cell voltage."
+      ],
+      [
+        "BatteryManager",
+        "REQUIRES_INTERFACE",
+        "ICellVoltage",
+        "Consumes cell voltage."
+      ],
+      [
+        "CellMonitorControl",
+        "PROVIDES_INTERFACE",
+        "ICellTemperature",
+        "Publishes cell temperature."
+      ],
+      [
+        "ThermalManager",
+        "REQUIRES_INTERFACE",
+        "ICellTemperature",
+        "Consumes cell temperature."
+      ],
+      [
+        "BatteryManager",
+        "PROVIDES_INTERFACE",
+        "IChargeLimit",
+        "Publishes charge current limit."
+      ],
+      [
+        "ChargeControl",
+        "REQUIRES_INTERFACE",
+        "IChargeLimit",
+        "Consumes charge current limit."
+      ],
+      [
+        "BatteryManager",
+        "PROVIDES_INTERFACE",
+        "IContactorCommand",
+        "Publishes contactor command."
+      ],
+      [
+        "ContactorControl",
+        "REQUIRES_INTERFACE",
+        "IContactorCommand",
+        "Consumes contactor command."
+      ],
+      [
+        "BatteryManager",
+        "PROVIDES_INTERFACE",
+        "IPackStatus",
+        "Publishes pack status."
+      ],
+      [
+        "ThermalManager",
+        "REQUIRES_INTERFACE",
+        "IPackStatus",
+        "Consumes pack status."
+      ]
+    ],
+    "flows": [
+      [
+        "F-001",
+        "Cell Voltage Distribution",
+        "CellMonitorControl publishes CellVoltage through ICellVoltage. BatteryManager receives the signal through CellVoltage_In and updates its internal state model."
+      ],
+      [
+        "F-002",
+        "Cell Temperature Distribution",
+        "CellMonitorControl publishes CellTemperature through ICellTemperature. ThermalManager receives the signal through CellTemperature_In and updates its internal state model."
+      ],
+      [
+        "F-003",
+        "Charge Current Limit Distribution",
+        "BatteryManager publishes ChargeCurrentLimit through IChargeLimit. ChargeControl receives the signal through ChargeLimit_In and updates its internal state model."
+      ],
+      [
+        "F-004",
+        "Contactor Command Distribution",
+        "BatteryManager publishes ContactorCommand through IContactorCommand. ContactorControl receives the signal through ContactorCommand_In and updates its internal state model."
+      ],
+      [
+        "F-005",
+        "Pack Status Distribution",
+        "BatteryManager publishes PackStatus through IPackStatus. ThermalManager receives the signal through PackStatus_In and updates its internal state model."
+      ]
+    ]
+  },
+  "seeded_defects": [
+    {
+      "kind": "wrong_direction",
+      "subject": "ICellVoltage",
+      "expected_rules": [
+        "V003"
+      ]
+    },
+    {
+      "kind": "missing_dependency",
+      "subject": "ICellTemperature",
+      "expected_rules": [
+        "V005"
+      ]
+    },
+    {
+      "kind": "undefined_interface_on_port",
+      "subject": "IChargeLimit",
+      "expected_rules": [
+        "V002"
+      ]
+    },
+    {
+      "kind": "signal_endpoint_mismatch",
+      "subject": "ContactorCommand",
+      "expected_rules": [
+        "V007"
+      ]
+    }
+  ]
+}
