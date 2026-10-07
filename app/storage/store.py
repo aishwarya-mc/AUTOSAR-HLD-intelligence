@@ -28,6 +28,15 @@ CREATE TABLE IF NOT EXISTS reviews (
     updated_at TEXT NOT NULL,
     PRIMARY KEY (document_id, finding_id)
 );
+CREATE TABLE IF NOT EXISTS audit_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ts TEXT NOT NULL,
+    user TEXT NOT NULL,
+    role TEXT NOT NULL,
+    action TEXT NOT NULL,
+    resource TEXT,
+    detail TEXT
+);
 """
 
 
@@ -97,6 +106,20 @@ class DocumentStore:
             cur = self._conn.execute("DELETE FROM documents WHERE document_id=?", (document_id,))
             self._conn.execute("DELETE FROM reviews WHERE document_id=?", (document_id,))
         return cur.rowcount > 0
+
+    def log_audit(self, user: str, role: str, action: str, resource: str = "", detail: str = "") -> None:
+        with self._lock, self._conn:
+            self._conn.execute(
+                "INSERT INTO audit_log (ts, user, role, action, resource, detail) VALUES (?,?,?,?,?,?)",
+                (datetime.now(timezone.utc).isoformat(), user, role, action, resource, detail[:500]),
+            )
+
+    def list_audit(self, limit: int = 200) -> list[dict]:
+        with self._lock:
+            rows = self._conn.execute(
+                "SELECT * FROM audit_log ORDER BY id DESC LIMIT ?", (limit,)
+            ).fetchall()
+        return [dict(r) for r in rows]
 
     def save_review(
         self, document_id: str, finding_id: str, status: str, reviewer: str, comment: str | None

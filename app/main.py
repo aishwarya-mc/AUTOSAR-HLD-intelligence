@@ -4,8 +4,10 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from app.api.architecture import router as architecture_router
+from app.api.audit import router as audit_router
 from app.api.comparison import router as comparison_router
 from app.api.documents import router as documents_router
+from app.api.export import router as export_router
 from app.api.queries import router as queries_router
 from app.api.reports import router as reports_router
 from app.api.validation import router as validation_router
@@ -13,7 +15,6 @@ from app.core.config import get_settings
 from app.core.exceptions import ApplicationError
 from app.core.logging import configure_logging, get_logger
 from app.core.schemas import HealthResponse, HealthStatus
-
 
 settings = get_settings()
 logger = get_logger(__name__)
@@ -41,6 +42,8 @@ app.include_router(architecture_router)
 app.include_router(validation_router)
 app.include_router(comparison_router)
 app.include_router(reports_router)
+app.include_router(export_router)
+app.include_router(audit_router)
 
 
 @app.exception_handler(ApplicationError)
@@ -71,6 +74,28 @@ async def health_check():
         service="autosar-hld-intelligence-api",
         version="0.1.0",
     )
+
+
+@app.get("/version", tags=["System"])
+async def version():
+    """Code, model and configuration versions behind the running service (for traceability)."""
+    from app.evaluation.tracking import git_sha
+    from app.rag.answerability import load_answerability_model
+
+    model = load_answerability_model()
+    return {
+        "app_version": "0.1.0",
+        "git_sha": git_sha(),
+        "embedding_model": settings.embedding_model if settings.embeddings_enabled else None,
+        "llm_provider": settings.llm_provider,
+        "answerability_model": None if model is None else {
+            "version": model.version, "algorithm": model.metadata["algorithm"],
+            "threshold": model.threshold, "trained_on": model.metadata["training_documents"],
+            "test_f1": model.metadata["metrics_test"]["f1"],
+            "dataset_sha256_16": model.metadata["dataset_sha256_16"],
+        },
+        "auth_enabled": settings.auth_enabled,
+    }
 
 
 @app.get("/", tags=["System"])

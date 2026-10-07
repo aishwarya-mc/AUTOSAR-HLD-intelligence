@@ -1,0 +1,16 @@
+{
+  "document": "sample_hld.pdf",
+  "component": ["BodyControlManager", "DoorControl", "WindowControl", "VehicleStateManager"],
+  "interface": ["IDoorStatus", "IWindowCommand", "IVehicleState"],
+  "port": ["DoorStatus_Out", "DoorStatus_In", "WindowCommand_Out", "WindowCommand_In", "VehicleState_Out", "VehicleState_In"],
+  "signal": ["DoorOpenStatus", "WindowPosition", "VehicleSpeed"],
+  "dependency": [
+    "DoorControl PROVIDES_INTERFACE IDoorStatus",
+    "BodyControlManager REQUIRES_INTERFACE IDoorStatus",
+    "BodyControlManager PROVIDES_INTERFACE IWindowCommand",
+    "WindowControl REQUIRES_INTERFACE IWindowCommand",
+    "VehicleStateManager PROVIDES_INTERFACE IVehicleState",
+    "WindowControl REQUIRES_INTERFACE IVehicleState"
+  ],
+  "functional_flow": ["F-001: Door State Monitoring", "F-002: Window Command", "F-003: Vehicle State Dependency"]
+}

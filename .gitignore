@@ -57,3 +57,7 @@ dist/
 
 # Jupyter
 .ipynb_checkpoints/
+# Local vector store and uploads
+data/vectorstore/
+data/uploads/
+dist/

@@ -14,7 +14,7 @@ from app.extraction.entity_schema import (
 class InterfaceExtractor:
 
     INTERFACE_PATTERN = re.compile(
-        r"\bI[A-Z][A-Za-z0-9_]+\b"
+        r"\bI[A-Z][A-Za-z0-9_]*[a-z][A-Za-z0-9_]*\b"
     )
 
     def extract(

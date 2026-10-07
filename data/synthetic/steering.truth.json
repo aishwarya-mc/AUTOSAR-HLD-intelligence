@@ -1,0 +1,336 @@
+{
+  "key": "steering",
+  "title": "Electric Power Steering System",
+  "split": "test",
+  "component": [
+    "SteeringManager",
+    "TorqueSensorControl",
+    "MotorDriveControl",
+    "AngleSensorManager",
+    "DiagnosticManager"
+  ],
+  "interface": [
+    "IDriverTorque",
+    "ISteeringAngle",
+    "IAssistRequest",
+    "IFaultReport",
+    "IMotorFeedback"
+  ],
+  "port": [
+    "DriverTorque_Out",
+    "DriverTorque_In",
+    "SteeringAngle_Out",
+    "SteeringAngle_In",
+    "AssistRequest_Out",
+    "AssistRequest_In",
+    "FaultReport_Out",
+    "FaultReport_In",
+    "MotorFeedback_Out",
+    "MotorFeedback_In"
+  ],
+  "signal": [
+    "DriverTorque",
+    "WheelAngle",
+    "AssistCurrent",
+    "FaultCode",
+    "MotorSpeed"
+  ],
+  "dependency": [
+    "TorqueSensorControl PROVIDES_INTERFACE IDriverTorque",
+    "SteeringManager REQUIRES_INTERFACE IDriverTorque",
+    "AngleSensorManager PROVIDES_INTERFACE ISteeringAngle",
+    "SteeringManager REQUIRES_INTERFACE ISteeringAngle",
+    "SteeringManager PROVIDES_INTERFACE IAssistRequest",
+    "MotorDriveControl REQUIRES_INTERFACE IAssistRequest",
+    "SteeringManager PROVIDES_INTERFACE IFaultReport",
+    "DiagnosticManager REQUIRES_INTERFACE IFaultReport",
+    "MotorDriveControl PROVIDES_INTERFACE IMotorFeedback",
+    "SteeringManager REQUIRES_INTERFACE IMotorFeedback"
+  ],
+  "functional_flow": [
+    "F-001: Driver Torque Distribution",
+    "F-002: Wheel Angle Distribution",
+    "F-003: Assist Current Distribution",
+    "F-004: Fault Code Distribution",
+    "F-005: Motor Speed Distribution"
+  ],
+  "tables": {
+    "components": [
+      [
+        "SteeringManager",
+        "Coordinator",
+        "Computes assist torque from driver input."
+      ],
+      [
+        "TorqueSensorControl",
+        "Provider",
+        "Measures driver steering torque."
+      ],
+      [
+        "MotorDriveControl",
+        "Consumer",
+        "Drives the assist motor."
+      ],
+      [
+        "AngleSensorManager",
+        "Provider",
+        "Reports steering wheel angle."
+      ],
+      [
+        "DiagnosticManager",
+        "Consumer",
+        "Collects steering fault information."
+      ]
+    ],
+    "interfaces": [
+      [
+        "IDriverTorque",
+        "TorqueSensorControl",
+        "SteeringManager",
+        "DriverTorque",
+        "int16"
+      ],
+      [
+        "ISteeringAngle",
+        "AngleSensorManager",
+        "SteeringManager",
+        "WheelAngle",
+        "int16"
+      ],
+      [
+        "IAssistRequest",
+        "SteeringManager",
+        "MotorDriveControl",
+        "AssistCurrent",
+        "int16"
+      ],
+      [
+        "IFaultReport",
+        "SteeringManager",
+        "DiagnosticManager",
+        "FaultCode",
+        "uint16"
+      ],
+      [
+        "IMotorFeedback",
+        "MotorDriveControl",
+        "SteeringManager",
+        "MotorSpeed",
+        "uint16"
+      ]
+    ],
+    "ports": [
+      [
+        "TorqueSensorControl",
+        "DriverTorque_Out",
+        "P-PORT",
+        "IDriverTorque"
+      ],
+      [
+        "SteeringManager",
+        "DriverTorque_In",
+        "R-PORT",
+        "IDriverTorque"
+      ],
+      [
+        "AngleSensorManager",
+        "SteeringAngle_Out",
+        "P-PORT",
+        "ISteeringAngle"
+      ],
+      [
+        "SteeringManager",
+        "SteeringAngle_In",
+        "R-PORT",
+        "ISteeringAngle"
+      ],
+      [
+        "SteeringManager",
+        "AssistRequest_Out",
+        "P-PORT",
+        "IAssistRequest"
+      ],
+      [
+        "MotorDriveControl",
+        "AssistRequest_In",
+        "R-PORT",
+        "IAssistRequest"
+      ],
+      [
+        "SteeringManager",
+        "FaultReport_Out",
+        "P-PORT",
+        "IFaultReport"
+      ],
+      [
+        "DiagnosticManager",
+        "FaultReport_In",
+        "R-PORT",
+        "IFaultReport"
+      ],
+      [
+        "MotorDriveControl",
+        "MotorFeedback_Out",
+        "P-PORT",
+        "IMotorFeedback"
+      ],
+      [
+        "SteeringManager",
+        "MotorFeedback_In",
+        "R-PORT",
+        "IMotorFeedback"
+      ]
+    ],
+    "signals": [
+      [
+        "DriverTorque",
+        "int16",
+        "TorqueSensorControl",
+        "SteeringManager"
+      ],
+      [
+        "WheelAngle",
+        "int16",
+        "AngleSensorManager",
+        "SteeringManager"
+      ],
+      [
+        "AssistCurrent",
+        "int16",
+        "SteeringManager",
+        "MotorDriveControl"
+      ],
+      [
+        "FaultCode",
+        "uint16",
+        "SteeringManager",
+        "DiagnosticManager"
+      ],
+      [
+        "MotorSpeed",
+        "uint16",
+        "MotorDriveControl",
+        "SteeringManager"
+      ]
+    ],
+    "dependencies": [
+      [
+        "TorqueSensorControl",
+        "PROVIDES_INTERFACE",
+        "IDriverTorque",
+        "Publishes driver torque."
+      ],
+      [
+        "SteeringManager",
+        "REQUIRES_INTERFACE",
+        "IDriverTorque",
+        "Consumes driver torque."
+      ],
+      [
+        "AngleSensorManager",
+        "PROVIDES_INTERFACE",
+        "ISteeringAngle",
+        "Publishes wheel angle."
+      ],
+      [
+        "SteeringManager",
+        "REQUIRES_INTERFACE",
+        "ISteeringAngle",
+        "Consumes wheel angle."
+      ],
+      [
+        "SteeringManager",
+        "PROVIDES_INTERFACE",
+        "IAssistRequest",
+        "Publishes assist current."
+      ],
+      [
+        "MotorDriveControl",
+        "REQUIRES_INTERFACE",
+        "IAssistRequest",
+        "Consumes assist current."
+      ],
+      [
+        "SteeringManager",
+        "PROVIDES_INTERFACE",
+        "IFaultReport",
+        "Publishes fault code."
+      ],
+      [
+        "DiagnosticManager",
+        "REQUIRES_INTERFACE",
+        "IFaultReport",
+        "Consumes fault code."
+      ],
+      [
+        "MotorDriveControl",
+        "PROVIDES_INTERFACE",
+        "IMotorFeedback",
+        "Publishes motor speed."
+      ],
+      [
+        "SteeringManager",
+        "REQUIRES_INTERFACE",
+        "IMotorFeedback",
+        "Consumes motor speed."
+      ]
+    ],
+    "flows": [
+      [
+        "F-001",
+        "Driver Torque Distribution",
+        "TorqueSensorControl publishes DriverTorque through IDriverTorque. SteeringManager receives the signal through DriverTorque_In and updates its internal state model."
+      ],
+      [
+        "F-002",
+        "Wheel Angle Distribution",
+        "AngleSensorManager publishes WheelAngle through ISteeringAngle. SteeringManager receives the signal through SteeringAngle_In and updates its internal state model."
+      ],
+      [
+        "F-003",
+        "Assist Current Distribution",
+        "SteeringManager publishes AssistCurrent through IAssistRequest. MotorDriveControl receives the signal through AssistRequest_In and updates its internal state model."
+      ],
+      [
+        "F-004",
+        "Fault Code Distribution",
+        "SteeringManager publishes FaultCode through IFaultReport. DiagnosticManager receives the signal through FaultReport_In and updates its internal state model."
+      ],
+      [
+        "F-005",
+        "Motor Speed Distribution",
+        "MotorDriveControl publishes MotorSpeed through IMotorFeedback. SteeringManager receives the signal through MotorFeedback_In and updates its internal state model."
+      ]
+    ]
+  },
+  "seeded_defects": [
+    {
+      "kind": "wrong_direction",
+      "subject": "IDriverTorque",
+      "expected_rules": [
+        "V003"
+      ]
+    },
+    {
+      "kind": "missing_dependency",
+      "subject": "ISteeringAngle",
+      "expected_rules": [
+        "V005"
+      ]
+    },
+    {
+      "kind": "undefined_interface_on_port",
+      "subject": "IAssistRequest",
+      "expected_rules": [
+        "V002"
+      ]
+    },
+    {
+      "kind": "signal_endpoint_mismatch",
+      "subject": "FaultCode",
+      "expected_rules": [
+        "V007"
+      ]
+    }
+  ]
+}

@@ -8,9 +8,16 @@ from dataclasses import dataclass
 _TOKEN = re.compile(r"[A-Za-z0-9]+")
 _CAMEL = re.compile(r"[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+")
 _STOP = {
-    "the", "a", "an", "of", "to", "and", "or", "is", "are", "in", "on", "for", "by", "with",
-    "what", "which", "who", "how", "does", "do", "this", "that", "it", "as", "at", "be",
-    "me", "tell", "show", "list", "give",
+    # articles, prepositions, conjunctions
+    "the", "a", "an", "of", "to", "and", "or", "in", "on", "for", "by", "with", "from", "into", "about",
+    "than", "then", "as", "at", "over", "under", "between", "per", "but", "if", "so", "not", "no",
+    # auxiliaries and pronouns
+    "is", "are", "was", "were", "be", "been", "being", "do", "does", "did", "have", "has", "had",
+    "will", "would", "can", "could", "should", "may", "might", "must", "it", "its", "this", "that",
+    "there", "their", "they", "we", "you", "your", "our", "my", "me", "any", "all", "some", "each",
+    # question words and request verbs (carry no document content)
+    "what", "which", "who", "whom", "whose", "how", "when", "where", "why", "tell", "show", "list",
+    "give", "describe", "explain",
 }
 
 
@@ -37,10 +44,11 @@ class RetrievedChunk:
 class BM25Retriever:
     """Dependency-free BM25 over section-aware chunks (deterministic and auditable)."""
 
-    def __init__(self, chunks: list[dict], k1: float = 1.5, b: float = 0.75):
+    def __init__(self, chunks: list[dict], k1: float = 1.5, b: float = 0.75, tokenizer=None):
         self.chunks = chunks
         self.k1, self.b = k1, b
-        self.docs = [Counter(tokenize(c["text"] + " " + c.get("section", ""))) for c in chunks]
+        self.tokenizer = tokenizer or tokenize
+        self.docs = [Counter(self.tokenizer(c["text"] + " " + c.get("section", ""))) for c in chunks]
         self.lengths = [sum(d.values()) for d in self.docs]
         self.avg = (sum(self.lengths) / len(self.lengths)) if self.lengths else 0.0
         df: Counter = Counter()
@@ -50,7 +58,7 @@ class BM25Retriever:
         self.idf = {t: math.log(1 + (n - f + 0.5) / (f + 0.5)) for t, f in df.items()}
 
     def search(self, query: str, top_k: int = 8) -> list[RetrievedChunk]:
-        q = set(tokenize(query))
+        q = set(self.tokenizer(query))
         scored = []
         for i, d in enumerate(self.docs):
             score = 0.0

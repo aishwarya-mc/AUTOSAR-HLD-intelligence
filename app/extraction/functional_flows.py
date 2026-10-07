@@ -114,24 +114,18 @@ class FunctionalFlowExtractor:
         content: str,
     ) -> tuple[str, str]:
 
-        known_flow_names = (
-            "Door State Monitoring",
-            "Window Command",
-            "Vehicle State Dependency",
-        )
+        # The title is the run of plain words before the first identifier-like token
+        # (CamelCase such as DoorControl, or snake_case such as DoorStatus_In).
+        words = content.split()
+        title: list[str] = []
+        for word in words:
+            if re.search(r"[a-z][A-Z]", word) or "_" in word or word.endswith("."):
+                break
+            title.append(word)
+        if title and len(title) < len(words):
+            return " ".join(title), " ".join(words[len(title):])
 
-        for flow_name in known_flow_names:
-
-            if content.startswith(flow_name):
-
-                description = content[
-                    len(flow_name):
-                ].strip()
-
-                return flow_name, description
-
-        # Fallback for future HLDs:
-        # use the first sentence as the flow title.
+        # Fallback: use the first sentence as the flow title.
         match = re.match(
             r"(.+?)(?:\.\s+)(.*)",
             content,

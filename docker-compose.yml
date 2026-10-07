@@ -6,11 +6,16 @@ services:
       DATABASE_URL: sqlite:////srv/data/db/autosar.db
       LLM_PROVIDER: ${LLM_PROVIDER:-local}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+      LLM_MODEL: ${LLM_MODEL:-}
+      AUTH_ENABLED: ${AUTH_ENABLED:-false}
+      API_KEYS: ${API_KEYS:-}
     ports:
       - "8000:8000"
     volumes:
       - hld-data:/srv/data/db
       - hld-uploads:/srv/data/uploads
+      - hld-vectors:/srv/data/vectorstore
     healthcheck:
       test: ["CMD", "curl", "-fs", "http://localhost:8000/health"]
       interval: 15s
@@ -33,3 +38,4 @@ services:
 volumes:
   hld-data:
   hld-uploads:
+  hld-vectors:

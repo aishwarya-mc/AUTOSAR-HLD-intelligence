@@ -4,7 +4,6 @@ from pathlib import Path
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -25,10 +24,16 @@ class Settings(BaseSettings):
     # LLM
     llm_provider: str = Field(default="local", alias="LLM_PROVIDER")
     llm_model: str = Field(default="", alias="LLM_MODEL")
+    answerability_model_dir: str = Field(default="", alias="ANSWERABILITY_MODEL_DIR")
+    auth_enabled: bool = Field(default=False, alias="AUTH_ENABLED")
+    api_keys: str = Field(default="", alias="API_KEYS")
     anthropic_api_key: str = Field(default="", alias="ANTHROPIC_API_KEY")
 
     # Embeddings
-    embedding_model: str = Field(default="", alias="EMBEDDING_MODEL")
+    embedding_model: str = Field(default="BAAI/bge-small-en-v1.5", alias="EMBEDDING_MODEL")
+    embeddings_enabled: bool = Field(default=True, alias="EMBEDDINGS_ENABLED")
+    vector_dir_override: str = Field(default="", alias="VECTOR_DIR")
+    ollama_url: str = Field(default="http://localhost:11434", alias="OLLAMA_URL")
 
     # ChromaDB
     chroma_host: str = Field(default="localhost", alias="CHROMA_HOST")
@@ -47,11 +52,15 @@ class Settings(BaseSettings):
 
     # Retrieval
     top_k: int = Field(default=8, alias="TOP_K", ge=1)
-    chunk_size: int = Field(default=1200, alias="CHUNK_SIZE", ge=100)
-    chunk_overlap: int = Field(default=150, alias="CHUNK_OVERLAP", ge=0)
+    chunk_size: int = Field(default=250, alias="CHUNK_SIZE", ge=100)
+    chunk_overlap: int = Field(default=40, alias="CHUNK_OVERLAP", ge=0)
 
     # Upload
     max_upload_mb: int = Field(default=100, alias="MAX_UPLOAD_MB", ge=1)
+
+    @property
+    def project_root_data(self) -> Path:
+        return PROJECT_ROOT / "data"
 
     @property
     def data_dir(self) -> Path:
@@ -68,6 +77,12 @@ class Settings(BaseSettings):
     @property
     def upload_dir(self) -> Path:
         return self.data_dir / "uploads"
+
+    @property
+    def vector_dir(self) -> Path:
+        if self.vector_dir_override:
+            return Path(self.vector_dir_override)
+        return self.data_dir / "vectorstore"
 
     @property
     def document_dir(self) -> Path:

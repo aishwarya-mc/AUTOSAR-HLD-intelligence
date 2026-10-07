@@ -1,0 +1,398 @@
+{
+  "dev": {
+    "summary": {
+      "component": {
+        "tp": 32,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "interface": {
+        "tp": 30,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "port": {
+        "tp": 60,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "signal": {
+        "tp": 30,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "dependency": {
+        "tp": 60,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "functional_flow": {
+        "tp": 30,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "overall": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      }
+    },
+    "per_document": {
+      "powertrain": {
+        "component": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "interface": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "port": {
+          "tp": 10,
+          "fp": 0,
+          "fn": 0
+        },
+        "signal": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "dependency": {
+          "tp": 10,
+          "fp": 0,
+          "fn": 0
+        },
+        "functional_flow": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "adas": {
+        "component": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0
+        },
+        "interface": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0
+        },
+        "port": {
+          "tp": 12,
+          "fp": 0,
+          "fn": 0
+        },
+        "signal": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0
+        },
+        "dependency": {
+          "tp": 12,
+          "fp": 0,
+          "fn": 0
+        },
+        "functional_flow": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "infotainment": {
+        "component": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "interface": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "port": {
+          "tp": 8,
+          "fp": 0,
+          "fn": 0
+        },
+        "signal": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "dependency": {
+          "tp": 8,
+          "fp": 0,
+          "fn": 0
+        },
+        "functional_flow": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "battery": {
+        "component": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "interface": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "port": {
+          "tp": 10,
+          "fp": 0,
+          "fn": 0
+        },
+        "signal": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "dependency": {
+          "tp": 10,
+          "fp": 0,
+          "fn": 0
+        },
+        "functional_flow": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "lighting": {
+        "component": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "interface": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "port": {
+          "tp": 8,
+          "fp": 0,
+          "fn": 0
+        },
+        "signal": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "dependency": {
+          "tp": 8,
+          "fp": 0,
+          "fn": 0
+        },
+        "functional_flow": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "thermal": {
+        "component": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0
+        },
+        "interface": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0
+        },
+        "port": {
+          "tp": 12,
+          "fp": 0,
+          "fn": 0
+        },
+        "signal": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0
+        },
+        "dependency": {
+          "tp": 12,
+          "fp": 0,
+          "fn": 0
+        },
+        "functional_flow": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0
+        }
+      }
+    },
+    "errors": []
+  },
+  "test": {
+    "summary": {
+      "component": {
+        "tp": 16,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "interface": {
+        "tp": 14,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "port": {
+        "tp": 28,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "signal": {
+        "tp": 14,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "dependency": {
+        "tp": 28,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "functional_flow": {
+        "tp": 14,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "overall": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      }
+    },
+    "per_document": {
+      "steering": {
+        "component": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "interface": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "port": {
+          "tp": 10,
+          "fp": 0,
+          "fn": 0
+        },
+        "signal": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "dependency": {
+          "tp": 10,
+          "fp": 0,
+          "fn": 0
+        },
+        "functional_flow": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "keyless": {
+        "component": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "interface": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "port": {
+          "tp": 8,
+          "fp": 0,
+          "fn": 0
+        },
+        "signal": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "dependency": {
+          "tp": 8,
+          "fp": 0,
+          "fn": 0
+        },
+        "functional_flow": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "wiper": {
+        "component": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0
+        },
+        "interface": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "port": {
+          "tp": 10,
+          "fp": 0,
+          "fn": 0
+        },
+        "signal": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        },
+        "dependency": {
+          "tp": 10,
+          "fp": 0,
+          "fn": 0
+        },
+        "functional_flow": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0
+        }
+      }
+    },
+    "errors": []
+  }
+}

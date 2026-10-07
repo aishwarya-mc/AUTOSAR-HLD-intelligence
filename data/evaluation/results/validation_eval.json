@@ -1,0 +1,17 @@
+{
+  "documents": 9,
+  "seeded_defects": 36,
+  "detected": 36,
+  "defect_recall": 1.0,
+  "recall_by_kind": {
+    "wrong_direction": "9/9",
+    "missing_dependency": "9/9",
+    "undefined_interface_on_port": "9/9",
+    "signal_endpoint_mismatch": "9/9"
+  },
+  "findings_on_clean_documents": 0,
+  "findings_on_defect_documents": 63,
+  "unexplained_findings_on_defect_documents": 0,
+  "false_positive_findings": [],
+  "missed_defects": []
+}

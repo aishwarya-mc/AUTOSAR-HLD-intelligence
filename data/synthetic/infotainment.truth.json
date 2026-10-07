@@ -1,0 +1,287 @@
+{
+  "key": "infotainment",
+  "title": "Infotainment Head Unit",
+  "split": "dev",
+  "component": [
+    "MediaManager",
+    "AudioControl",
+    "DisplayControl",
+    "BluetoothManager",
+    "VolumeControl"
+  ],
+  "interface": [
+    "IVolumeLevel",
+    "IAudioStream",
+    "IPhoneConnection",
+    "IDisplayContent"
+  ],
+  "port": [
+    "VolumeLevel_Out",
+    "VolumeLevel_In",
+    "AudioStream_Out",
+    "AudioStream_In",
+    "PhoneConnection_Out",
+    "PhoneConnection_In",
+    "DisplayContent_Out",
+    "DisplayContent_In"
+  ],
+  "signal": [
+    "VolumeLevel",
+    "StreamState",
+    "PhoneStatus",
+    "TrackTitle"
+  ],
+  "dependency": [
+    "VolumeControl PROVIDES_INTERFACE IVolumeLevel",
+    "AudioControl REQUIRES_INTERFACE IVolumeLevel",
+    "MediaManager PROVIDES_INTERFACE IAudioStream",
+    "AudioControl REQUIRES_INTERFACE IAudioStream",
+    "BluetoothManager PROVIDES_INTERFACE IPhoneConnection",
+    "MediaManager REQUIRES_INTERFACE IPhoneConnection",
+    "MediaManager PROVIDES_INTERFACE IDisplayContent",
+    "DisplayControl REQUIRES_INTERFACE IDisplayContent"
+  ],
+  "functional_flow": [
+    "F-001: Volume Level Distribution",
+    "F-002: Stream State Distribution",
+    "F-003: Phone Status Distribution",
+    "F-004: Track Title Distribution"
+  ],
+  "tables": {
+    "components": [
+      [
+        "MediaManager",
+        "Coordinator",
+        "Controls playback and source selection."
+      ],
+      [
+        "AudioControl",
+        "Consumer",
+        "Drives the amplifier and equaliser."
+      ],
+      [
+        "DisplayControl",
+        "Consumer",
+        "Renders the user interface."
+      ],
+      [
+        "BluetoothManager",
+        "Provider",
+        "Handles phone pairing and streaming."
+      ],
+      [
+        "VolumeControl",
+        "Provider",
+        "Reads steering-wheel volume buttons."
+      ]
+    ],
+    "interfaces": [
+      [
+        "IVolumeLevel",
+        "VolumeControl",
+        "AudioControl",
+        "VolumeLevel",
+        "uint8"
+      ],
+      [
+        "IAudioStream",
+        "MediaManager",
+        "AudioControl",
+        "StreamState",
+        "uint8"
+      ],
+      [
+        "IPhoneConnection",
+        "BluetoothManager",
+        "MediaManager",
+        "PhoneStatus",
+        "boolean"
+      ],
+      [
+        "IDisplayContent",
+        "MediaManager",
+        "DisplayControl",
+        "TrackTitle",
+        "uint32"
+      ]
+    ],
+    "ports": [
+      [
+        "VolumeControl",
+        "VolumeLevel_Out",
+        "P-PORT",
+        "IVolumeLevel"
+      ],
+      [
+        "AudioControl",
+        "VolumeLevel_In",
+        "R-PORT",
+        "IVolumeLevel"
+      ],
+      [
+        "MediaManager",
+        "AudioStream_Out",
+        "P-PORT",
+        "IAudioStream"
+      ],
+      [
+        "AudioControl",
+        "AudioStream_In",
+        "R-PORT",
+        "IAudioStream"
+      ],
+      [
+        "BluetoothManager",
+        "PhoneConnection_Out",
+        "P-PORT",
+        "IPhoneConnection"
+      ],
+      [
+        "MediaManager",
+        "PhoneConnection_In",
+        "R-PORT",
+        "IPhoneConnection"
+      ],
+      [
+        "MediaManager",
+        "DisplayContent_Out",
+        "P-PORT",
+        "IDisplayContent"
+      ],
+      [
+        "DisplayControl",
+        "DisplayContent_In",
+        "R-PORT",
+        "IDisplayContent"
+      ]
+    ],
+    "signals": [
+      [
+        "VolumeLevel",
+        "uint8",
+        "VolumeControl",
+        "AudioControl"
+      ],
+      [
+        "StreamState",
+        "uint8",
+        "MediaManager",
+        "AudioControl"
+      ],
+      [
+        "PhoneStatus",
+        "boolean",
+        "BluetoothManager",
+        "MediaManager"
+      ],
+      [
+        "TrackTitle",
+        "uint32",
+        "MediaManager",
+        "DisplayControl"
+      ]
+    ],
+    "dependencies": [
+      [
+        "VolumeControl",
+        "PROVIDES_INTERFACE",
+        "IVolumeLevel",
+        "Publishes volume level."
+      ],
+      [
+        "AudioControl",
+        "REQUIRES_INTERFACE",
+        "IVolumeLevel",
+        "Consumes volume level."
+      ],
+      [
+        "MediaManager",
+        "PROVIDES_INTERFACE",
+        "IAudioStream",
+        "Publishes stream state."
+      ],
+      [
+        "AudioControl",
+        "REQUIRES_INTERFACE",
+        "IAudioStream",
+        "Consumes stream state."
+      ],
+      [
+        "BluetoothManager",
+        "PROVIDES_INTERFACE",
+        "IPhoneConnection",
+        "Publishes phone status."
+      ],
+      [
+        "MediaManager",
+        "REQUIRES_INTERFACE",
+        "IPhoneConnection",
+        "Consumes phone status."
+      ],
+      [
+        "MediaManager",
+        "PROVIDES_INTERFACE",
+        "IDisplayContent",
+        "Publishes track title."
+      ],
+      [
+        "DisplayControl",
+        "REQUIRES_INTERFACE",
+        "IDisplayContent",
+        "Consumes track title."
+      ]
+    ],
+    "flows": [
+      [
+        "F-001",
+        "Volume Level Distribution",
+        "VolumeControl publishes VolumeLevel through IVolumeLevel. AudioControl receives the signal through VolumeLevel_In and updates its internal state model."
+      ],
+      [
+        "F-002",
+        "Stream State Distribution",
+        "MediaManager publishes StreamState through IAudioStream. AudioControl receives the signal through AudioStream_In and updates its internal state model."
+      ],
+      [
+        "F-003",
+        "Phone Status Distribution",
+        "BluetoothManager publishes PhoneStatus through IPhoneConnection. MediaManager receives the signal through PhoneConnection_In and updates its internal state model."
+      ],
+      [
+        "F-004",
+        "Track Title Distribution",
+        "MediaManager publishes TrackTitle through IDisplayContent. DisplayControl receives the signal through DisplayContent_In and updates its internal state model."
+      ]
+    ]
+  },
+  "seeded_defects": [
+    {
+      "kind": "wrong_direction",
+      "subject": "IVolumeLevel",
+      "expected_rules": [
+        "V003"
+      ]
+    },
+    {
+      "kind": "missing_dependency",
+      "subject": "IAudioStream",
+      "expected_rules": [
+        "V005"
+      ]
+    },
+    {
+      "kind": "undefined_interface_on_port",
+      "subject": "IPhoneConnection",
+      "expected_rules": [
+        "V002"
+      ]
+    },
+    {
+      "kind": "signal_endpoint_mismatch",
+      "subject": "TrackTitle",
+      "expected_rules": [
+        "V007"
+      ]
+    }
+  ]
+}

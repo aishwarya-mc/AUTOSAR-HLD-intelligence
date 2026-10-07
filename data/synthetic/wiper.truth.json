@@ -1,0 +1,342 @@
+{
+  "key": "wiper",
+  "title": "Wiper and Rain Sensing",
+  "split": "test",
+  "component": [
+    "WiperManager",
+    "RainSensorControl",
+    "WiperMotorControl",
+    "WasherControl",
+    "StalkSwitchManager",
+    "RearWiperControl"
+  ],
+  "interface": [
+    "IRainIntensity",
+    "IStalkInput",
+    "IWiperDrive",
+    "IWasherDrive",
+    "IRearWiperDrive"
+  ],
+  "port": [
+    "RainIntensity_Out",
+    "RainIntensity_In",
+    "StalkInput_Out",
+    "StalkInput_In",
+    "WiperDrive_Out",
+    "WiperDrive_In",
+    "WasherDrive_Out",
+    "WasherDrive_In",
+    "RearWiperDrive_Out",
+    "RearWiperDrive_In"
+  ],
+  "signal": [
+    "RainIntensity",
+    "StalkSetting",
+    "WipeInterval",
+    "WasherPulse",
+    "RearWipeMode"
+  ],
+  "dependency": [
+    "RainSensorControl PROVIDES_INTERFACE IRainIntensity",
+    "WiperManager REQUIRES_INTERFACE IRainIntensity",
+    "StalkSwitchManager PROVIDES_INTERFACE IStalkInput",
+    "WiperManager REQUIRES_INTERFACE IStalkInput",
+    "WiperManager PROVIDES_INTERFACE IWiperDrive",
+    "WiperMotorControl REQUIRES_INTERFACE IWiperDrive",
+    "WiperManager PROVIDES_INTERFACE IWasherDrive",
+    "WasherControl REQUIRES_INTERFACE IWasherDrive",
+    "WiperManager PROVIDES_INTERFACE IRearWiperDrive",
+    "RearWiperControl REQUIRES_INTERFACE IRearWiperDrive"
+  ],
+  "functional_flow": [
+    "F-001: Rain Intensity Distribution",
+    "F-002: Stalk Setting Distribution",
+    "F-003: Wipe Interval Distribution",
+    "F-004: Washer Pulse Distribution",
+    "F-005: Rear Wipe Mode Distribution"
+  ],
+  "tables": {
+    "components": [
+      [
+        "WiperManager",
+        "Coordinator",
+        "Selects wiper mode from sensor and switch inputs."
+      ],
+      [
+        "RainSensorControl",
+        "Provider",
+        "Measures rain intensity."
+      ],
+      [
+        "WiperMotorControl",
+        "Consumer",
+        "Drives the front wiper motor."
+      ],
+      [
+        "WasherControl",
+        "Consumer",
+        "Controls the washer pump."
+      ],
+      [
+        "StalkSwitchManager",
+        "Provider",
+        "Reads wiper stalk switch."
+      ],
+      [
+        "RearWiperControl",
+        "Consumer",
+        "Drives the rear wiper."
+      ]
+    ],
+    "interfaces": [
+      [
+        "IRainIntensity",
+        "RainSensorControl",
+        "WiperManager",
+        "RainIntensity",
+        "uint8"
+      ],
+      [
+        "IStalkInput",
+        "StalkSwitchManager",
+        "WiperManager",
+        "StalkSetting",
+        "uint8"
+      ],
+      [
+        "IWiperDrive",
+        "WiperManager",
+        "WiperMotorControl",
+        "WipeInterval",
+        "uint16"
+      ],
+      [
+        "IWasherDrive",
+        "WiperManager",
+        "WasherControl",
+        "WasherPulse",
+        "uint8"
+      ],
+      [
+        "IRearWiperDrive",
+        "WiperManager",
+        "RearWiperControl",
+        "RearWipeMode",
+        "uint8"
+      ]
+    ],
+    "ports": [
+      [
+        "RainSensorControl",
+        "RainIntensity_Out",
+        "P-PORT",
+        "IRainIntensity"
+      ],
+      [
+        "WiperManager",
+        "RainIntensity_In",
+        "R-PORT",
+        "IRainIntensity"
+      ],
+      [
+        "StalkSwitchManager",
+        "StalkInput_Out",
+        "P-PORT",
+        "IStalkInput"
+      ],
+      [
+        "WiperManager",
+        "StalkInput_In",
+        "R-PORT",
+        "IStalkInput"
+      ],
+      [
+        "WiperManager",
+        "WiperDrive_Out",
+        "P-PORT",
+        "IWiperDrive"
+      ],
+      [
+        "WiperMotorControl",
+        "WiperDrive_In",
+        "R-PORT",
+        "IWiperDrive"
+      ],
+      [
+        "WiperManager",
+        "WasherDrive_Out",
+        "P-PORT",
+        "IWasherDrive"
+      ],
+      [
+        "WasherControl",
+        "WasherDrive_In",
+        "R-PORT",
+        "IWasherDrive"
+      ],
+      [
+        "WiperManager",
+        "RearWiperDrive_Out",
+        "P-PORT",
+        "IRearWiperDrive"
+      ],
+      [
+        "RearWiperControl",
+        "RearWiperDrive_In",
+        "R-PORT",
+        "IRearWiperDrive"
+      ]
+    ],
+    "signals": [
+      [
+        "RainIntensity",
+        "uint8",
+        "RainSensorControl",
+        "WiperManager"
+      ],
+      [
+        "StalkSetting",
+        "uint8",
+        "StalkSwitchManager",
+        "WiperManager"
+      ],
+      [
+        "WipeInterval",
+        "uint16",
+        "WiperManager",
+        "WiperMotorControl"
+      ],
+      [
+        "WasherPulse",
+        "uint8",
+        "WiperManager",
+        "WasherControl"
+      ],
+      [
+        "RearWipeMode",
+        "uint8",
+        "WiperManager",
+        "RearWiperControl"
+      ]
+    ],
+    "dependencies": [
+      [
+        "RainSensorControl",
+        "PROVIDES_INTERFACE",
+        "IRainIntensity",
+        "Publishes rain intensity."
+      ],
+      [
+        "WiperManager",
+        "REQUIRES_INTERFACE",
+        "IRainIntensity",
+        "Consumes rain intensity."
+      ],
+      [
+        "StalkSwitchManager",
+        "PROVIDES_INTERFACE",
+        "IStalkInput",
+        "Publishes stalk setting."
+      ],
+      [
+        "WiperManager",
+        "REQUIRES_INTERFACE",
+        "IStalkInput",
+        "Consumes stalk setting."
+      ],
+      [
+        "WiperManager",
+        "PROVIDES_INTERFACE",
+        "IWiperDrive",
+        "Publishes wipe interval."
+      ],
+      [
+        "WiperMotorControl",
+        "REQUIRES_INTERFACE",
+        "IWiperDrive",
+        "Consumes wipe interval."
+      ],
+      [
+        "WiperManager",
+        "PROVIDES_INTERFACE",
+        "IWasherDrive",
+        "Publishes washer pulse."
+      ],
+      [
+        "WasherControl",
+        "REQUIRES_INTERFACE",
+        "IWasherDrive",
+        "Consumes washer pulse."
+      ],
+      [
+        "WiperManager",
+        "PROVIDES_INTERFACE",
+        "IRearWiperDrive",
+        "Publishes rear wipe mode."
+      ],
+      [
+        "RearWiperControl",
+        "REQUIRES_INTERFACE",
+        "IRearWiperDrive",
+        "Consumes rear wipe mode."
+      ]
+    ],
+    "flows": [
+      [
+        "F-001",
+        "Rain Intensity Distribution",
+        "RainSensorControl publishes RainIntensity through IRainIntensity. WiperManager receives the signal through RainIntensity_In and updates its internal state model."
+      ],
+      [
+        "F-002",
+        "Stalk Setting Distribution",
+        "StalkSwitchManager publishes StalkSetting through IStalkInput. WiperManager receives the signal through StalkInput_In and updates its internal state model."
+      ],
+      [
+        "F-003",
+        "Wipe Interval Distribution",
+        "WiperManager publishes WipeInterval through IWiperDrive. WiperMotorControl receives the signal through WiperDrive_In and updates its internal state model."
+      ],
+      [
+        "F-004",
+        "Washer Pulse Distribution",
+        "WiperManager publishes WasherPulse through IWasherDrive. WasherControl receives the signal through WasherDrive_In and updates its internal state model."
+      ],
+      [
+        "F-005",
+        "Rear Wipe Mode Distribution",
+        "WiperManager publishes RearWipeMode through IRearWiperDrive. RearWiperControl receives the signal through RearWiperDrive_In and updates its internal state model."
+      ]
+    ]
+  },
+  "seeded_defects": [
+    {
+      "kind": "wrong_direction",
+      "subject": "IRainIntensity",
+      "expected_rules": [
+        "V003"
+      ]
+    },
+    {
+      "kind": "missing_dependency",
+      "subject": "IStalkInput",
+      "expected_rules": [
+        "V005"
+      ]
+    },
+    {
+      "kind": "undefined_interface_on_port",
+      "subject": "IWiperDrive",
+      "expected_rules": [
+        "V002"
+      ]
+    },
+    {
+      "kind": "signal_endpoint_mismatch",
+      "subject": "WasherPulse",
+      "expected_rules": [
+        "V007"
+      ]
+    }
+  ]
+}
