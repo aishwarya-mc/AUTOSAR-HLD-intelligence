@@ -425,6 +425,9 @@ def main():
     docs_dir = dirs["Documentation"]
     (docs_dir / fname("Rubric_Self_Assessment", "md")).write_text(submission_docs.rubric_self_assessment(REG, passed), encoding="utf-8")
     (docs_dir / fname("Technical_QA_Preparation", "md")).write_text(submission_docs.qa_prep(REG), encoding="utf-8")
+    deck = REPO / "presentation" / fname("Presentation", "pptx")
+    if deck.exists():
+        shutil.copy(deck, docs_dir / deck.name)
     (docs_dir / fname("Contribution_Statement", "md")).write_text(submission_docs.contribution_statement(REG), encoding="utf-8")
     shutil.copytree(REPO / "models", dirs["Model_Prompts_Config"] / "models")
     shutil.copytree(REPO / "models", code / "models")
