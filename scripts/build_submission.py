@@ -82,9 +82,10 @@ def declarations(dest: Path):
                   "(listed below and in the Technical Report).", B),
         Paragraph("3. No results have been fabricated; every metric reported can be reproduced with the "
                   "commands in the README.", B),
-        Paragraph("4. My individual contribution is stated accurately: <i>(student to complete: describe which "
-                  "parts you designed, wrote, tested and can explain)</i> "
-                  "______________________________________________________________", B),
+        Paragraph("4. My individual contribution is stated accurately in the Contribution Statement "
+                  "(Documentation folder): I designed and wrote the foundation, ingestion, chunking, extraction and "
+                  "normalisation modules and chose, directed, reviewed and can explain the rest; later modules were "
+                  "implemented with AI assistance (Claude Code), as declared in the AI-tool usage declaration.", B),
         Spacer(1, 3 * mm),
         Paragraph("<b>External software and models used</b>", B),
         grid([["Component", "Use", "Licence / source"],
@@ -113,9 +114,11 @@ def declarations(dest: Path):
                "integration tests; drafted the evaluation set, technical report generator, declarations and README.",
                "Code/, Evaluation_Results/, Documentation/, Model_Prompts_Config/, Declarations/",
                "____ (student to confirm after review)"],
-              ["Claude Code (earlier sessions / earlier components)",
-               "<i>Student to state whether the ingestion, chunking, extraction and normalisation modules were written "
-               "with or without AI assistance.</i>", "Code/app/ingestion, chunking, extraction", "____"],
+              ["None (student-authored modules)",
+               "Per the student's statement, the project foundation, document ingestion, section-aware chunking, entity "
+               "extraction and normalisation/deduplication modules (with their unit tests) and the sample HLD generator were "
+               "written by the student without AI assistance. See the Contribution Statement.",
+               "Code/app/core, ingestion, chunking, extraction, scripts/generate_sample_hld.py", "____"],
               ["BAAI/bge-small-en-v1.5 (pre-trained model, runs locally)",
                "Runtime component: converts chunks and queries to embeddings for retrieval.",
                "RAG layer", "Y (evaluated; see Evaluation_Results)"],
@@ -422,6 +425,7 @@ def main():
     docs_dir = dirs["Documentation"]
     (docs_dir / fname("Rubric_Self_Assessment", "md")).write_text(submission_docs.rubric_self_assessment(REG, passed), encoding="utf-8")
     (docs_dir / fname("Technical_QA_Preparation", "md")).write_text(submission_docs.qa_prep(REG), encoding="utf-8")
+    (docs_dir / fname("Contribution_Statement", "md")).write_text(submission_docs.contribution_statement(REG), encoding="utf-8")
     shutil.copytree(REPO / "models", dirs["Model_Prompts_Config"] / "models")
     shutil.copytree(REPO / "models", code / "models")
     shutil.copytree(REPO / "data/synthetic", code / "data/synthetic")

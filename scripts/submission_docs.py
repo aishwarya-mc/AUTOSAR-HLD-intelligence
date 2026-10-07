@@ -15,6 +15,50 @@ def _n():
     return ans, res, ret, val, ext, before
 
 
+def contribution_statement(reg: str) -> str:
+    return f"""# Contribution Statement
+
+Student: Aishwarya Manoj ({reg}), Amrita Vishwa Vidyapeetham. Case study CS1: AUTOSAR HLD Document Analysis Assistant.
+
+This statement separates the work done by the student from the work done with AI assistance (Claude Code, Anthropic Claude
+models). The student's authorship of the modules in column 2 is the student's own statement; the git history of the repository
+(commits "establish project foundation", "implement document ingestion pipeline", "implement architecture entity extraction",
+"normalize and deduplicate architecture entities") shows when they were created. The student directed all the AI-assisted work,
+reviewed it, ran it and is accountable for it.
+
+| Area | Student (Aishwarya Manoj) | AI assistance (Claude Code), directed and reviewed by the student |
+|---|---|---|
+| Project scope and plan | Chose case study CS1; defined objectives, users and the technology stack (FastAPI, Streamlit, vector store, SQLite, Docker); set the repository structure | Followed the student's plan; aligned the work to the guide and rubric the student supplied |
+| Foundation | Configuration and settings, logging, error types, data schemas, FastAPI application skeleton | Added settings for new features (embeddings, authentication, model paths) |
+| Document ingestion | PDF parsing (text, headings, tables), OCR fallback, file validation, metadata, ingestion service | Fixed the OCR trigger (only scanned pages); made the OCR import optional |
+| Chunking | Section-aware chunker with deterministic chunk ids and page evidence | Reduced the default chunk size to fit the embedding model |
+| Entity extraction | Extractors for components, interfaces, ports, signals, dependencies and functional flows; extraction orchestrator | Found by held-out testing and fixed: table-driven extraction for signals and other entities, flow-title parsing, interface pattern |
+| Normalisation and deduplication | Entity normaliser and evidence-preserving de-duplication, with unit tests | None |
+| Sample data | Synthetic sample HLD and its generator script | Second revision with seeded defects; nine more synthetic HLDs, ground truth and defect variants |
+| Typed table model, graph, impact analysis | Reviewed | Implemented |
+| Retrieval and Q&amp;A | Reviewed; chose the stack | BGE embeddings, ChromaDB store, BM25, weighted fusion, grounded answerer |
+| Answerability model and ML experiments | Reviewed and ran the experiments; decides which results to report | Dataset generator, nested cross-validation, six-model comparison, calibration, PCA and retrieval experiments, EDA |
+| Validation rules and revision comparison | Reviewed | Eleven rules, seeded-defect evaluation, revision diff and impact |
+| API, security, audit, export | Reviewed | Routes, roles, project isolation, audit log, JSON/CSV export, component reports |
+| Streamlit UI | Reviewed and tested | Implemented |
+| Tests, CI, Docker, deployment config | Ran and verified | Unit and integration tests, Dockerfile, compose, CI workflow, Render blueprint |
+| Evaluation, report and submission package | Supplied the guide and rubric, directed the work, reviews and submits; writes the personal reflection | Evaluation scripts, technical report, declarations, model/prompt configuration, video script, submission builder |
+
+## Summary
+- **Student:** project definition and direction, and the core pipeline that everything else builds on: foundation, ingestion,
+  chunking, entity extraction, normalisation and deduplication, the sample HLD generator, and their tests.
+- **AI-assisted, student-directed:** retrieval and embeddings, the trained model and experiments, validation, comparison,
+  security, API, UI, deployment, evaluation and documentation.
+
+## Accountability
+The student has run the system, reviewed the AI-assisted work and can explain every module in the submission. Where the
+two columns overlap (for example fixes inside the student's extractors), the AI-assisted change is the bug fix described in the
+second column and the original module is the student's.
+
+Student signature: ______________________________ Date: ______________
+"""
+
+
 def rubric_self_assessment(reg: str, tests: str) -> str:
     ans, res, ret, val, ext, before = _n()
     tm, rb = ans["test_metrics"], ans["rule_baseline_test"]
