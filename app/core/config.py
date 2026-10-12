@@ -22,8 +22,9 @@ class Settings(BaseSettings):
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
 
     # LLM
-    llm_provider: str = Field(default="local", alias="LLM_PROVIDER")
-    llm_model: str = Field(default="", alias="LLM_MODEL")
+    llm_provider: str = Field(default="ollama", alias="LLM_PROVIDER")
+    llm_model: str = Field(default="llama3.2", alias="LLM_MODEL")
+    llm_timeout_seconds: float = Field(default=120.0, alias="LLM_TIMEOUT_SECONDS")
     answerability_model_dir: str = Field(default="", alias="ANSWERABILITY_MODEL_DIR")
     auth_enabled: bool = Field(default=False, alias="AUTH_ENABLED")
     api_keys: str = Field(default="", alias="API_KEYS")

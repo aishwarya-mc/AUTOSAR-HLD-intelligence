@@ -25,6 +25,9 @@ async def lifespan(app: FastAPI):
     configure_logging()
     logger.info("Starting AUTOSAR HLD Intelligence API")
     logger.info("Environment: %s", settings.app_env)
+    from app.rag.llm import warm_up
+
+    warm_up()  # load the local LLM in the background (no-op if disabled or unavailable)
     yield
     logger.info("Shutting down AUTOSAR HLD Intelligence API")
 
@@ -81,13 +84,18 @@ async def version():
     """Code, model and configuration versions behind the running service (for traceability)."""
     from app.evaluation.tracking import git_sha
     from app.rag.answerability import load_answerability_model
+    from app.rag.llm import llm_status
 
+    llm = llm_status(force=True)
     model = load_answerability_model()
     return {
         "app_version": "0.1.0",
         "git_sha": git_sha(),
         "embedding_model": settings.embedding_model if settings.embeddings_enabled else None,
-        "llm_provider": settings.llm_provider,
+        "llm": {
+            "provider": llm.provider, "model": llm.model, "enabled": llm.enabled,
+            "ready": llm.reachable and llm.model_installed, "detail": llm.detail,
+        },
         "answerability_model": None if model is None else {
             "version": model.version, "algorithm": model.metadata["algorithm"],
             "threshold": model.threshold, "trained_on": model.metadata["training_documents"],

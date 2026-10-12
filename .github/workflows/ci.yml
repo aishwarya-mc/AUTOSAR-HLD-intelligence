@@ -8,6 +8,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      LLM_PROVIDER: local  # CI has no Ollama; LLM paths are tested against a fake server
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
