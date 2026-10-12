@@ -18,6 +18,7 @@ RUN python -c "from fastembed import TextEmbedding; TextEmbedding('BAAI/bge-smal
 COPY app ./app
 COPY models ./models
 COPY frontend ./frontend
+COPY .streamlit ./.streamlit
 COPY data/sample ./data/sample
 COPY scripts/start_single.sh ./scripts/start_single.sh
 
