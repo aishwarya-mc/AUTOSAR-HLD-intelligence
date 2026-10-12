@@ -379,6 +379,12 @@ def page_ask(doc):
             with st.chat_message("assistant"):
                 if r["grounded"]:
                     st.markdown(r["answer"])
+                    if r.get("generated_by"):
+                        st.caption(f"✍️ Wording generated locally by {r['generated_by']} from the cited evidence")
+                        if r.get("facts"):
+                            with st.expander("Verbatim facts from the document (check the wording against these)"):
+                                for fact in r["facts"]:
+                                    st.markdown(f"- {fact}")
                     st.progress(r["confidence"], text=f"Confidence {r['confidence']:.0%}")
                     for c in r["citations"]:
                         with st.expander(f"📄 [{c['citation_id']}] {c['section']} — page {c['page_number']}"):

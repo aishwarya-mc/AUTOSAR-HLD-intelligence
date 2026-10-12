@@ -12,6 +12,7 @@ from collections import defaultdict
 from pathlib import Path
 
 os.environ.setdefault("DATABASE_URL", "sqlite:///:memory:")
+os.environ.setdefault("LLM_PROVIDER", "local")  # retrieval metrics must not depend on LLM wording
 os.environ.setdefault("VECTOR_DIR", tempfile.mkdtemp(prefix="hld_eval_vectors_"))
 
 from app.core.config import get_settings  # noqa: E402

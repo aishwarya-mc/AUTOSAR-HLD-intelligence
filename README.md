@@ -47,9 +47,15 @@ docker compose up --build -d
 Data persists in the `hld-data`, `hld-uploads` and `hld-vectors` volumes. The BGE embedding model is
 baked into the image, so the stack runs offline. Authentication is off by default; enable it with
 `AUTH_ENABLED=true API_KEYS="key:role:name[:projectA|projectB],..." docker compose up -d` and enter the key
-in the UI's **Access** box. For LLM-phrased answers set `LLM_PROVIDER=ollama` (local, preferred) or
-`LLM_PROVIDER=anthropic` with `ANTHROPIC_API_KEY` (external API: declare it before a demo); the LLM only
-rewrites retrieved evidence. Without either, answers are extractive and fully local.
+in the UI's **Access** box.
+
+**Local LLM (on by default).** Answers are phrased by a local model served by [Ollama](https://ollama.com)
+(default `llama3.2`). Install Ollama and run `ollama pull llama3.2` once; the API loads the model at startup.
+The LLM only rewrites retrieved evidence: the trained answerability model decides *whether* to answer, the prompt
+allows only the supplied evidence with [C#] citations, and a faithfulness guard rejects any answer that mentions a
+name not present in the evidence. If Ollama is not running, the model is missing, or a reply fails the guard, the
+system falls back to the extractive answer and says so in the response's limitations. `GET /version` shows the LLM
+status. Set `LLM_PROVIDER=local` to disable the LLM, or `anthropic` (external API, declare it) to use Claude.
 
 ### One-click: Render (free tier, single container)
 
@@ -75,7 +81,7 @@ and set `DATABASE_URL=sqlite:////srv/data/db/autosar.db`.
 - **Extraction** is deterministic (regex + table parsing), so every entity carries exact page/section evidence.
 - **Validation** is rule-based (V001-V011); findings are advisory and reviewable (accept / reject / needs review).
 - **Graph**: the traceability graph is built in memory from the HLD tables (Neo4j is not used).
-- **LLM**: not required for the reported results; optional local (Ollama) or external (Anthropic) providers are untested in the evaluation.
+- **LLM**: a local Ollama model phrases answers by default (with guard and fallback); retrieval, answerability and extraction metrics are computed with the deterministic extractive wording (`LLM_PROVIDER=local`), and LLM answers are evaluated separately (`python -m app.evaluation.llm_eval`).
 - **Security**: static API keys with roles and project isolation plus an audit log (`GET /audit`, admin). There is no SSO/IAM integration.
 - The table parser expects the sample HLD's table layout (Component/Role, Interface/Provider/Consumer,
   Component/Port/Direction/Interface, Signal/Data Type/Source/Destination, Source/Relationship/Target/Reason).

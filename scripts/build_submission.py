@@ -22,6 +22,10 @@ from reportlab.lib.units import mm
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO))
+
+from app.rag.llm import SYSTEM_PROMPT as SYSTEM_PROMPT_TEXT  # noqa: E402
+
 ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
 RERUN = "--rerun" in sys.argv  # regenerate every experiment (slow)
 OUT_BASE = Path(ARGS[0]) if ARGS else REPO / "dist"
@@ -82,13 +86,15 @@ def declarations(dest: Path):
                   "(listed below and in the Technical Report).", B),
         Paragraph("3. No results have been fabricated; every metric reported can be reproduced with the "
                   "commands in the README.", B),
-        Paragraph("4. My individual contribution is stated accurately: <i>(student to complete: describe which "
-                  "parts you designed, wrote, tested and can explain)</i> "
-                  "______________________________________________________________", B),
+        Paragraph("4. My individual contribution is stated accurately in the Contribution Statement "
+                  "(Documentation folder): I designed and wrote the foundation, ingestion, chunking, extraction and "
+                  "normalisation modules and chose, directed, reviewed and can explain the rest; later modules were "
+                  "implemented with AI assistance (Claude Code), as declared in the AI-tool usage declaration.", B),
         Spacer(1, 3 * mm),
         Paragraph("<b>External software and models used</b>", B),
         grid([["Component", "Use", "Licence / source"],
               ["BAAI/bge-small-en-v1.5", "Pre-trained embedding model (retrieval)", "MIT, Hugging Face"],
+              ["Llama 3.2 3B (Meta) via Ollama", "Local LLM that phrases answers from retrieved evidence", "Llama 3.2 Community License; Ollama MIT"],
               ["sentence-transformers/all-MiniLM-L6-v2", "Pre-trained embedding model, used only in the retrieval comparison", "Apache-2.0, Hugging Face"],
               ["scikit-learn, joblib, NumPy, matplotlib", "Training and evaluating the answerability classifier, PCA, plots", "BSD / PSF"],
               ["fastembed / ONNX Runtime", "Local embedding inference", "Apache-2.0"],
@@ -113,15 +119,18 @@ def declarations(dest: Path):
                "integration tests; drafted the evaluation set, technical report generator, declarations and README.",
                "Code/, Evaluation_Results/, Documentation/, Model_Prompts_Config/, Declarations/",
                "____ (student to confirm after review)"],
-              ["Claude Code (earlier sessions / earlier components)",
-               "<i>Student to state whether the ingestion, chunking, extraction and normalisation modules were written "
-               "with or without AI assistance.</i>", "Code/app/ingestion, chunking, extraction", "____"],
+              ["None (student-authored modules)",
+               "Per the student's statement, the project foundation, document ingestion, section-aware chunking, entity "
+               "extraction and normalisation/deduplication modules (with their unit tests) and the sample HLD generator were "
+               "written by the student without AI assistance. See the Contribution Statement.",
+               "Code/app/core, ingestion, chunking, extraction, scripts/generate_sample_hld.py", "____"],
               ["BAAI/bge-small-en-v1.5 (pre-trained model, runs locally)",
                "Runtime component: converts chunks and queries to embeddings for retrieval.",
                "RAG layer", "Y (evaluated; see Evaluation_Results)"],
-              ["Optional LLM via Ollama or Anthropic API",
-               "<b>Not used in the submitted evaluation.</b> Disabled by default; extractive answers are produced "
-               "without a generative model.", "None", "N/A"]],
+              ["Meta Llama 3.2 3B (pre-trained LLM), served locally by Ollama",
+               "Runtime component: phrases the final answer from the retrieved evidence only, behind a faithfulness guard "
+               "and a provides/requires role guard; falls back to extractive text. Does not decide whether to answer.",
+               "RAG layer (app/rag/llm.py)", "Y (evaluated on 50 questions; see Evaluation_Results)"]],
              [40, 60, 40, 30]),
         Spacer(1, 3 * mm),
         Paragraph("Verification performed: all code was run; the automated test suite passes; extraction and Q&amp;A were "
@@ -139,9 +148,9 @@ Student: {FULL_NAME} ({REG}), {FULL_UNI}. Version {VERSION}, {date.today():%d %B
 | Role | Model / provider | Version | Where it runs | Notes |
 |---|---|---|---|---|
 | Embeddings | BAAI/bge-small-en-v1.5 (384 dimensions) | revision pinned by the fastembed cache baked into the Docker image | Local, CPU, ONNX Runtime through `fastembed` | Query prefix "Represent this sentence for searching relevant passages: " is applied to queries, as recommended for BGE retrieval |
-| Answer generation (default) | None - extractive, rule-based composition from retrieved passages and graph facts | n/a | Local | Used for all reported evaluation results |
-| Answer generation (optional) | Ollama-hosted local model (default name `llama3.2`, configurable with `LLM_MODEL`) | user-selected | Local | Enabled with `LLM_PROVIDER=ollama`; not part of the evaluation |
-| Answer generation (optional, external) | Anthropic API (default `claude-haiku-4-5-20251001`) | n/a | External service | Disabled by default; requires `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY`; would have to be declared before any demo |
+| Answer wording (default) | Meta Llama 3.2 3B served by Ollama (`LLM_PROVIDER=ollama`, `LLM_MODEL=llama3.2`) | 3B, 4-bit quantised, about 2 GB | Local (Ollama on the same machine) | Phrases the answer from retrieved evidence only; temperature 0, at most 300 new tokens; falls back to extractive wording |
+| Answer wording (fallback) | Extractive, rule-based composition from retrieved passages and graph facts | n/a | Local | Used when the LLM is unavailable or rejected; also used for all retrieval/answerability metrics (`LLM_PROVIDER=local`) |
+| Answer wording (optional, external) | Anthropic API | n/a | External service | Off unless `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY` are set; would have to be declared |
 | OCR | Tesseract (via pytesseract) | system package | Local | Only for pages with fewer than 20 extractable words |
 
 ## 2. Vector store and retrieval configuration
@@ -172,13 +181,16 @@ Student: {FULL_NAME} ({REG}), {FULL_UNI}. Version {VERSION}, {date.today():%d %B
 
 ## 3. Prompts
 
-The default pipeline uses no generative prompt. When an optional LLM provider is enabled, this exact template is sent
-(`app/rag/answerer.py`, `GroundedAnswerer._llm_answer`); retrieved text is inserted as delimited evidence:
+After the answerability model decides the question is answerable, the LLM receives a system prompt and a user message
+(`app/rag/llm.py`); retrieved text is inserted as delimited evidence. The system prompt is:
 
 ```
-Answer the engineering question using ONLY the evidence below. Cite evidence as [C1], [C2]. If the evidence does not
-contain the answer, reply exactly: "The requested information was not found in the document."
+{SYSTEM_PROMPT_TEXT}
+```
 
+The user message has this form:
+
+```
 EVIDENCE
 [C1] (section: <section>, page <n>)
 <chunk text>
@@ -191,7 +203,7 @@ STRUCTURED FACTS
 QUESTION: <user question>
 ```
 
-Generation settings for Ollama: temperature 0. For the Anthropic path: `max_tokens` 700.
+Generation settings for Ollama (`/api/chat`): temperature 0, `num_predict` 300, `keep_alive` 30 minutes. Guards applied to the reply: (1) faithfulness: every component/interface/port/signal name in the answer must occur in the evidence or the question; (2) role guard: for a provides/requires question, a component whose facts show the opposite role is rejected; (3) empty or 'not found' replies are rejected. Any rejection or failure falls back to the extractive answer.
 
 ## 4. Tools and components
 
@@ -213,8 +225,9 @@ Generation settings for Ollama: temperature 0. For the Anthropic path: `max_toke
 | `EMBEDDING_MODEL` | `BAAI/bge-small-en-v1.5` | embedding model name |
 | `EMBEDDINGS_ENABLED` | `true` | `false` falls back to BM25 only |
 | `VECTOR_DIR` | `data/vectorstore` | vector store location |
-| `LLM_PROVIDER` | `local` | `local` (extractive), `ollama`, `anthropic` |
-| `LLM_MODEL` | empty | model name for the optional LLM |
+| `LLM_PROVIDER` | `ollama` | `ollama` (local LLM, default), `local` (no LLM, extractive wording only), `anthropic` (external API) |
+| `LLM_MODEL` | `llama3.2` | model served by Ollama (run `ollama pull llama3.2` once) |
+| `LLM_TIMEOUT_SECONDS` | `120` | per-answer LLM timeout |
 | `OLLAMA_URL` | `http://localhost:11434` | Ollama endpoint |
 | `AUTH_ENABLED` / `API_KEYS` | `false` / empty | `key:role:name[:projectA|projectB]` entries separated by commas |
 | `DATABASE_URL` | `sqlite:///./data/autosar.db` | SQLite file |
@@ -240,7 +253,7 @@ docker compose up --build        # API :8000, UI :8501
 VIDEO_SCRIPT = f"""# Video demonstration script (target 8-9 minutes, limit 5-10)
 
 Student: {FULL_NAME} ({REG}). Record the screen with narration; show the application running from the submitted code.
-Declare before the demo: no external API is used (LLM_PROVIDER=local; embeddings run locally after the one-time model download).
+Declare before the demo: no external API is used. Embeddings and the LLM (Llama 3.2 via Ollama) run locally. Start Ollama before the API so the model is loaded (check GET /version -> llm.ready).
 
 | Time | Show | Say |
 |---|---|---|
@@ -373,7 +386,10 @@ def main():
                                ("validation_eval.json", "Validation_Rules_Evaluation", "json"),
                                ("eda_summary.json", "EDA_Summary", "json"),
                                ("extraction_corpus_before_fix.json", "Extraction_Before_Fixes", "json"),
-                               ("extraction_corpus_after_fix.json", "Extraction_After_Fixes", "json")]:
+                               ("extraction_corpus_after_fix.json", "Extraction_After_Fixes", "json"),
+                               ("llm_eval.json", "LLM_Evaluation", "json"),
+                               ("llm_eval_run1_baseline_prompt.json", "LLM_Evaluation_First_Prompt", "json"),
+                               ("extra_models.json", "Supplementary_Models_NB_MLP_KMeans", "json")]:
         shutil.copy(res_dir / src, er / fname(artifact, ext))
     shutil.copy(REPO / "data/evaluation/answerability_dataset.csv", er / fname("Answerability_Dataset", "csv"))
     shutil.copy(REPO / "data/evaluation/runs.jsonl", er / fname("Experiment_Log", "jsonl"))
@@ -422,6 +438,10 @@ def main():
     docs_dir = dirs["Documentation"]
     (docs_dir / fname("Rubric_Self_Assessment", "md")).write_text(submission_docs.rubric_self_assessment(REG, passed), encoding="utf-8")
     (docs_dir / fname("Technical_QA_Preparation", "md")).write_text(submission_docs.qa_prep(REG), encoding="utf-8")
+    deck = REPO / "presentation" / fname("Presentation", "pptx")
+    if deck.exists():
+        shutil.copy(deck, docs_dir / deck.name)
+    (docs_dir / fname("Contribution_Statement", "md")).write_text(submission_docs.contribution_statement(REG), encoding="utf-8")
     shutil.copytree(REPO / "models", dirs["Model_Prompts_Config"] / "models")
     shutil.copytree(REPO / "models", code / "models")
     shutil.copytree(REPO / "data/synthetic", code / "data/synthetic")

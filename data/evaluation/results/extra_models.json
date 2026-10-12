@@ -1,0 +1,58 @@
+{
+  "supplementary_models_nested_cv": {
+    "naive_bayes (Gaussian)": {
+      "cv_auc_mean": 0.9606,
+      "cv_auc_std": 0.0131,
+      "f1_at_best_threshold": 0.879
+    },
+    "neural_network (MLP)": {
+      "cv_auc_mean": 0.9349,
+      "cv_auc_std": 0.0185,
+      "f1_at_best_threshold": 0.8658
+    }
+  },
+  "reference_random_forest": {
+    "cv_auc_mean": 0.9936,
+    "cv_auc_std": 0.0067,
+    "f1": 0.9795
+  },
+  "kmeans_clustering": {
+    "k=2": {
+      "silhouette": 0.433,
+      "adjusted_rand_vs_label": 0.183,
+      "nmi_vs_label": 0.295,
+      "purity_dev": 0.715,
+      "purity_test_documents": 0.721,
+      "cluster_answerable_share": {
+        "0": 0.0,
+        "1": 0.64
+      }
+    },
+    "k=3": {
+      "silhouette": 0.351,
+      "adjusted_rand_vs_label": 0.406,
+      "nmi_vs_label": 0.455,
+      "purity_dev": 0.868,
+      "purity_test_documents": 0.863,
+      "cluster_answerable_share": {
+        "0": 0.97,
+        "1": 0.3,
+        "2": 0.0
+      }
+    },
+    "k=4": {
+      "silhouette": 0.35,
+      "adjusted_rand_vs_label": 0.304,
+      "nmi_vs_label": 0.433,
+      "purity_dev": 0.854,
+      "purity_test_documents": 0.858,
+      "cluster_answerable_share": {
+        "0": 0.0,
+        "1": 0.99,
+        "2": 0.0,
+        "3": 0.59
+      }
+    }
+  },
+  "note": "Production model unchanged (random forest). Differences among the top models are within one standard deviation."
+}

@@ -65,13 +65,13 @@ with sync_playwright() as p:
 
     go(page, "💬 Ask")
     page.locator("button", has_text="Which component provides IDoorStatus?").first.click()
-    page.wait_for_selector("text=Architecture facts", timeout=60000)
+    page.wait_for_selector("text=/Architecture facts|Wording generated/", timeout=120000)
     idle(page, 2500)
     shot(page, "06_ask_grounded")
     box = page.get_by_placeholder("Ask about components, interfaces, ports, signals, flows…")
     box.fill("What is the maximum engine torque?")
     box.press("Enter")
-    page.wait_for_selector("text=was not found in the document", timeout=60000)
+    page.wait_for_selector("text=was not found in the document", timeout=120000)
     idle(page, 2500)
     shot(page, "07_ask_refusal")
 
