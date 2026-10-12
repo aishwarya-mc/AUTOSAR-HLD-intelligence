@@ -33,8 +33,7 @@ def idle(page, extra=1500):
 
 
 def go(page, label):
-    key = label.split(" ", 1)[1]  # strip the emoji
-    page.locator("button", has_text=key).first.click()
+    page.get_by_role("radio", name=label).first.click() if False else page.locator("button", has_text=label).first.click()
     idle(page)
 
 
@@ -47,13 +46,14 @@ with sync_playwright() as p:
     browser = p.chromium.launch(channel="msedge", headless=True)
     page = browser.new_page(viewport={"width": 1400, "height": 900})
     page.goto(UI)
-    page.wait_for_timeout(5000)
+    page.wait_for_selector("text=Workflow", timeout=60000)
+    idle(page, 2000)
     shot(page, "01_home")
 
-    go(page, "📄 Documents")
+    go(page, "Documents")
     shot(page, "02_documents")
 
-    go(page, "🧩 Architecture")
+    go(page, "Architecture")
     page.wait_for_timeout(6000)  # let the graph physics settle
     shot(page, "03_architecture_graph")
     page.locator("button", has_text="Component report").first.click()
@@ -63,25 +63,25 @@ with sync_playwright() as p:
     idle(page)
     shot(page, "05_impact_analysis")
 
-    go(page, "💬 Ask")
+    go(page, "Ask")
     page.locator("button", has_text="Which component provides IDoorStatus?").first.click()
-    page.wait_for_selector("text=/Architecture facts|Wording generated/", timeout=120000)
+    page.wait_for_selector("text=/Answered/", timeout=120000)
     idle(page, 2500)
     shot(page, "06_ask_grounded")
-    box = page.get_by_placeholder("Ask about components, interfaces, ports, signals, flows…")
+    box = page.get_by_placeholder("Ask about components, interfaces, ports, signals or flows")
     box.fill("What is the maximum engine torque?")
     box.press("Enter")
     page.wait_for_selector("text=was not found in the document", timeout=120000)
     idle(page, 2500)
     shot(page, "07_ask_refusal")
 
-    go(page, "✅ Validation")
+    go(page, "Validation")
     shot(page, "08_validation")
 
-    go(page, "🔀 Compare")
+    go(page, "Compare")
     idle(page, 3000)
     shot(page, "09_compare")
 
-    go(page, "📑 Report")
+    go(page, "Report")
     shot(page, "10_report")
     browser.close()
