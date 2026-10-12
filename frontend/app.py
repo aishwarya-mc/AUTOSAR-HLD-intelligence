@@ -15,29 +15,31 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-NAVY, TEAL, SLATE = "#12263F", "#0F766E", "#475569"
+INK, TEAL, MUTED = "#E6EDF7", "#2DD4BF", "#94A3B8"  # text, accent number colour, secondary text (dark theme)
 TYPE_COLORS = {
     "component": "#2563EB",
     "interface": "#0D9488",
     "port": "#D97706",
     "signal": "#BE185D",
 }
-SEVERITY = {"critical": "#B91C1C", "warning": "#B45309", "info": "#1D4ED8"}
+SEVERITY = {"critical": "#B91C1C", "warning": "#B45309", "info": "#1D4ED8"}  # badge backgrounds (white text)
+SEVERITY_TEXT = {"critical": "#F87171", "warning": "#FBBF24", "info": "#60A5FA"}  # numbers on dark cards
 PAGES = ["Home", "Documents", "Architecture", "Ask", "Validation", "Compare", "Report", "System", "Audit"]
 
 st.markdown(
     """
 <style>
-:root {--navy:#12263F; --teal:#0F766E; --line:#E2E8F0; --muted:#64748B; --bg:#F5F7FA;}
+:root {--navy:#0A1626; --teal:#0F766E; --line:#24324D; --muted:#94A3B8; --bg:#0B1220; --card:#111B2F; --ink:#E6EDF7;}
 #MainMenu, footer, header[data-testid="stHeader"] {display: none;}
 [data-testid="stSidebar"], [data-testid="collapsedControl"] {display: none;}
-.stApp {background: var(--bg);}
+.stApp {background: var(--bg); color: var(--ink);}
 html, body, [class*="css"] {font-family: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;}
 .block-container {padding-top: 1.1rem; max-width: 1300px;}
-h1, h2, h3, h4 {color: var(--navy); letter-spacing: -0.01em;}
+h1, h2, h3, h4, h5 {color: var(--ink); letter-spacing: -0.01em;}
 .topbar {
     display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
     background: var(--navy); color: #fff; padding: .85rem 1.2rem; border-radius: 10px; margin-bottom: .9rem;
+    border: 1px solid var(--line);
 }
 .brand {display: flex; align-items: center; gap: .8rem;}
 .brand-mark {
@@ -53,23 +55,23 @@ h1, h2, h3, h4 {color: var(--navy); letter-spacing: -0.01em;}
 }
 .pill .dot {display: inline-block; width: .5rem; height: .5rem; border-radius: 50%; margin-right: .4rem;}
 .card {
-    background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.15rem;
-    box-shadow: 0 1px 2px rgba(15,23,42,.05);
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.15rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.35);
 }
-.card .num {font-size: 1.9rem; font-weight: 700; line-height: 1.1; color: var(--navy);}
+.card .num {font-size: 1.9rem; font-weight: 700; line-height: 1.1; color: var(--ink);}
 .card .lbl {color: var(--muted); font-size: .76rem; text-transform: uppercase; letter-spacing: .06em; margin-top: .15rem;}
 .card .sub {color: var(--muted); font-size: .82rem; margin-top: .35rem;}
 .badge {
     display: inline-block; padding: .12rem .6rem; border-radius: 4px; font-size: .72rem; font-weight: 600;
     color: #fff; margin-right: .35rem; letter-spacing: .02em;
 }
-.badge.soft {background: #EEF2F7; color: var(--navy);}
-.step-title {font-weight: 600; color: var(--navy);}
+.badge.soft {background: #1E2B45; color: #CBD5E1;}
+.step-title {font-weight: 600; color: var(--ink);}
 .step-desc {color: var(--muted); font-size: .84rem; margin: .2rem 0 .6rem 0; min-height: 4.2rem;}
-div[data-testid="stFileUploaderDropzone"] {border: 1.5px dashed #94A3B8; border-radius: 10px; background: #fff;}
+div[data-testid="stFileUploaderDropzone"] {border: 1.5px dashed #3B4F73; border-radius: 10px; background: var(--card);}
 .stButton > button, .stDownloadButton > button {border-radius: 6px; font-weight: 500;}
 .stButton > button[kind="primary"], .stDownloadButton > button[kind="primary"] {background: var(--teal); border-color: var(--teal);}
-[data-testid="stExpander"] {background: #fff; border-radius: 8px;}
+[data-testid="stExpander"] {background: var(--card); border-radius: 8px; border-color: var(--line);}
 .section-note {color: var(--muted); font-size: .85rem; margin-bottom: .6rem;}
 </style>
 """,
@@ -123,7 +125,7 @@ def doc_label(d: dict) -> str:
     return f"{d['filename']}  |  {d['version']}"
 
 
-def card(value, label, sub: str = "", color: str = NAVY) -> str:
+def card(value, label, sub: str = "", color: str = INK) -> str:
     sub_html = f'<div class="sub">{sub}</div>' if sub else ""
     return (
         f'<div class="card"><div class="num" style="color:{color}">{value}</div>'
@@ -329,7 +331,7 @@ def graph_html(graph: dict, visible_types: set, focus: str | None, physics: bool
         if focus in ids else ""
     )
     return f"""
-<div id="g" style="height:560px;border:1px solid #CBD5E1;border-radius:10px;background:#0F172A"></div>
+<div id="g" style="height:560px;border:1px solid #24324D;border-radius:10px;background:#070D18"></div>
 <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
 <script>
 const data = {{nodes: new vis.DataSet({json.dumps(nodes)}), edges: new vis.DataSet({json.dumps(edges)})}};
@@ -375,7 +377,7 @@ def page_architecture(doc):
             info = get_json(f"/architecture/{doc}/impact/{focus}", params={"depth": 1})
             if info:
                 st.markdown(
-                    f"**{focus}** {badge(info['type'].title(), TYPE_COLORS.get(info['type'], '#64748B'))} "
+                    f"**{focus}** {badge(info['type'].title(), TYPE_COLORS.get(info['type'], '#94A3B8'))} "
                     f"has {len(info['relationships'])} direct relationship(s):",
                     unsafe_allow_html=True,
                 )
@@ -398,7 +400,7 @@ def page_architecture(doc):
             ev = f["evidence"][0]
             st.markdown(
                 f'<div class="card"><b>{f["name"]}</b><br>{f["description"]}<br>'
-                f'<span style="color:#64748B;font-size:.82rem">Evidence: {ev["section"]}, page {ev["page_number"]}</span>'
+                f'<span style="color:#94A3B8;font-size:.82rem">Evidence: {ev["section"]}, page {ev["page_number"]}</span>'
                 "</div><div style='height:.6rem'></div>",
                 unsafe_allow_html=True,
             )
@@ -498,9 +500,9 @@ def page_validation(doc):
     findings = data["findings"]
     s = data["summary"]
     c = st.columns(4)
-    c[0].markdown(card(s.get("critical", 0), "Critical", color=SEVERITY["critical"]), unsafe_allow_html=True)
-    c[1].markdown(card(s.get("warning", 0), "Warning", color=SEVERITY["warning"]), unsafe_allow_html=True)
-    c[2].markdown(card(s.get("info", 0), "Info", color=SEVERITY["info"]), unsafe_allow_html=True)
+    c[0].markdown(card(s.get("critical", 0), "Critical", color=SEVERITY_TEXT["critical"]), unsafe_allow_html=True)
+    c[1].markdown(card(s.get("warning", 0), "Warning", color=SEVERITY_TEXT["warning"]), unsafe_allow_html=True)
+    c[2].markdown(card(s.get("info", 0), "Info", color=SEVERITY_TEXT["info"]), unsafe_allow_html=True)
     reviewed = sum(1 for f in findings if (f["review"] or {}).get("status", "pending") != "pending")
     c[3].markdown(card(f"{reviewed} / {len(findings)}", "Reviewed", color=TEAL), unsafe_allow_html=True)
     st.write("")
