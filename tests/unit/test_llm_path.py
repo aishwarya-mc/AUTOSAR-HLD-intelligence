@@ -124,3 +124,15 @@ def test_faithfulness_guard_unit():
     assert llm.is_faithful("DoorControl provides IDoorStatus [C1].", ev, "q")
     assert llm.is_faithful("It uses DoorStatus_In.", ev, "q")
     assert not llm.is_faithful("WindowControl uses it.", ev, "q")
+
+
+def test_relation_guard_rejects_provider_named_as_requirer():
+    facts = [("VehicleStateManager provides interface IVehicleState", 2),
+             ("WindowControl requires interface IVehicleState", 2)]
+    bad = "WindowControl and VehicleStateManager require IVehicleState."
+    good = "WindowControl requires IVehicleState."
+    assert llm.relation_conflict("Which component requires IVehicleState?", bad, facts)
+    assert not llm.relation_conflict("Which component requires IVehicleState?", good, facts)
+    assert not llm.relation_conflict("Which component provides IVehicleState?",
+                                     "VehicleStateManager provides IVehicleState.", facts)
+    assert not llm.relation_conflict("What does WindowControl do?", bad, facts)  # not a provides/requires question

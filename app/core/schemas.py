@@ -84,6 +84,7 @@ class QueryResponse(BaseModel):
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
     grounded: bool = False
     limitations: list[str] = Field(default_factory=list)
+    facts: list[str] = Field(default_factory=list)  # verbatim structured facts behind the answer
     generated_by: str | None = None  # e.g. 'ollama:llama3.2' when an LLM phrased the answer
 
 

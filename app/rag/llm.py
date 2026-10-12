@@ -30,9 +30,17 @@ SYSTEM_PROMPT = (
     "using ONLY the EVIDENCE and STRUCTURED FACTS provided. Rules: (1) Be concise: at most four "
     "sentences. (2) Cite the evidence you used as [C1], [C2] right after the statement. (3) Copy "
     "component, interface, port and signal names exactly as written. (4) Do not add any name, number "
-    "or fact that is not in the evidence. (5) If the evidence does not answer the question, reply "
-    f"exactly: {NOT_FOUND}"
+    "or fact that is not in the evidence. (5) Do not confuse the kinds of element: interface names start "
+    "with I (for example IDoorStatus), port names end in _In or _Out (for example DoorStatus_Out), "
+    "components end in Manager, Control or Component, and signals are the data values. (6) Keep the "
+    "relationship verbs exactly as in the STRUCTURED FACTS: a component that 'provides' an interface "
+    "does not 'require' it, and the reverse. Name only the components the question asks about. (7) If "
+    f"the evidence does not answer the question, reply exactly: {NOT_FOUND}"
 )
+
+FACT = re.compile(r"(\w+) (provides|requires) interface (\w+)")
+ASKS_REQUIRES = re.compile(r"\b(requires?|consum\w*|uses?|needs?)\b", re.I)
+ASKS_PROVIDES = re.compile(r"\b(provides?|supplies|supplying|publish\w*|offers?)\b", re.I)
 
 IDENTIFIER = re.compile(r"\b[A-Za-z]+(?:[A-Z][a-z0-9]+)+\b|\b[A-Za-z0-9]+_(?:In|Out)\b")
 
@@ -94,6 +102,28 @@ def is_faithful(answer: str, evidence: str, question: str) -> bool:
     return identifiers(answer) <= allowed
 
 
+def relation_conflict(question: str, answer: str, facts) -> bool:
+    """True if the answer names a component for the wrong role (e.g. a provider as a requirer).
+
+    Only applies to questions that ask about exactly one of provides/requires; the roles come from the
+    structured facts extracted from the document tables, not from the LLM.
+    """
+    wants_req, wants_prov = bool(ASKS_REQUIRES.search(question)), bool(ASKS_PROVIDES.search(question))
+    if wants_req == wants_prov:
+        return False
+    asked, other = ("requires", "provides") if wants_req else ("provides", "requires")
+    roles: dict[str, set[str]] = {}
+    for text, _page in facts:
+        m = FACT.search(text)
+        if m:
+            roles.setdefault(m.group(1), set()).add(m.group(2))
+    mentioned = identifiers(answer)
+    for comp, rels in roles.items():
+        if comp.lower() in mentioned and other in rels and asked not in rels:
+            return True
+    return False
+
+
 def build_messages(question: str, hits, facts) -> list[dict]:
     context = "\n\n".join(
         f"[C{i + 1}] (section: {h.section}, page {h.page_number})\n{h.text}" for i, h in enumerate(hits)
@@ -144,6 +174,9 @@ def generate_answer(question: str, hits, facts) -> LLMAnswer | None:
         return None
     if not is_faithful(text, evidence, question):
         logger.warning("LLM answer rejected by the faithfulness guard (unknown identifier): %s", text[:120])
+        return None
+    if relation_conflict(question, text, facts):
+        logger.warning("LLM answer rejected by the relation guard (provides/requires mixed up): %s", text[:120])
         return None
     return LLMAnswer(text=text, label=label, seconds=time.time() - started)
 

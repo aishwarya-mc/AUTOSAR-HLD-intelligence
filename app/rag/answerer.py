@@ -126,6 +126,7 @@ class GroundedAnswerer:
         return QueryResponse(
             answer=answer_text, citations=citations, confidence=round(confidence, 2),
             grounded=True, limitations=limitations, generated_by=generated_by,
+            facts=list(dict.fromkeys(f"{t} (page {p})" if p else t for t, p in facts)),
         )
 
     # -- answer builders ---------------------------------------------------
