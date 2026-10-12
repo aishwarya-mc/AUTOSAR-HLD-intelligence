@@ -46,6 +46,9 @@ VAL = load("validation_eval.json")
 EDA = load("eda_summary.json")
 EXT_BEFORE = load("extraction_corpus_before_fix.json")
 EXT_AFTER = load("extraction_corpus_after_fix.json")
+LLM = load("llm_eval.json")["summary"]
+EXTRA = load("extra_models.json")
+LLM_V1 = load("llm_eval_run1_baseline_prompt.json")["summary"]
 META = ANS["metadata"]
 
 NAME, UNI, REG = "Aishwarya Manoj", "Amrita Vishwa Vidyapeetham", "CB.SC.U4AIE23211"
@@ -299,8 +302,10 @@ def build():
                       f"questions in the independent set. The trained classifier reached F1 {tm['f1']:.2f} (Section 8)."],
                      ["How to phrase answers",
                       "LLM generation vs extractive composition",
-                      "Extractive composition from retrieved passages and graph facts by default: no hallucination risk, offline, auditable. "
-                      "An optional local LLM (Ollama) can rewrite the evidence; it was not part of the evaluation."]],
+                      "Both. The evidence (graph facts and cited passages) is always retrieved first and the trained model decides whether to "
+                      "answer. A local LLM (Llama 3.2 3B served by Ollama, no data leaves the machine) then phrases the answer from that evidence only, "
+                      "behind a faithfulness guard and a relation guard; if the LLM is unavailable or rejected, the verbatim extractive answer is shown. "
+                      "Measured in Section 8.9."]],
                     [30, 45, 95]),
               P("<b>Learning types.</b> Embedding models are pre-trained (self-supervised); the answerability classifier is <b>supervised binary "
                 "classification</b> trained on labelled questions; retrieval ranking and extraction are unsupervised/rule-based. The task has "
@@ -315,7 +320,8 @@ def build():
                       "Runs offline from the Docker image"],
                      ["Structured store", "SQLite: documents, reviews, audit log", "PostgreSQL for production"],
                      ["Graph", "In-memory property graph built from the HLD tables", "Neo4j not used at this document size"],
-                     ["LLM", "Off by default; optional Ollama (local) or Anthropic (external, must be declared)", "Not part of reported results"]],
+                     ["LLM", "Llama 3.2 3B (pre-trained) served locally by Ollama; phrases answers from retrieved evidence only; guards and fallback",
+                      "On by default; optional Anthropic API is external and must be declared"]],
                     [32, 90, 48]),
               PageBreak()]
 
@@ -396,6 +402,14 @@ def build():
                 f"(SVM, k-NN, random forest, boosting) are within one standard deviation, so the choice is not critical; <b>{sel.replace('_', ' ')}</b> was "
                 "selected for the highest mean AUC and wrapped in sigmoid calibration so its probability can serve as a confidence value. "
                 f"Chosen hyperparameters: {META['best_params']}; decision threshold {META['threshold']}."),
+              P("<b>Further standard techniques (supplementary).</b> To cover the remaining common techniques, the same nested leave-one-document-out "
+                f"protocol was run for Gaussian naive Bayes (AUC {EXTRA['supplementary_models_nested_cv']['naive_bayes (Gaussian)']['cv_auc_mean']}) and a "
+                f"multi-layer perceptron neural network (AUC {EXTRA['supplementary_models_nested_cv']['neural_network (MLP)']['cv_auc_mean']}); both are below the "
+                f"random forest ({cmp_['random_forest']['cv_auc_mean']}), so the production model was not changed. Naive Bayes assumes independent features, which "
+                "the correlation analysis contradicts; the small network has too few examples (288) to beat tree ensembles. An unsupervised check with k-means "
+                f"(k=3) found clusters that match the answerable/unanswerable label with purity {EXTRA['kmeans_clustering']['k=3']['purity_dev']} on development and "
+                f"{EXTRA['kmeans_clustering']['k=3']['purity_test_documents']} on unseen documents (silhouette {EXTRA['kmeans_clustering']['k=3']['silhouette']}), "
+                "which shows the 12 features carry the signal even without labels."),
               P("7.3 Extraction improvements found by error analysis", H2),
               P("Running the first extractors on the six development domains exposed generalisation failures. They were fixed one cause at "
                 "a time, then confirmed on three further domains that had not been used for debugging."),
@@ -493,9 +507,34 @@ def build():
         "Synthetic, template-generated data with one document layout; real HLDs vary more.",
         "Question templates are shared between training and test documents; only documents differ. The hand-written sets are the check against this.",
         "Gold labels for retrieval are section-level and the documents are small (about 10 chunks), so recall@5 saturates; MRR and recall@1 are the informative metrics.",
-        "The local-LLM answer path, OCR on real scans and user-time savings were not evaluated.",
+        "OCR on real scans and user-time savings were not evaluated; the LLM was evaluated on only 50 questions with a lenient metric (Section 8.9).",
         f"Test and independent sets are small ({META['n_test']} and {ind_t['n']} questions); differences of a few percentage points are not significant.",
     ])
+    story += [P("8.9 LLM-phrased answers", H2),
+              P("The system uses a local LLM (Llama 3.2 3B served by Ollama, about 2 GB, running on this machine) to phrase answers. The trained model still "
+                "decides whether to answer; the LLM only rewrites the retrieved evidence. It was evaluated on the 50 answerable hand-written questions "
+                "(26 on the sample HLD, 24 on three held-out domains) against the extractive wording produced from the same evidence."),
+              table([["Measure", "Extractive wording", "LLM, first prompt", "LLM, final prompt"],
+                     ["Questions with the expected facts present", pct(LLM["baseline_accuracy"]), pct(LLM_V1["llm_accuracy_overall"]), pct(LLM["llm_accuracy_overall"])],
+                     ["LLM used (rest = refused by the classifier or guard)", "-", pct(LLM_V1["llm_used_rate"]), pct(LLM["llm_used_rate"])],
+                     ["Correct when the LLM wrote the answer", "-", pct(LLM_V1["llm_accuracy_when_used"]), pct(LLM["llm_accuracy_when_used"])],
+                     ["Answers carrying [C#] citation markers", "-", pct(LLM_V1["citation_marker_rate_when_used"]), pct(LLM["citation_marker_rate_when_used"])],
+                     ["Median time per LLM answer", "instant", f"{LLM_V1['median_seconds_when_used']} s", f"{LLM['median_seconds_when_used']} s"]],
+                    [70, 33, 33, 34]),
+              Spacer(1, 2 * mm),
+              P("<b>Error analysis and fixes.</b> The first prompt gave errors in which the LLM named an interface where a port was asked for. A short domain hint "
+                "(interfaces start with I, ports end in _In/_Out, keep provides/requires apart) raised correctness when used from "
+                f"{pct(LLM_V1['llm_accuracy_when_used'])} to {pct(LLM['llm_accuracy_when_used'])}. Because this tuning used the same 50 questions, that figure is a "
+                "development number, not an independent one. A live test then exposed a second error type that the metric cannot see: for 'Which component requires "
+                "IVehicleState?' the LLM answered 'WindowControl and VehicleStateManager require IVehicleState', although VehicleStateManager provides it. The "
+                "metric only checks that expected names appear, so it does not penalise extra wrong claims. I added a rule-based relation guard that rejects an answer "
+                "naming a component for the wrong role (roles are read from the document tables), and the same question is now answered correctly."),
+              P("<b>Reading the result.</b> The LLM gives readable, cited sentences, but on this metric it is not more accurate than the extractive wording "
+                f"({pct(LLM['llm_accuracy_overall'])} vs {pct(LLM['baseline_accuracy'])} overall); its value is readability. A 3-billion-parameter model can mix up "
+                "roles, so the interface shows the verbatim facts beside the answer and keeps the citations, and any failure falls back to the extractive text. "
+                "The evaluation is small (50 questions) and lenient, so no strong claim is made."),
+              fig(ROOT / "submission_assets" / "screenshots" / "06_ask_grounded.png", "Figure: LLM-phrased answer in the application.", 110),
+              ]
     story.append(PageBreak())
 
     # ---- 9 implementation, 10 MLOps
@@ -512,7 +551,8 @@ def build():
                 "its entities are extracted from patterns and tables and de-duplicated with merged evidence. A typed model of the tables feeds "
                 "the graph, the 11 validation rules and the revision comparison. At query time BM25 and dense rankings are fused, 12 features "
                 "are computed, the answerability model decides to answer or refuse, and the answer is composed from graph facts and "
-                "cited passages with a probability-based confidence."),
+                "cited passages with a probability-based confidence. The local LLM then rewrites that evidence into a short cited answer; two guards "
+                "(unknown-identifier check and provides/requires role check) can reject its wording, in which case the extractive answer is used."),
               table([["Rule", "Check", "Severity"],
                      ["V001", "Provider/consumer/port owner not a declared component", "critical"],
                      ["V002", "Port references an undefined interface", "critical"],
@@ -555,7 +595,9 @@ def build():
         "<b>Safety risk:</b> a wrong architecture answer could mislead a design review. Mitigations: answers use only retrieved evidence and graph "
         "facts, every answer cites section and page, a trained classifier refuses questions the document cannot answer, confidence is a calibrated "
         "probability, and findings need human accept/reject decisions. The report and UI carry an advisory notice; the system never approves a design.",
-        "<b>Hallucination:</b> by default there is no generative model; an optional LLM is restricted to the retrieved evidence and instructed to reply 'not found' otherwise.",
+        "<b>Hallucination:</b> a small local LLM can make mistakes (a provides/requires mix-up was observed). Mitigations: the answer/refuse decision "
+        "is made by the trained model, not the LLM; the prompt allows only retrieved evidence; a guard rejects names absent from the evidence; a role "
+        "guard rejects a provider named as a requirer; every answer shows citations and the verbatim facts; and the extractive answer is the fallback.",
         "<b>Privacy and confidentiality:</b> embeddings, vector store and database are local; the embedding model runs offline; external APIs are disabled by default and must be declared. Only synthetic documents are used.",
         "<b>Access control and accountability:</b> roles, per-project isolation, authenticated reviewer identity and a complete audit log.",
         "<b>Bias and fairness:</b> the data are technical documents, not personal data, so demographic bias does not apply; the relevant bias is "
@@ -583,7 +625,7 @@ def build():
         "01_home": "Figure 13: Home page.", "02_documents": "Figure 14: Documents page with project label.",
         "03_architecture_graph": "Figure 15: Interactive traceability graph.", "04_component_report": "Figure 16: Cited component report.",
         "05_impact_analysis": "Figure 17: Change-impact explorer.",
-        "06_ask_grounded": "Figure 18: Grounded answer with citations and calibrated confidence.",
+        "06_ask_grounded": "Figure 18: Answer phrased by the local LLM (ollama:llama3.2) with citations, verbatim-fact check and calibrated confidence.",
         "07_ask_refusal": "Figure 19: Refusal of an out-of-scope question.", "08_validation": "Figure 20: Validation findings and review actions.",
         "09_compare": "Figure 21: Revision comparison.", "10_report": "Figure 22: Report page with structured export.",
     }
@@ -602,9 +644,9 @@ def build():
                 "Grouping cross-validation by document and keeping untouched test documents exposed these problems, and the fixes (a trained answerability "
                 "model, a tuned fusion weight, table-driven extraction) each improved held-out results."),
               P("The main limitation is realism: all data are synthetic and share one layout, the question sets are small, and the system was not "
-                "evaluated on real HLDs, scanned documents or with a generative model. Next steps are an independent evaluation set from real or "
+                "evaluated on real HLDs or scanned documents, and the LLM evaluation is small. Next steps are an independent evaluation set from real or "
                 "differently structured HLDs, table-header mapping for other layouts, a verification step for 'absent attribute' questions, "
-                "evaluation of a local LLM, a graph database for large documents and enterprise identity management."),
+                "a stricter LLM evaluation (penalising wrong extra claims) with larger models, a graph database for large documents and enterprise identity management."),
               P("<i>Personal reflection (to be written by the student):</i> what you learned, what was difficult, what you would do differently.", SMALL),
               P("Appendix: reproduction commands", H2),
               P("<font face='Courier' size=8>pip install -r requirements-dev.txt<br/>"

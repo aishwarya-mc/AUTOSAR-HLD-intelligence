@@ -117,7 +117,9 @@ questions with page citations, flags inconsistencies, compares revisions and exp
 
 **Q: Why not just ask an LLM?**
 An LLM can invent relationships and cannot cite exact pages reliably. Here, structure comes from deterministic table parsing
-(reproducible, auditable), answers are composed from retrieved evidence, and an optional LLM may only rephrase that evidence.
+(reproducible, auditable), the answer/refuse decision is made by a trained model, and a small local LLM (Llama 3.2 via Ollama) only rephrases
+the retrieved evidence, behind guards, with the extractive text as fallback. I measured it: it is readable and cited but not more accurate
+than the extractive wording, and I saw it mix up provides/requires, which is why the guards and the verbatim facts exist.
 
 **Q: Where is machine learning in this project?**
 (1) Pre-trained BGE embeddings for semantic retrieval. (2) A supervised answerability classifier trained on labelled
@@ -191,12 +193,12 @@ Not as a general claim. The first extractors scored F1 {before['summary']['overa
 confirmed on three unseen domains, but all documents share one layout, so I would expect lower scores on real HLDs.
 
 **Q: What are the limitations?**
-Synthetic, single-layout data; small test sets; local-LLM answers and OCR on real scans not evaluated; the model refuses some
+Synthetic, single-layout data; small test sets; OCR on real scans not evaluated, and the LLM evaluation is small (50 questions, lenient metric); the model refuses some
 unusual paraphrases and answers some "absent attribute" questions about real entities; no SSO; in-memory graph only.
 
 **Q: What would you do next?**
 Test on real or differently formatted HLDs, add header mapping for other layouts, add a check that the requested attribute
-appears in the cited evidence, evaluate a local LLM, and expand the labelled set.
+appears in the cited evidence, evaluate larger LLMs with a stricter metric, and expand the labelled set.
 
 ## System and MLOps
 **Q: How is the system versioned and reproducible?**

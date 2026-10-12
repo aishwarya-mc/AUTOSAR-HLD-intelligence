@@ -14,6 +14,7 @@ const VAL = load("validation_eval.json");
 const EDA = load("eda_summary.json");
 const EXT_B = load("extraction_corpus_before_fix.json").summary.overall;
 const EXT_A = load("extraction_corpus_after_fix.json").test.summary.overall;
+const LLM = load("llm_eval.json").summary;
 
 const tm = ANS.test_metrics, rb = ANS.rule_baseline_test;
 const ind = RES_ALL.independent.trained, indOld = RES_ALL.independent.legacy_gate;
@@ -112,7 +113,7 @@ function badge(s, x, y, label, color = TEAL) {
     ["Extract", "components, interfaces, ports, signals, flows"],
     ["Index", "BGE embeddings in ChromaDB, plus BM25"],
     ["Decide", "trained model: answer or refuse"],
-    ["Answer", "cited facts, confidence, human review"],
+    ["Answer", "local LLM (Llama 3.2) writes a cited answer; human review"],
   ];
   const bw = 1.66, gap = 0.175;
   steps.forEach(([head, sub], i) => {
@@ -220,7 +221,7 @@ function badge(s, x, y, label, color = TEAL) {
     text(s, label, { x: x + 2.4, y: y + 0.35, w: 1.9, h: 0.35, fontSize: 16, bold: true, color: WHITE });
     text(s, sub, { x: x + 2.4, y: y + 0.75, w: 1.9, h: 0.5, fontSize: 12, color: PALE, valign: "top" });
   });
-  text(s, `Independent hand-written questions: ${pct(ind.accuracy)} overall, ${pct(ind.answerable_accuracy)} of answerable ones answered. Small synthetic test sets.`,
+  text(s, `Independent questions: ${pct(ind.accuracy)} overall. Local LLM (Llama 3.2): ${pct(LLM.llm_accuracy_when_used)} correct when used on 50 questions. Small synthetic sets.`,
     { x: 0.5, y: 4.75, w: 9, h: 0.5, fontSize: 12, italic: true, color: PALE, valign: "top" });
   s.addNotes("Be honest: the model refuses a few answerable paraphrased questions and answers one unanswerable question about a real entity. Test sets are small and synthetic.");
 }
@@ -234,8 +235,9 @@ function badge(s, x, y, label, color = TEAL) {
       "Every answer cites page and section",
       "Refuses what the document cannot answer",
       "Calibrated confidence, human accept/reject",
-      "Local models, synthetic data only",
+      "Local models only (embeddings and LLM), synthetic data",
       "Roles, project isolation, audit log",
+      "Guards reject unfaithful LLM wording",
     ]],
     ["MLOps basics", AMBER, [
       "Versioned model with metadata and dataset hash",
@@ -276,13 +278,13 @@ function badge(s, x, y, label, color = TEAL) {
   text(s, [
     { text: "Synthetic data, one layout", options: { bullet: true, breakLine: true } },
     { text: "Small test sets", options: { bullet: true, breakLine: true } },
-    { text: "Local LLM and real scans not evaluated", options: { bullet: true } },
+    { text: "Small LLM can mix up roles; real scans not tested", options: { bullet: true } },
   ], { x: 5.35, y: 1.85, w: 3.9, h: 1.2, fontSize: 14, color: WHITE, paraSpaceAfter: 4, valign: "top" });
   text(s, "Next", { x: 5.35, y: 3.1, w: 3.9, h: 0.35, fontSize: 18, bold: true, color: AMBER, fontFace: HEAD });
   text(s, [
     { text: "Test on real HLD layouts", options: { bullet: true, breakLine: true } },
     { text: "Check absent attributes in evidence", options: { bullet: true, breakLine: true } },
-    { text: "Evaluate a local LLM", options: { bullet: true } },
+    { text: "Stricter LLM tests, larger models", options: { bullet: true } },
   ], { x: 5.35, y: 3.5, w: 3.9, h: 1.2, fontSize: 14, color: WHITE, paraSpaceAfter: 4, valign: "top" });
   s.addNotes("Be ready to explain every module in the left column and the AI-assisted modules too: you are accountable for all of it. Thank the audience and invite questions.");
 }
